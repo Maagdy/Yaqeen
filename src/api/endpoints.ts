@@ -1,6 +1,16 @@
-export const API_BASE_URL = "http://api.alquran.cloud/v1";
+// Hybrid API approach:
+// - mp3quran for surah metadata (fast, reliable)
+// - AlQuran Cloud for verse/ayah content
+export const MP3QURAN_BASE_URL = "https://mp3quran.net/api/v3";
+export const ALQURAN_BASE_URL = "http://api.alquran.cloud/v1";
+
+// Legacy - keeping for backward compatibility
+export const API_BASE_URL = ALQURAN_BASE_URL;
 
 export const ENDPOINTS = {
+  // --- MP3QURAN v3 ENDPOINTS (for metadata) ---
+  MP3QURAN_SUWAR: (language: string = "eng") => `/suwar?language=${language}`,
+
   // --- METADATA & EDITIONS ---
   META: "/meta",
   EDITIONS: "/edition",

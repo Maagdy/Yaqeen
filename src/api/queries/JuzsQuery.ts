@@ -4,7 +4,7 @@ import type {
   AlQuranResponse,
   MetaResponse,
   JuzMeta,
-  JuzResponse,
+  JuzData,
 } from "./queries.types";
 
 export const getJuzs = async (): Promise<JuzMeta[]> => {
@@ -14,9 +14,12 @@ export const getJuzs = async (): Promise<JuzMeta[]> => {
   return data.data.juzs.references;
 };
 
-export const getJuz = async (juzNumber: number): Promise<JuzResponse> => {
-  const data = await client.get<AlQuranResponse<JuzResponse>>(
-    `${API_BASE_URL}${ENDPOINTS.JUZ}/${juzNumber}`,
+export const getJuz = async (
+  juzNumber: number,
+  edition: string = "quran-uthmani",
+): Promise<JuzData> => {
+  const data = await client.get<AlQuranResponse<JuzData>>(
+    `${API_BASE_URL}${ENDPOINTS.JUZ(juzNumber, edition)}`,
   );
   return data.data;
 };

@@ -24,6 +24,9 @@
       "madinah": "Medinan"
     }
   },
+  "surah": {
+    "end": "End of Surah"
+  },
   "navigation": {
     "quran": "Quran",
     "reciters": "Reciters",
@@ -39,6 +42,16 @@
   },
   "auth": {
     "signup": "Sign Up"
+  },
+  "error": {
+    "title": "Oops! Something went wrong",
+    "message": "We couldn't load the content you requested. Please try again.",
+    "go_home": "Go to Home"
+  },
+  "juz": {
+    "title": "Juz {{number}}",
+    "loading": "Loading Juz {{number}}...",
+    "error_loading": "Error loading Juz {{number}}"
   },
   "footer": {
     "navigate": "Navigate",
