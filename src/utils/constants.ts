@@ -1,0 +1,451 @@
+export const navigationLinks = [
+  { text: "Home", href: "#" },
+  { text: "Quran Radio", href: "#" },
+  { text: "Reciters", href: "#" },
+  { text: "About Us", href: "#" },
+  { text: "Donate", href: "#" },
+  { text: "Mobile Apps", href: "#" },
+  { text: "Developers", href: "#" },
+  { text: "Product Updates", href: "#" },
+  { text: "Feedback", href: "#" },
+  { text: "Help", href: "#" },
+];
+
+export const networkLinks = [
+  { text: "QuranicAudio.com", href: "#" },
+  { text: "Salah.com", href: "#" },
+  { text: "Sunnah.com", href: "#" },
+  { text: "Legacy.Quran.com", href: "#" },
+  { text: "Previous.Quran.com", href: "#" },
+  { text: "Corpus.Quran.com", href: "#" },
+  { text: "QuranReflect.com", href: "#" },
+  { text: "Tarteel.ai", href: "#" },
+];
+
+export const popularLinks = [
+  { text: "Ayatul Kursi", href: "#" },
+  { text: "Yaseen", href: "#" },
+  { text: "Al Mulk", href: "#" },
+  { text: "Ar-Rahman", href: "#" },
+  { text: "Al Waqi'ah", href: "#" },
+  { text: "Al Kahf", href: "#" },
+  { text: "Al Muzzammil", href: "#" },
+];
+
+export const juzData = [
+  {
+    number: 1,
+    surahs: [
+      { number: 1, name: "Al-Fatihah", arabicName: "الفاتحة", verses: "1-7" },
+      { number: 2, name: "Al-Baqarah", arabicName: "البقرة", verses: "1-141" },
+    ],
+  },
+  {
+    number: 2,
+    surahs: [
+      {
+        number: 2,
+        name: "Al-Baqarah",
+        arabicName: "البقرة",
+        verses: "142-252",
+      },
+    ],
+  },
+  {
+    number: 3,
+    surahs: [
+      {
+        number: 2,
+        name: "Al-Baqarah",
+        arabicName: "البقرة",
+        verses: "253-286",
+      },
+      { number: 3, name: "Al-Imran", arabicName: "آل عمران", verses: "1-91" },
+    ],
+  },
+  {
+    number: 4,
+    surahs: [
+      { number: 3, name: "Al-Imran", arabicName: "آل عمران", verses: "92-200" },
+      { number: 4, name: "An-Nisa", arabicName: "النساء", verses: "1-23" },
+    ],
+  },
+  {
+    number: 5,
+    surahs: [
+      { number: 4, name: "An-Nisa", arabicName: "النساء", verses: "24-147" },
+    ],
+  },
+  {
+    number: 6,
+    surahs: [
+      { number: 4, name: "An-Nisa", arabicName: "النساء", verses: "148-176" },
+      { number: 5, name: "Al-Ma'idah", arabicName: "المائدة", verses: "1-81" },
+    ],
+  },
+  {
+    number: 7,
+    surahs: [
+      {
+        number: 5,
+        name: "Al-Ma'idah",
+        arabicName: "المائدة",
+        verses: "82-120",
+      },
+      { number: 6, name: "Al-An'am", arabicName: "الأنعام", verses: "1-110" },
+    ],
+  },
+  {
+    number: 8,
+    surahs: [
+      { number: 6, name: "Al-An'am", arabicName: "الأنعام", verses: "111-165" },
+      { number: 7, name: "Al-A'raf", arabicName: "الأعراف", verses: "1-87" },
+    ],
+  },
+  {
+    number: 9,
+    surahs: [
+      { number: 7, name: "Al-A'raf", arabicName: "الأعراف", verses: "88-206" },
+      { number: 8, name: "Al-Anfal", arabicName: "الأنفال", verses: "1-40" },
+    ],
+  },
+  {
+    number: 10,
+    surahs: [
+      { number: 8, name: "Al-Anfal", arabicName: "الأنفال", verses: "41-75" },
+      { number: 9, name: "At-Tawbah", arabicName: "التوبة", verses: "1-92" },
+    ],
+  },
+  {
+    number: 11,
+    surahs: [
+      { number: 9, name: "At-Tawbah", arabicName: "التوبة", verses: "93-129" },
+      { number: 10, name: "Yunus", arabicName: "يونس", verses: "1-109" },
+      { number: 11, name: "Hud", arabicName: "هود", verses: "1-5" },
+    ],
+  },
+  {
+    number: 12,
+    surahs: [
+      { number: 11, name: "Hud", arabicName: "هود", verses: "6-123" },
+      { number: 12, name: "Yusuf", arabicName: "يوسف", verses: "1-52" },
+    ],
+  },
+  {
+    number: 13,
+    surahs: [
+      { number: 12, name: "Yusuf", arabicName: "يوسف", verses: "53-111" },
+      { number: 13, name: "Ar-Ra'd", arabicName: "الرعد", verses: "1-43" },
+      { number: 14, name: "Ibrahim", arabicName: "ابراهيم", verses: "1-52" },
+    ],
+  },
+  {
+    number: 14,
+    surahs: [
+      { number: 15, name: "Al-Hijr", arabicName: "الحجر", verses: "1-99" },
+      { number: 16, name: "An-Nahl", arabicName: "النحل", verses: "1-128" },
+    ],
+  },
+  {
+    number: 15,
+    surahs: [
+      { number: 17, name: "Al-Isra", arabicName: "الإسراء", verses: "1-111" },
+      { number: 18, name: "Al-Kahf", arabicName: "الكهف", verses: "1-74" },
+    ],
+  },
+  {
+    number: 16,
+    surahs: [
+      { number: 18, name: "Al-Kahf", arabicName: "الكهف", verses: "75-110" },
+      { number: 19, name: "Maryam", arabicName: "مريم", verses: "1-98" },
+      { number: 20, name: "Ta-Ha", arabicName: "طه", verses: "1-135" },
+    ],
+  },
+  {
+    number: 17,
+    surahs: [
+      { number: 21, name: "Al-Anbya", arabicName: "الأنبياء", verses: "1-112" },
+      { number: 22, name: "Al-Hajj", arabicName: "الحج", verses: "1-78" },
+    ],
+  },
+  {
+    number: 18,
+    surahs: [
+      {
+        number: 23,
+        name: "Al-Mu'minun",
+        arabicName: "المؤمنون",
+        verses: "1-118",
+      },
+      { number: 24, name: "An-Nur", arabicName: "النور", verses: "1-64" },
+      { number: 25, name: "Al-Furqan", arabicName: "الفرقان", verses: "1-20" },
+    ],
+  },
+  {
+    number: 19,
+    surahs: [
+      { number: 25, name: "Al-Furqan", arabicName: "الفرقان", verses: "21-77" },
+      {
+        number: 26,
+        name: "Ash-Shu'ara",
+        arabicName: "الشعراء",
+        verses: "1-227",
+      },
+      { number: 27, name: "An-Naml", arabicName: "النمل", verses: "1-55" },
+    ],
+  },
+  {
+    number: 20,
+    surahs: [
+      { number: 27, name: "An-Naml", arabicName: "النمل", verses: "56-93" },
+      { number: 28, name: "Al-Qasas", arabicName: "القصص", verses: "1-88" },
+      {
+        number: 29,
+        name: "Al-Ankabut",
+        arabicName: "العنكبوت",
+        verses: "1-45",
+      },
+    ],
+  },
+  {
+    number: 21,
+    surahs: [
+      {
+        number: 29,
+        name: "Al-Ankabut",
+        arabicName: "العنكبوت",
+        verses: "46-69",
+      },
+      { number: 30, name: "Ar-Rum", arabicName: "الروم", verses: "1-60" },
+      { number: 31, name: "Luqman", arabicName: "لقمان", verses: "1-34" },
+      { number: 32, name: "As-Sajdah", arabicName: "السجدة", verses: "1-30" },
+      { number: 33, name: "Al-Ahzab", arabicName: "الأحزاب", verses: "1-30" },
+    ],
+  },
+  {
+    number: 22,
+    surahs: [
+      { number: 33, name: "Al-Ahzab", arabicName: "الأحزاب", verses: "31-73" },
+      { number: 34, name: "Saba", arabicName: "سبإ", verses: "1-54" },
+      { number: 35, name: "Fatir", arabicName: "فاطر", verses: "1-45" },
+      { number: 36, name: "Ya-Sin", arabicName: "يس", verses: "1-27" },
+    ],
+  },
+  {
+    number: 23,
+    surahs: [
+      { number: 36, name: "Ya-Sin", arabicName: "يس", verses: "28-83" },
+      { number: 37, name: "As-Saffat", arabicName: "الصافات", verses: "1-182" },
+      { number: 38, name: "Sad", arabicName: "ص", verses: "1-88" },
+      { number: 39, name: "Az-Zumar", arabicName: "الزمر", verses: "1-31" },
+    ],
+  },
+  {
+    number: 24,
+    surahs: [
+      { number: 39, name: "Az-Zumar", arabicName: "الزمر", verses: "32-75" },
+      { number: 40, name: "Ghafir", arabicName: "غافر", verses: "1-85" },
+      { number: 41, name: "Fussilat", arabicName: "فصلت", verses: "1-46" },
+    ],
+  },
+  {
+    number: 25,
+    surahs: [
+      { number: 41, name: "Fussilat", arabicName: "فصلت", verses: "47-54" },
+      { number: 42, name: "Ash-Shura", arabicName: "الشورى", verses: "1-53" },
+      { number: 43, name: "Az-Zukhruf", arabicName: "الزخرف", verses: "1-89" },
+      { number: 44, name: "Ad-Dukhan", arabicName: "الدخان", verses: "1-59" },
+      {
+        number: 45,
+        name: "Al-Jathiyah",
+        arabicName: "الجاثية",
+        verses: "1-37",
+      },
+    ],
+  },
+  {
+    number: 26,
+    surahs: [
+      { number: 46, name: "Al-Ahqaf", arabicName: "الأحقاف", verses: "1-35" },
+      { number: 47, name: "Muhammad", arabicName: "محمد", verses: "1-38" },
+      { number: 48, name: "Al-Fath", arabicName: "الفتح", verses: "1-29" },
+      { number: 49, name: "Al-Hujurat", arabicName: "الحجرات", verses: "1-18" },
+      { number: 50, name: "Qaf", arabicName: "ق", verses: "1-45" },
+      {
+        number: 51,
+        name: "Adh-Dhariyat",
+        arabicName: "الذاريات",
+        verses: "1-30",
+      },
+    ],
+  },
+  {
+    number: 27,
+    surahs: [
+      {
+        number: 51,
+        name: "Adh-Dhariyat",
+        arabicName: "الذاريات",
+        verses: "31-60",
+      },
+      { number: 52, name: "At-Tur", arabicName: "الطور", verses: "1-49" },
+      { number: 53, name: "An-Najm", arabicName: "النجم", verses: "1-62" },
+      { number: 54, name: "Al-Qamar", arabicName: "القمر", verses: "1-55" },
+      { number: 55, name: "Ar-Rahman", arabicName: "الرحمن", verses: "1-78" },
+      { number: 56, name: "Al-Waqi'ah", arabicName: "الواقعة", verses: "1-96" },
+      { number: 57, name: "Al-Hadid", arabicName: "الحديد", verses: "1-29" },
+    ],
+  },
+  {
+    number: 28,
+    surahs: [
+      {
+        number: 58,
+        name: "Al-Mujadila",
+        arabicName: "المجادلة",
+        verses: "1-22",
+      },
+      { number: 59, name: "Al-Hashr", arabicName: "الحشر", verses: "1-24" },
+      {
+        number: 60,
+        name: "Al-Mumtahanah",
+        arabicName: "الممتحنة",
+        verses: "1-13",
+      },
+      { number: 61, name: "As-Saf", arabicName: "الصف", verses: "1-14" },
+      { number: 62, name: "Al-Jumu'ah", arabicName: "الجمعة", verses: "1-11" },
+      {
+        number: 63,
+        name: "Al-Munafiqun",
+        arabicName: "المنافقون",
+        verses: "1-11",
+      },
+      {
+        number: 64,
+        name: "At-Taghabun",
+        arabicName: "التغابن",
+        verses: "1-18",
+      },
+      { number: 65, name: "At-Talaq", arabicName: "الطلاق", verses: "1-12" },
+      { number: 66, name: "At-Tahrim", arabicName: "التحريم", verses: "1-12" },
+    ],
+  },
+  {
+    number: 29,
+    surahs: [
+      { number: 67, name: "Al-Mulk", arabicName: "الملك", verses: "1-30" },
+      { number: 68, name: "Al-Qalam", arabicName: "القلم", verses: "1-52" },
+      { number: 69, name: "Al-Haqqah", arabicName: "الحاقة", verses: "1-52" },
+      { number: 70, name: "Al-Ma'arij", arabicName: "المعارج", verses: "1-44" },
+      { number: 71, name: "Nuh", arabicName: "نوح", verses: "1-28" },
+      { number: 72, name: "Al-Jinn", arabicName: "الجن", verses: "1-28" },
+      {
+        number: 73,
+        name: "Al-Muzzammil",
+        arabicName: "المزمل",
+        verses: "1-20",
+      },
+      {
+        number: 74,
+        name: "Al-Muddaththir",
+        arabicName: "المدثر",
+        verses: "1-56",
+      },
+      { number: 75, name: "Al-Qiyamah", arabicName: "القيامة", verses: "1-40" },
+      { number: 76, name: "Al-Insan", arabicName: "الإنسان", verses: "1-31" },
+      {
+        number: 77,
+        name: "Al-Mursalat",
+        arabicName: "المرسلات",
+        verses: "1-50",
+      },
+    ],
+  },
+  {
+    number: 30,
+    surahs: [
+      { number: 78, name: "An-Naba", arabicName: "النبإ", verses: "1-40" },
+      {
+        number: 79,
+        name: "An-Nazi'at",
+        arabicName: "النازعات",
+        verses: "1-46",
+      },
+      { number: 80, name: "Abasa", arabicName: "عبس", verses: "1-42" },
+      { number: 81, name: "At-Takwir", arabicName: "التكوير", verses: "1-29" },
+      {
+        number: 82,
+        name: "Al-Infitar",
+        arabicName: "الإنفطار",
+        verses: "1-19",
+      },
+      {
+        number: 83,
+        name: "Al-Mutaffifin",
+        arabicName: "المطففين",
+        verses: "1-36",
+      },
+      {
+        number: 84,
+        name: "Al-Inshiqaq",
+        arabicName: "الإنشقاق",
+        verses: "1-25",
+      },
+      { number: 85, name: "Al-Buruj", arabicName: "البروج", verses: "1-22" },
+      { number: 86, name: "At-Tariq", arabicName: "الطارق", verses: "1-17" },
+      { number: 87, name: "Al-A'la", arabicName: "الأعلى", verses: "1-19" },
+      {
+        number: 88,
+        name: "Al-Ghashiyah",
+        arabicName: "الغاشية",
+        verses: "1-26",
+      },
+      { number: 89, name: "Al-Fajr", arabicName: "الفجر", verses: "1-30" },
+      { number: 90, name: "Al-Balad", arabicName: "البلد", verses: "1-20" },
+      { number: 91, name: "Ash-Shams", arabicName: "الشمس", verses: "1-15" },
+      { number: 92, name: "Al-Lail", arabicName: "الليل", verses: "1-21" },
+      { number: 93, name: "Ad-Duha", arabicName: "الضحى", verses: "1-11" },
+      { number: 94, name: "Ash-Sharh", arabicName: "الشرح", verses: "1-8" },
+      { number: 95, name: "At-Tin", arabicName: "التين", verses: "1-8" },
+      { number: 96, name: "Al-Alaq", arabicName: "العلق", verses: "1-19" },
+      { number: 97, name: "Al-Qadr", arabicName: "القدر", verses: "1-5" },
+      { number: 98, name: "Al-Bayyinah", arabicName: "البينة", verses: "1-8" },
+      { number: 99, name: "Az-Zalzalah", arabicName: "الزلزلة", verses: "1-8" },
+      {
+        number: 100,
+        name: "Al-Adiyat",
+        arabicName: "العاديات",
+        verses: "1-11",
+      },
+      {
+        number: 101,
+        name: "Al-Qari'ah",
+        arabicName: "القارعة",
+        verses: "1-11",
+      },
+      {
+        number: 102,
+        name: "At-Takathur",
+        arabicName: "التكاثر",
+        verses: "1-8",
+      },
+      { number: 103, name: "Al-Asr", arabicName: "العصر", verses: "1-3" },
+      { number: 104, name: "Al-Humazah", arabicName: "الهمزة", verses: "1-9" },
+      { number: 105, name: "Al-Fil", arabicName: "الفيل", verses: "1-5" },
+      { number: 106, name: "Quraish", arabicName: "قريش", verses: "1-4" },
+      { number: 107, name: "Al-Ma'un", arabicName: "الماعون", verses: "1-7" },
+      { number: 108, name: "Al-Kawthar", arabicName: "الكوثر", verses: "1-3" },
+      {
+        number: 109,
+        name: "Al-Kafirun",
+        arabicName: "الكافرون",
+        verses: "1-6",
+      },
+      { number: 110, name: "An-Nasr", arabicName: "النصر", verses: "1-3" },
+      { number: 111, name: "Al-Masad", arabicName: "المسد", verses: "1-5" },
+      { number: 112, name: "Al-Ikhlas", arabicName: "الإخلاص", verses: "1-4" },
+      { number: 113, name: "Al-Falaq", arabicName: "الفلق", verses: "1-5" },
+      { number: 114, name: "An-Nas", arabicName: "الناس", verses: "1-6" },
+    ],
+  },
+];

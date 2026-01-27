@@ -1,0 +1,74 @@
+sabeel-islamic-website/
+├── public/                    # Static assets served directly
+│   ├── vite.svg
+│   └── ...                    # Other static files (favicon, images, etc.)
+├── src/
+│   ├── api/                   # API-related files (React Query)
+│   │   ├── client.ts          # Axios/fetch client configuration
+│   │   ├── endpoints.ts       # API endpoint constants
+│   │   ├── queries/           # React Query query hooks
+│   │   │   ├── usePosts.ts
+│   │   │   ├── useUsers.ts
+│   │   │   └── ...
+│   │   ├── mutations/         # React Query mutation hooks
+│   │   │   ├── useCreatePost.ts
+│   │   │   ├── useUpdateUser.ts
+│   │   │   └── ...
+│   │   └── types.ts           # API-related TypeScript types
+│   ├── assets/                # Static assets imported in code
+│   │   ├── images/
+│   │   ├── icons/
+│   │   └── fonts/
+│   ├── components/            # Reusable UI components
+│   │   ├── common/            # Shared components (buttons, inputs, etc.)
+│   │   ├── layout/            # Layout components (header, footer, sidebar)
+│   │   ├── pages/             # Page-specific components
+│   │   └── ui/                # Basic UI components (if using a design system)
+│   ├── contexts/              # React contexts for global state
+│   │   └── ThemeContext.tsx
+│   ├── hooks/                 # Custom React hooks (non-API related)
+│   │   ├── index.ts
+│   │   └── useLanguage.ts
+│   ├── i18n/                  # Internationalization configuration
+│   │   └── config.ts
+│   ├── locales/               # Translation files
+│   │   ├── ar/
+│   │   │   └── common.json
+│   │   └── en/
+│   │       └── common.json
+│   ├── pages/                 # Page components (route-level)
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   └── ...
+│   ├── router/                # Routing configuration
+│   │   └── index.tsx          # (renamed from router.tsx)
+│   ├── store/                 # State management (Zustand stores)
+│   │   ├── index.ts
+│   │   └── usePreferencesStore.ts
+│   ├── theme/                 # Theme-related files
+│   │   └── colors.ts
+│   ├── types/                 # TypeScript type definitions
+│   │   └── index.ts
+│   ├── utils/                 # Utility functions
+│   │   ├── constants.ts
+│   │   ├── helpers.ts
+│   │   └── ...
+│   ├── App.tsx                # Main app component
+│   ├── main.tsx               # App entry point
+│   ├── index.css              # Global styles
+│   └── App.css                # App-specific styles
+├── tests/                     # Test files
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package.json
+├── postcss.config.js
+├── README.md
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+└── ...                        # Other config files
