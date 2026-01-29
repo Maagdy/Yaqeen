@@ -1,5 +1,9 @@
 import type { SurahDetailsProps } from "./surah-details.types";
 import { useTranslation } from "react-i18next";
+import { useAudioStore } from "../../../stores/useAudioStore";
+import { PlayCircleFilledRounded } from "@mui/icons-material";
+import type { Ayah } from "../../../api/queries/queries.types";
+import { IconButton } from "../icon-button/icon-button";
 
 export const SurahDetails: React.FC<SurahDetailsProps> = ({
   surah,
@@ -7,6 +11,28 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   language,
 }) => {
   const { t } = useTranslation();
+  const { playFullSurah, playAyah, currentAyahNumber, isPlayingAyah } =
+    useAudioStore();
+
+  // TODO: Get full surah audio URL from API
+  const fullSurahAudioUrl =
+    "https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3"; // Will be provided by API later
+
+  const handleFullSurahClick = () => {
+    if (fullSurahAudioUrl) {
+      const surahName = language === "ar" ? surah.name : surah.englishName;
+      playFullSurah(fullSurahAudioUrl, surahName);
+    }
+  };
+
+  const handleAyahClick = (ayah: Ayah) => {
+    if (!ayah.audio) return;
+    playAyah(ayah.audio, ayah.numberInSurah);
+  };
+
+  const isCurrentlyPlaying = (ayah: Ayah) => {
+    return ayah.numberInSurah === currentAyahNumber && isPlayingAyah;
+  };
 
   return (
     <div className="mb-12">
@@ -19,6 +45,18 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
         >
           {language === "ar" ? surah.name : surah.englishName}
         </h2>
+
+        {/* Listen to Full Surah Button */}
+        {fullSurahAudioUrl && (
+          <IconButton
+            onClick={handleFullSurahClick}
+            icon={<PlayCircleFilledRounded />}
+            label={t("surah.listen_full")}
+            className="mx-auto"
+            size="md"
+          />
+        )}
+
         <p className="text-sm text-text-secondary">
           {t(
             surah.revelationType.toLowerCase() === "meccan"
@@ -29,43 +67,70 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
         </p>
       </div>
 
-      {/* Ayahs - Centered */}
+      {/* Ayahs - Centered and Clickable */}
       <div
         className={`space-y-4 text-center ${
           language === "ar" ? "font-amiri" : ""
         }`}
         dir={language === "ar" ? "rtl" : "ltr"}
       >
-        {ayahs.map((ayah) => (
-          <div key={ayah.number} className="leading-loose text-text-primary">
-            <span className="text-xl md:text-2xl">{ayah.text}</span>
-            {/* Ayah Number Badge - Traditional Quran octagonal style */}
-            <span className="inline-flex items-center justify-center relative mx-2 w-9 h-9">
-              <svg
-                className="absolute inset-0 w-full h-full"
-                viewBox="0 0 36 36"
-              >
-                {/* Octagonal shape */}
-                <path
-                  d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="text-primary/90"
-                />
-              </svg>
-              <span className="relative z-10 text-sm font-bold text-text-primary">
-                {ayah.numberInSurah}
-              </span>
-            </span>
-          </div>
-        ))}
+        {ayahs.map((ayah) => {
+          const isPlaying = isCurrentlyPlaying(ayah);
+          const isClickable = ayah.audio;
+
+          return (
+            <div
+              key={ayah.number}
+              className="leading-loose text-text-primary p-2"
+            >
+              <div>
+                <span
+                  onClick={() => isClickable && handleAyahClick(ayah)}
+                  className={`text-xl md:text-2xl ${
+                    isClickable
+                      ? "cursor-pointer rounded px-1 transition-colors"
+                      : ""
+                  } ${
+                    isClickable && isPlaying
+                      ? "bg-primary/10"
+                      : isClickable
+                        ? "hover:bg-primary/10"
+                        : ""
+                  }`}
+                  title={isClickable ? t("audio.click_to_play") : ""}
+                >
+                  {ayah.text}
+                </span>
+                {/* Ayah Number Badge - Arabic Glyph Style */}
+                <span className="inline-flex items-center justify-center relative ">
+                  <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
+                    <svg
+                      className="absolute inset-0 w-full h-full"
+                      viewBox="0 0 36 36"
+                    >
+                      {/* Octagonal shape */}
+                      <path
+                        d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        className="text-primary/90"
+                      />
+                    </svg>
+                    <span className="relative z-10 text-sm font-bold text-text-primary">
+                      {ayah.numberInSurah}
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* End of Surah Marker */}
       <div className="mt-8 flex items-center justify-center gap-3">
-        {}
-        <div className="h-px flex-1 bg-linear-to-r from-transparent via-primary/30 to-transparent" />{" "}
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-primary/30 to-transparent" />
         <span className="text-sm font-medium text-primary/70 px-4">
           {t("surah.end")}
         </span>

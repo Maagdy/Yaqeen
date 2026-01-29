@@ -25,7 +25,21 @@
     }
   },
   "surah": {
-    "end": "نهاية السورة"
+    "end": "نهاية السورة",
+    "loading": "جاري تحميل سورة {{surahName}}...",
+    "error-loading": "خطأ في تحميل سورة {{surahName}}",
+    "play": "تشغيل السورة",
+    "pause": "إيقاف مؤقت",
+    "listen_full": "استمع للسورة كاملة",
+    "error_id_required": "معرف السورة مطلوب",
+    "error_invalid_surah": "رقم السورة غير صحيح"
+  },
+  "audio": {
+    "playing": "جاري التشغيل",
+    "paused": "متوقف مؤقتاً",
+    "ayah_of": "آية {{current}} من {{total}}",
+    "click_to_play": "انقر لتشغيل هذه الآية",
+    "close": "إغلاق المشغل"
   },
   "navigation": {
     "quran": "القرآن",
@@ -51,7 +65,9 @@
   "juz": {
     "title": "الجزء {{number}}",
     "loading": "جاري تحميل الجزء {{number}}...",
-    "error_loading": "خطأ في تحميل الجزء {{number}}"
+    "error_loading": "خطأ في تحميل الجزء {{number}}",
+    "error_id_required": "معرف الجزء مطلوب",
+    "error_invalid_juz": "رقم الجزء غير صحيح"
   },
   "footer": {
     "navigate": "التنقل",

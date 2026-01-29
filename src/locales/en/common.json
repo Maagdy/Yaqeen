@@ -25,7 +25,21 @@
     }
   },
   "surah": {
-    "end": "End of Surah"
+    "end": "End of Surah",
+    "loading": "Loading Surah {{surahName}}...",
+    "error-loading": "Error loading Surah {{surahName}}",
+    "play": "Play Surah",
+    "pause": "Pause Surah",
+    "listen_full": "Listen to Full Surah",
+    "error_id_required": "Surah ID is required",
+    "error_invalid_surah": "Invalid Surah number"
+  },
+  "audio": {
+    "playing": "Playing",
+    "paused": "Paused",
+    "ayah_of": "Ayah {{current}} of {{total}}",
+    "click_to_play": "Click to play this ayah",
+    "close": "Close player"
   },
   "navigation": {
     "quran": "Quran",
@@ -51,7 +65,9 @@
   "juz": {
     "title": "Juz {{number}}",
     "loading": "Loading Juz {{number}}...",
-    "error_loading": "Error loading Juz {{number}}"
+    "error_loading": "Error loading Juz {{number}}",
+    "error_id_required": "Juz ID is required",
+    "error_invalid_juz": "Invalid Juz number"
   },
   "footer": {
     "navigate": "Navigate",

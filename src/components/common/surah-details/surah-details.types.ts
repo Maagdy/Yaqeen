@@ -1,7 +1,11 @@
-import type { Ayah, Surah } from "../../../api/queries/queries.types";
+import type {
+  Ayah,
+  Surah,
+  SurahData,
+} from "../../../api/queries/queries.types";
 
 export interface SurahDetailsProps {
-  surah: Surah;
+  surah: Surah | SurahData;
   ayahs: Ayah[];
   language: string;
 }

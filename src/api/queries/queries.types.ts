@@ -61,6 +61,9 @@ export interface Ayah {
         recommended: boolean;
         obligatory: boolean;
       };
+  // Audio fields (present when using audio editions like ar.alafasy)
+  audio?: string;
+  audioSecondary?: string[];
 }
 
 export interface JuzData {
@@ -80,6 +83,23 @@ export interface MetaResponse {
   juzs: {
     references: JuzMeta[];
   };
+}
+
+export interface SurahData {
+  number: number;
+  name: string;
+  englishName: string;
+  englishNameTranslation: string;
+  revelationType: string;
+  numberOfAyahs: number;
+  ayahs: Ayah[];
+  edition: Edition;
+}
+
+export interface SurahResponse {
+  code: number;
+  status: string;
+  data: SurahData;
 }
 
 // Utility function to map Mp3QuranSurah to Surah format
