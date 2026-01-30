@@ -7,5 +7,4 @@ import type {
 export interface SurahDetailsProps {
   surah: Surah | SurahData;
   ayahs: Ayah[];
-  language: string;
 }

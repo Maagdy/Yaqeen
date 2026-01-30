@@ -1,1 +1,1 @@
-export { GlobalAudioPlayer } from "./global-audio-player";
+export { GlobalAudioPlayer } from "./global-audio-player.tsx";

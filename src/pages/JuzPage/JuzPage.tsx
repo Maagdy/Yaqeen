@@ -67,14 +67,7 @@ const JuzPage: React.FC<JuzPageProps> = () => {
           const surah = juz.surahs[surahNumber];
           const ayahs = ayahsBySurah[surahNumber];
 
-          return (
-            <SurahDetails
-              key={surahNumber}
-              surah={surah}
-              ayahs={ayahs}
-              language={language}
-            />
-          );
+          return <SurahDetails key={surahNumber} surah={surah} ayahs={ayahs} />;
         })}
       </div>
     </div>

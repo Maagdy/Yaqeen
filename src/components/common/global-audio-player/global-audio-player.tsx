@@ -1,153 +1,254 @@
-import { useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { useAudioStore } from "../../../stores/useAudioStore";
+// src/components/global-audio-player/global-audio-player.tsx
+import React, { useRef, useState, useEffect } from "react";
 
-export const GlobalAudioPlayer = () => {
-  const { t } = useTranslation();
-  const audioRef = useRef<HTMLAudioElement>(null);
+import {
+  PlayArrow,
+  Pause,
+  SkipNext,
+  SkipPrevious,
+  Close,
+  VolumeUp,
+  VolumeOff,
+} from "@mui/icons-material";
+import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
+import { useAudio } from "../../../hooks/useAudio";
 
+export const GlobalAudioPlayer: React.FC = () => {
   const {
-    fullSurahName,
-    currentAyahNumber,
-    isPlayingFullSurah,
-    isPlayingAyah,
-    isPlayerVisible,
-    currentTime,
+    isPlaying,
+    currentAudio,
+    progress,
     duration,
-    togglePlay,
-    closePlayer,
-    setAudioElement,
-  } = useAudioStore();
+    volume,
+    toggle,
+    seek,
+    setVolume,
+    stop,
+  } = useAudio();
+  const { onNext, onPrevious, canGoNext, canGoPrevious } = useSurahNavigation();
 
-  // Register audio element with store
-  useEffect(() => {
-    if (audioRef.current) {
-      setAudioElement(audioRef.current);
-    }
-  }, [setAudioElement]);
-
-  if (!isPlayerVisible) return null;
-
-  const isPlaying = isPlayingFullSurah || isPlayingAyah;
-  const displayText = isPlayingFullSurah
-    ? fullSurahName || "Full Surah"
-    : `Ayah ${currentAyahNumber}`;
+  const progressRef = useRef<HTMLDivElement>(null);
+  const volumeRef = useRef<HTMLDivElement>(null);
+  const [isDraggingProgress, setIsDraggingProgress] = useState(false);
+  const [isDraggingVolume, setIsDraggingVolume] = useState(false);
 
   const formatTime = (time: number) => {
-    if (!time || isNaN(time)) return "0:00";
+    if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (audioRef.current) {
-      const newTime = parseFloat(e.target.value);
-      audioRef.current.currentTime = newTime;
-    }
+  const updateProgress = (clientX: number) => {
+    if (!progressRef.current) return;
+    const rect = progressRef.current.getBoundingClientRect();
+    const clickX = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = percentage * duration;
+    seek(newTime);
   };
 
+  const updateVolume = (clientX: number) => {
+    if (!volumeRef.current) return;
+    const rect = volumeRef.current.getBoundingClientRect();
+    const clickX = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+    setVolume(percentage);
+  };
+
+  // Progress handlers
+  const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDraggingProgress(true);
+    updateProgress(e.clientX);
+  };
+
+  const handleProgressTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsDraggingProgress(true);
+    updateProgress(e.touches[0].clientX);
+  };
+
+  // Volume handlers
+  const handleVolumeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDraggingVolume(true);
+    updateVolume(e.clientX);
+  };
+
+  const handleVolumeTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsDraggingVolume(true);
+    updateVolume(e.touches[0].clientX);
+  };
+
+  // Global mouse/touch move and up handlers
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDraggingProgress) {
+        updateProgress(e.clientX);
+      } else if (isDraggingVolume) {
+        updateVolume(e.clientX);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDraggingProgress) {
+        updateProgress(e.touches[0].clientX);
+      } else if (isDraggingVolume) {
+        updateVolume(e.touches[0].clientX);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDraggingProgress(false);
+      setIsDraggingVolume(false);
+    };
+
+    const handleTouchEnd = () => {
+      setIsDraggingProgress(false);
+      setIsDraggingVolume(false);
+    };
+
+    if (isDraggingProgress || isDraggingVolume) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isDraggingProgress, isDraggingVolume, duration]);
+
+  // Calculate progress percentage
+  const progressPercentage = duration > 0 ? (progress / duration) * 100 : 0;
+  const volumePercentage = volume * 100;
+
+  // Early return AFTER all hooks
+  if (!currentAudio) return null;
+
   return (
-    <>
-      {/* Hidden audio element */}
-      <audio ref={audioRef} preload="metadata" />
-
-      {/* Fixed bottom player */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-primary/20 shadow-lg animate-slide-up">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          {/* Top row: Info and close button */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🕌</span>
-              <div>
-                <p className="text-sm font-medium text-text-primary">
-                  {displayText}
-                </p>
-                <p className="text-xs text-text-secondary">
-                  {isPlaying ? t("audio.playing") : t("audio.paused")}
-                </p>
-              </div>
+    <div
+      className="fixed bottom-0 left-0 right-0 bg-background dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 z-50"
+      dir="ltr"
+    >
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
+        {/* Progress Bar */}
+        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+          <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10">
+            {formatTime(progress)}
+          </span>
+          <div
+            ref={progressRef}
+            className="flex-1 relative h-4 flex items-center cursor-pointer select-none"
+            onMouseDown={handleProgressMouseDown}
+            onTouchStart={handleProgressTouchStart}
+          >
+            {/* Background track */}
+            <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+              {/* Played portion (colored) */}
+              <div
+                className="h-full bg-primary transition-all duration-100"
+                style={{ width: `${progressPercentage}%` }}
+              />
             </div>
+            {/* Thumb (ball) */}
+            <div
+              className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
+              style={{ left: `${progressPercentage}%` }}
+            />
+          </div>
+          <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10">
+            {formatTime(duration)}
+          </span>
+        </div>
 
-            {/* Close button */}
+        {/* Controls Section */}
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          {/* Volume Control - Left Side */}
+          <div className="flex items-center gap-2 min-w-20 lg:min-w-24">
             <button
-              onClick={closePlayer}
-              className="p-2 hover:bg-primary/10 rounded-full transition-colors"
-              aria-label={t("audio.close")}
+              onClick={() => setVolume(volume > 0 ? 0 : 1)}
+              className="text-text-secondary hover:text-primary transition-colors shrink-0"
+              aria-label={volume > 0 ? "Mute" : "Unmute"}
             >
-              <svg
-                className="w-5 h-5 text-text-secondary hover:text-text-primary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              {volume > 0 ? (
+                <VolumeUp fontSize="small" />
+              ) : (
+                <VolumeOff fontSize="small" />
+              )}
             </button>
+            <div
+              ref={volumeRef}
+              className="flex-1 relative h-4 flex items-center cursor-pointer select-none"
+              onMouseDown={handleVolumeMouseDown}
+              onTouchStart={handleVolumeTouchStart}
+            >
+              {/* Background track */}
+              <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                {/* Volume level (colored) */}
+                <div
+                  className="h-full bg-primary transition-all duration-100"
+                  style={{ width: `${volumePercentage}%` }}
+                />
+              </div>
+              {/* Thumb (ball) */}
+              <div
+                className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
+                style={{ left: `${volumePercentage}%` }}
+              />
+            </div>
           </div>
 
-          {/* Bottom row: Controls and progress */}
-          <div className="flex items-center gap-4">
-            {/* Play/Pause button */}
+          {/* Playback Controls - Center */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Previous Button */}
             <button
-              onClick={togglePlay}
-              className="p-3 bg-primary-600 hover:bg-primary-700 rounded-full transition-colors"
+              onClick={onPrevious}
+              disabled={!canGoPrevious || !onPrevious}
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-text-secondary hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary"
+              aria-label="Previous Surah"
+            >
+              <SkipPrevious fontSize="small" className="sm:text-base" />
+            </button>
+
+            {/* Play/Pause Button */}
+            <button
+              onClick={toggle}
+              className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-primary hover:bg-primary/80 text-white transition-colors shadow-md"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? (
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Pause fontSize="medium" className="sm:text-3xl" />
               ) : (
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <PlayArrow fontSize="medium" className="sm:text-3xl" />
               )}
             </button>
 
-            {/* Progress bar and time */}
-            <div className="flex-1 flex items-center gap-3">
-              <span className="text-xs text-text-secondary min-w-10">
-                {formatTime(currentTime)}
-              </span>
+            {/* Next Button */}
+            <button
+              onClick={onNext}
+              disabled={!canGoNext || !onNext}
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-text-secondary hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary"
+              aria-label="Next Surah"
+            >
+              <SkipNext fontSize="small" className="sm:text-base" />
+            </button>
+          </div>
 
-              <input
-                type="range"
-                min="0"
-                max={duration || 0}
-                value={currentTime}
-                onChange={handleSeek}
-                className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary-600"
-              />
-
-              <span className="text-xs text-text-secondary min-w-10">
-                {formatTime(duration)}
-              </span>
-            </div>
+          {/* Close Button - Right Side */}
+          <div className="min-w-8 sm:min-w-10 lg:min-w-12 flex justify-end">
+            <button
+              onClick={stop}
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-text-secondary hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Close player"
+            >
+              <Close fontSize="small" />
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

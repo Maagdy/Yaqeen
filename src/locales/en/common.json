@@ -31,6 +31,7 @@
     "play": "Play Surah",
     "pause": "Pause Surah",
     "listen_full": "Listen to Full Surah",
+    "pause_full": "Pause Full Surah",
     "error_id_required": "Surah ID is required",
     "error_invalid_surah": "Invalid Surah number"
   },
@@ -39,7 +40,8 @@
     "paused": "Paused",
     "ayah_of": "Ayah {{current}} of {{total}}",
     "click_to_play": "Click to play this ayah",
-    "close": "Close player"
+    "close": "Close player",
+    "pause": "Pause"
   },
   "navigation": {
     "quran": "Quran",
