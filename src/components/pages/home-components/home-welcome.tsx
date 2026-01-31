@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { IconButton } from "../../common/icon-button";
+import { IconButton } from "../../common";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Moshaf } from "../../../assets/images";
 
@@ -8,7 +8,7 @@ export const HomeWelcome: React.FC = () => {
   const isRTL = i18n.language === "ar";
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 md:px-8 lg:px-16">
+    <div className="min-h-[calc(100dvh-10rem)] flex items-center justify-center px-4 md:px-8 lg:px-16">
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         {/* Text Section - Left Half */}
         <section

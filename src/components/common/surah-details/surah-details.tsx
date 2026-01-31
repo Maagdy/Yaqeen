@@ -7,10 +7,10 @@ import {
 } from "@mui/icons-material";
 import { IconButton } from "../icon-button/icon-button";
 import { useEffect } from "react";
-import type { Ayah } from "../../../api/queries/queries.types";
 import { useLanguage } from "../../../hooks";
 import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../hooks/useAudio";
+import type { Ayah } from "../../../api";
 
 export const SurahDetails: React.FC<SurahDetailsProps> = ({ surah, ayahs }) => {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({ surah, ayahs }) => {
     useSurahNavigation();
 
   // TODO: Get full surah audio URL from API
-  const fullSurahAudioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${surah.number}.mp3`;
+  const fullSurahAudioUrl = `https://server6.mp3quran.net/akdr/002.mp3`;
 
   // Set up navigation handlers when component mounts
   useEffect(() => {

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../../hooks/useLanguage";
-import { useTheme } from "../../hooks/useTheme";
-import { IconButton } from "../common/icon-button";
+import { useLanguage, useTheme } from "../../hooks";
+import { IconButton } from "../common";
 import { Logo } from "../../assets/images";
 import {
   MenuBook,
@@ -14,13 +13,14 @@ import {
   Close,
 } from "@mui/icons-material";
 import { Drawer, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const navigation = useNavigate();
   const handleLanguageToggle = () => {
     changeLanguage(language === "en" ? "ar" : "en");
   };
@@ -39,7 +39,12 @@ export function Header() {
     <>
       <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-background border-b border-border">
         {/* Left: Hamburger Menu (Mobile Only) + Logo/Title */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer"
+          onClick={() => {
+            navigation("/");
+          }}
+        >
           {/* Hamburger Menu Button - Show below 769px */}
           <Box
             component="div"
@@ -85,7 +90,7 @@ export function Header() {
           <IconButton
             icon={<MenuBook />}
             label={t("navigation.quran")}
-            href="/quran"
+            onClick={() => navigation("/quran")}
             variant="ghost"
             size="md"
             ariaLabel={t("navigation.quran")}
@@ -94,7 +99,7 @@ export function Header() {
           <IconButton
             icon={<Mic />}
             label={t("navigation.reciters")}
-            href="/reciters"
+            onClick={() => navigation("/reciters")}
             variant="ghost"
             size="md"
             ariaLabel={t("navigation.reciters")}
@@ -103,7 +108,7 @@ export function Header() {
           <IconButton
             icon={<Radio />}
             label={t("navigation.radio")}
-            href="/radio"
+            onClick={() => navigation("/radio")}
             variant="ghost"
             size="md"
             ariaLabel={t("navigation.radio")}
@@ -189,15 +194,17 @@ export function Header() {
           {/* Navigation Items */}
           <nav className="flex flex-col p-4 gap-2">
             {navigationItems.map((item, index) => (
-              <a
+              <button
                 key={index}
-                href={item.href}
-                className="flex items-center gap-4 p-3 rounded-lg text-text-primary hover:bg-border hover:text-primary transition-all"
-                onClick={toggleDrawer}
+                onClick={() => {
+                  navigation(item.href);
+                  toggleDrawer();
+                }}
+                className="flex items-center gap-4 p-3 rounded-lg text-text-primary hover:bg-border hover:text-primary transition-all w-full text-left"
               >
                 <span className="w-6 h-6 text-text-primary">{item.icon}</span>
                 <span className="text-base font-medium">{item.label}</span>
-              </a>
+              </button>
             ))}
           </nav>
 

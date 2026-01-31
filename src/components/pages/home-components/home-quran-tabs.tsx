@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useChaptersQuery } from "../../../api/mutations/useChaptersQuery";
-import { useJuzsQuery } from "../../../api/mutations/useJuzsQuery";
-import { SurahCard } from "../../common/surah-card/surah-card";
-import { JuzCard } from "../../common/juz-card/juz-card";
-import type { Surah, JuzMeta } from "../../../api/queries/queries.types";
+
+import { SurahCard, JuzCard } from "../../common";
 import { juzData } from "../../../utils/constants";
 import { revelationOrder } from "../../../utils/revelation-order";
-import { useNavigate } from "react-router-dom";
 import { generateRoute } from "../../../router/routes";
+import {
+  useChaptersQuery,
+  useJuzsQuery,
+  type JuzMeta,
+  type Surah,
+} from "../../../api";
 
 export default function HomeQuranTabs() {
   const { t } = useTranslation();
@@ -118,6 +121,7 @@ export default function HomeQuranTabs() {
                 {(currentData as JuzMeta[]).map((item, index) => {
                   const juzNumber = index + 1;
                   const surahsInJuz = surahsByJuz[juzNumber] || [];
+                  console.log(item);
 
                   return (
                     <JuzCard

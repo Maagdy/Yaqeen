@@ -10,7 +10,7 @@ export const API_BASE_URL = ALQURAN_BASE_URL;
 export const ENDPOINTS = {
   // --- MP3QURAN v3 ENDPOINTS (for metadata) ---
   MP3QURAN_SUWAR: (language: string = "eng") => `/suwar?language=${language}`,
-
+  RECITERS: "/reciters",
   // --- METADATA & EDITIONS ---
   META: "/meta",
   EDITIONS: "/edition",

@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "Sabeel",
-    "description": "Your path to Islamic knowledge"
+    "description": "Your path to Islamic knowledge",
+    "error-page-title": "Error 404!",
+    "not-found-message": "Page Not Found!"
   },
   "common": {
     "loading": "Loading..."
@@ -14,6 +16,7 @@
     "verses": "Verses",
     "surahs": "Surahs",
     "read_juz": "Read Juz",
+    "search_placeholder": "Search in Quran...",
     "tabs": {
       "surah": "Surah",
       "juz": "Juz",
@@ -24,10 +27,39 @@
       "madinah": "Medinan"
     }
   },
+  "reciters": {
+    "title": "Reciters",
+    "loading": "Loading Reciters...",
+    "error_loading": "Error loading Reciters",
+    "error_loading_page": "Error loading Reciters. Please try again.",
+    "error_id_required": "Reciter ID is required",
+    "no_reciters": "No reciters found",
+    "error_invalid_reciter": "Invalid Reciter number",
+    "browse": "Browse {{count}} renowned Quran reciters",
+    "recitation": "Recitation",
+    "recitations": "Recitations",
+    "primary_recitation": "Primary Recitation",
+    "search_placeholder": "Search reciters...",
+    "sort_az": "A-Z",
+    "sort_za": "Z-A",
+    "clear_search": "Clear search",
+    "showing_count": "Showing {{count}} reciters"
+  },
+  "reciter-details": {
+    "title": "Reciter Details",
+    "loading": "Loading Reciter Details...",
+    "error_loading": "Error loading Reciter Details",
+    "error_loading_page": "Error loading Reciter Details. Please try again.",
+    "error_id_required": "Reciter ID is required",
+    "error_invalid_reciter": "Invalid Reciter number",
+    "link_copied": "Link copied to clipboard!",
+    "link_copy_failed": "Failed to copy link"
+  },
   "surah": {
     "end": "End of Surah",
     "loading": "Loading Surah {{surahName}}...",
     "error-loading": "Error loading Surah {{surahName}}",
+    "error_loading_page": "Error loading Surah. Please try again.",
     "play": "Play Surah",
     "pause": "Pause Surah",
     "listen_full": "Listen to Full Surah",
@@ -62,12 +94,16 @@
   "error": {
     "title": "Oops! Something went wrong",
     "message": "We couldn't load the content you requested. Please try again.",
-    "go_home": "Go to Home"
+    "go_home": "Go to Home",
+    "go_back": "Go Back",
+    "retry": "Retry",
+    "show_details": "Show Details"
   },
   "juz": {
     "title": "Juz {{number}}",
     "loading": "Loading Juz {{number}}...",
     "error_loading": "Error loading Juz {{number}}",
+    "error_loading_page": "Error loading Juz. Please try again.",
     "error_id_required": "Juz ID is required",
     "error_invalid_juz": "Invalid Juz number"
   },

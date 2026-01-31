@@ -3,10 +3,12 @@ import { useLanguage } from "../../../hooks/useLanguage";
 import { formatNumber } from "../../../utils/numbers";
 import { SurahCard } from "../surah-card/surah-card";
 import type { JuzCardProps } from "./juz-card.types";
+import { useNavigate } from "react-router-dom";
 
 export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
+  const navigation = useNavigate();
 
   return (
     <div className="bg-surface border border-transparent rounded-xl overflow-hidden p-4 break-inside-avoid mb-4">
@@ -27,7 +29,11 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
       {/* Surah Cards */}
       <div className="space-y-3">
         {surahs.map((chapter) => (
-          <SurahCard key={chapter.number} chapter={chapter} />
+          <SurahCard
+            key={chapter.number}
+            chapter={chapter}
+            onClick={() => navigation(`/juz/${juzNumber}`)}
+          />
         ))}
       </div>
     </div>

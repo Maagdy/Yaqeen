@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../../hooks/useLanguage";
-import { useTheme } from "../../hooks/useTheme";
+import { useLanguage, useTheme } from "../../hooks";
 import {
   navigationLinks,
   networkLinks,
@@ -36,12 +36,12 @@ export function Footer() {
       <div className="lg:flex justify-between w-[90%] max-w-7xl">
         {/* Main content */}
         <div className="mb-8 lg:mb-0 flex flex-col lg:max-w-md">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="text-2xl w-fit font-bold mb-3 text-primary hover:opacity-80 transition-opacity"
           >
             {t("app.title")}
-          </a>
+          </Link>
           <h2 className="text-lg mb-3 font-semibold text-text-primary">
             {t("footer.subtitle")}
           </h2>
@@ -63,12 +63,12 @@ export function Footer() {
               <ul className="space-y-3">
                 {nav.array.map((link) => (
                   <li key={link.text}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.href}
                       className="text-text-secondary hover:text-primary transition-colors text-sm"
                     >
                       {link.text}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

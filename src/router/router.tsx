@@ -1,32 +1,25 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import { HomePage } from "../pages/HomePage";
-import SurahPage from "../pages/SurahPage/SurahPage";
 import { ROUTES } from "./routes";
+import SurahPage from "../pages/SurahPage/SurahPage";
 import JuzPage from "../pages/JuzPage/JuzPage";
-import { juzPageLoader } from "../pages/JuzPage/JuzPage.loader";
-import { surahPageLoader } from "../pages/SurahPage/SurahPage.loader";
-import { RouteError } from "../components/common/route-error/route-error";
+import RecitersPage from "../pages/RecitersPage/RecitersPage";
+import { AppErrorBoundary } from "../pages/AppErrorBoundary/AppErrorBoundary";
+import ReciterDetailsPage from "../pages/ReciterDetailsPage/ReciterDetailsPage";
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
     element: <App />,
+    errorElement: <AppErrorBoundary />, // ✅ This wraps errors with header/footer
     children: [
       { index: true, element: <HomePage /> },
-      {
-        path: ROUTES.SURAH,
-        element: <SurahPage />,
-        loader: surahPageLoader,
-        errorElement: <RouteError />,
-      },
-      {
-        path: ROUTES.JUZ,
-        element: <JuzPage />,
-        loader: juzPageLoader,
-        errorElement: <RouteError />,
-      },
+      { path: ROUTES.SURAH, element: <SurahPage /> },
+      { path: ROUTES.JUZ, element: <JuzPage /> },
       { path: ROUTES.ABOUT, element: <div className="bg-red-400">About</div> },
+      { path: ROUTES.RECITERS, element: <RecitersPage /> },
+      { path: ROUTES.RECITER_DETAILS, element: <ReciterDetailsPage /> },
     ],
   },
 ]);

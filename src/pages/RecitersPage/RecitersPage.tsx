@@ -1,0 +1,109 @@
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../hooks";
+import { useReciters } from "../../api";
+import { useMemo, useState } from "react";
+import {
+  ReciterControls,
+  ReciterResultsCount,
+  RecitersGrid,
+} from "../../components/pages";
+import ErrorPage from "../ErrorPage/ErrorPage";
+import { Loading } from "../../components/ui";
+import type { RecitersPageProps } from "./RecitersPage.types";
+import { useNavigate } from "react-router-dom";
+import { generateRoute } from "../../router/routes";
+
+const RecitersPage: React.FC<RecitersPageProps> = () => {
+  const { language } = useLanguage();
+  const { data: reciters, isLoading, error } = useReciters({ language });
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortAscending, setSortAscending] = useState(true);
+
+  const handleReciterClick = (reciterId: number) => {
+    navigate(generateRoute.reciterDetails(reciterId));
+  };
+
+  // Normalize Arabic text to ignore letter variations
+  const normalizeArabic = (text: string): string => {
+    return text
+      .replace(/[أإآ]/g, "ا") // أ إ آ -> ا
+      .replace(/ى/g, "ي") // ى -> ي
+      .replace(/ة/g, "ه") // ة -> ه
+      .replace(/[ًٌٍَُِّْـ]/g, ""); // Remove diacritics
+  };
+
+  // Filter and sort reciters
+  const filteredAndSortedReciters = useMemo(() => {
+    if (!reciters) return [];
+
+    // Normalize search query for Arabic
+    const normalizedQuery =
+      language === "ar"
+        ? normalizeArabic(searchQuery.toLowerCase())
+        : searchQuery.toLowerCase();
+
+    // Filter by search query
+    const filtered = reciters.filter((reciter) => {
+      const normalizedName =
+        language === "ar"
+          ? normalizeArabic(reciter.name.toLowerCase())
+          : reciter.name.toLowerCase();
+      return normalizedName.includes(normalizedQuery);
+    });
+
+    // Sort alphabetically based on language
+    filtered.sort((a, b) => {
+      const nameA = a.name;
+      const nameB = b.name;
+
+      // Use localeCompare with proper locale for better sorting
+      const compareResult = nameA.localeCompare(
+        nameB,
+        language === "ar" ? "ar" : "en",
+        {
+          sensitivity: "base",
+        },
+      );
+
+      return sortAscending ? compareResult : -compareResult;
+    });
+
+    return filtered;
+  }, [reciters, searchQuery, sortAscending, language]);
+
+  if (isLoading) {
+    return <Loading size="lg" message={t("reciters.loading")} />;
+  }
+
+  if (error) {
+    return <ErrorPage message={t("reciters.error_loading")} />;
+  }
+
+  if (!reciters || reciters.length === 0) {
+    return <ErrorPage message={t("reciters.no_reciters")} />;
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <ReciterControls
+        totalCount={reciters.length}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearchClear={() => setSearchQuery("")}
+        sortAscending={sortAscending}
+        onSortToggle={() => setSortAscending(!sortAscending)}
+      />
+
+      <ReciterResultsCount count={filteredAndSortedReciters.length} />
+
+      <RecitersGrid
+        reciters={filteredAndSortedReciters}
+        onReciterClick={handleReciterClick}
+      />
+    </div>
+  );
+};
+
+export default RecitersPage;

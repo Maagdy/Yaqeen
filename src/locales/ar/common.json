@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "سبيل",
-    "description": "طريقك إلى المعرفة الإسلامية"
+    "description": "طريقك إلى المعرفة الإسلامية",
+    "error-page-title": "خطأ 404!",
+    "not-found-message": "الصفحة غير موجودة"
   },
   "common": {
     "loading": "جاري التحميل ..."
@@ -14,6 +16,7 @@
     "verses": "آيات",
     "surahs": "سور",
     "read_juz": "اقرأ الجزء",
+    "search_placeholder": "ابحث في القرآن...",
     "tabs": {
       "surah": "سورة",
       "juz": "جزء",
@@ -24,10 +27,39 @@
       "madinah": "مدنية"
     }
   },
+  "reciters": {
+    "title": "القراء",
+    "loading": "جاري تحميل القراء...",
+    "error_loading": "خطأ في تحميل القراء",
+    "error_loading_page": "خطأ في تحميل القراء. يرجى المحاولة مرة أخرى.",
+    "no_reciters": "لا يوجد قراء",
+    "error_id_required": "معرف القارئ مطلوب",
+    "error_invalid_reciter": "رقم القارئ غير صحيح",
+    "browse": "تصفح {{count}} من قراء القرآن الكريم",
+    "recitation": "تلاوة",
+    "recitations": "تلاوات",
+    "primary_recitation": "التلاوة الأساسية",
+    "search_placeholder": "ابحث عن القراء...",
+    "sort_az": "أ-ي",
+    "sort_za": "ي-أ",
+    "clear_search": "مسح البحث",
+    "showing_count": "عرض {{count}} من القراء"
+  },
+  "reciter-details": {
+    "title": "تفاصيل القارئ",
+    "loading": "جاري تحميل تفاصيل القارئ...",
+    "error_loading": "خطأ في تحميل تفاصيل القارئ",
+    "error_loading_page": "خطأ في تحميل تفاصيل القارئ. يرجى المحاولة مرة أخرى.",
+    "error_id_required": "معرف القارئ مطلوب",
+    "error_invalid_reciter": "رقم القارئ غير صحيح",
+    "link_copied": "تم نسخ الرابط إلى الحافظة!",
+    "link_copy_failed": "فشل نسخ الرابط"
+  },
   "surah": {
     "end": "نهاية السورة",
     "loading": "جاري تحميل سورة {{surahName}}...",
     "error-loading": "خطأ في تحميل سورة {{surahName}}",
+    "error_loading_page": "خطأ في تحميل السورة. يرجى المحاولة مرة أخرى.",
     "play": "تشغيل السورة",
     "pause": "إيقاف مؤقت",
     "listen_full": "استمع للسورة كاملة",
@@ -60,12 +92,16 @@
   "error": {
     "title": "عذراً! حدث خطأ ما",
     "message": "لم نتمكن من تحميل المحتوى المطلوب. يرجى المحاولة مرة أخرى.",
-    "go_home": "الذهاب للصفحة الرئيسية"
+    "go_home": "الذهاب للصفحة الرئيسية",
+    "go_back": "العودة للصفحة السابقة",
+    "retry": "إعادة المحاولة",
+    "show_details": "عرض التفاصيل"
   },
   "juz": {
     "title": "الجزء {{number}}",
     "loading": "جاري تحميل الجزء {{number}}...",
     "error_loading": "خطأ في تحميل الجزء {{number}}",
+    "error_loading_page": "خطأ في تحميل الجزء. يرجى المحاولة مرة أخرى.",
     "error_id_required": "معرف الجزء مطلوب",
     "error_invalid_juz": "رقم الجزء غير صحيح"
   },
