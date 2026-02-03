@@ -1,10 +1,13 @@
 import { useTranslation } from "react-i18next";
 import type { ReciterCardProps } from "./reciter-card.types";
+import { formatNumber } from "../../../utils/numbers";
+import { useLanguage } from "../../../hooks";
 
 export const ReciterCard = ({ reciter, onClick }: ReciterCardProps) => {
   const { t } = useTranslation();
   const primaryMoshaf = reciter.moshaf[0];
   const totalRecitations = reciter.moshaf.length;
+  const { language } = useLanguage();
 
   return (
     <div
@@ -24,7 +27,7 @@ export const ReciterCard = ({ reciter, onClick }: ReciterCardProps) => {
               {reciter.name}
             </h3>
             <span className="text-text-secondary text-sm">
-              {totalRecitations}{" "}
+              {formatNumber(totalRecitations, language)}{" "}
               {totalRecitations === 1
                 ? t("reciters.recitation")
                 : t("reciters.recitations")}
@@ -41,7 +44,8 @@ export const ReciterCard = ({ reciter, onClick }: ReciterCardProps) => {
               {t("reciters.primary_recitation")}:
             </span>
             <span className="text-text-primary text-sm font-medium">
-              {primaryMoshaf.surah_total} {t("home.surahs")}
+              {formatNumber(primaryMoshaf.surah_total, language)}{" "}
+              {t("home.surahs")}
             </span>
           </div>
           <p className="text-text-secondary text-xs line-clamp-1">

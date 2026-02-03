@@ -6,10 +6,13 @@
     "not-found-message": "الصفحة غير موجودة"
   },
   "common": {
-    "loading": "جاري التحميل ..."
+    "loading": "جاري التحميل ...",
+    "close": "إغلاق"
   },
   "home": {
-    "header": "اقترب من",
+    "sabeel-header": "سبيلك",
+    "your": "إلى",
+    "to": "إلى",
     "sub-header": "الله.",
     "description": "القرآن هو النص الديني المركزي للإسلام، يؤمن المسلمون أنه وحي مباشر من الله",
     "read-quran": "اقرأ القرآن",
@@ -43,7 +46,7 @@
     "sort_az": "أ-ي",
     "sort_za": "ي-أ",
     "clear_search": "مسح البحث",
-    "showing_count": "عرض {{count}} من القراء"
+    "showing_count": "عرض {{formattedCount}} من القراء"
   },
   "reciter-details": {
     "title": "تفاصيل القارئ",
@@ -64,7 +67,26 @@
     "pause": "إيقاف مؤقت",
     "listen_full": "استمع للسورة كاملة",
     "error_id_required": "معرف السورة مطلوب",
-    "error_invalid_surah": "رقم السورة غير صحيح"
+    "error_invalid_surah": "رقم السورة غير صحيح",
+    "acheive-quran-goals": "حقق أهدافك القرآنية",
+    "quran-goals-description": "تتبّع تقدمك اليومي، أنشئ أهدافك الخاصة، وداوم على الالتزام",
+    "set-quran-goal": "أنشئ هدفك الآن",
+    "discover": "اكتشف",
+    "discover-tafsir": "التفسير",
+    "discover-tadabor": "تدبر",
+    "discover-lessons": "الدروس",
+    "read-more": "اقرأ المزيد",
+    "read-again": "اقرأ مرة أخرى",
+    "My-Quran": "قرآني",
+    "next": "التالي",
+    "previous": "السابق",
+    "ayah-details": "تفاصيل الآية",
+    "juz": "الجزء",
+    "page": "الصفحة",
+    "hizb": "الحزب",
+    "manzil": "المنزل",
+    "sajda": "السجدة",
+    "verse": "الآية"
   },
   "audio": {
     "playing": "جاري التشغيل",

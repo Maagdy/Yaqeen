@@ -6,10 +6,13 @@
     "not-found-message": "Page Not Found!"
   },
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "close": "Close"
   },
   "home": {
-    "header": "Come Close to",
+    "sabeel-header": "Sabeel",
+    "your": "Your",
+    "to": "to",
     "sub-header": "Allah.",
     "description": "Quran is the central religious text of Islam, believed by Muslims to be a revelation directly from God",
     "read-quran": "Read Quran",
@@ -43,7 +46,7 @@
     "sort_az": "A-Z",
     "sort_za": "Z-A",
     "clear_search": "Clear search",
-    "showing_count": "Showing {{count}} reciters"
+    "showing_count": "Showing {{formattedCount}} reciters"
   },
   "reciter-details": {
     "title": "Reciter Details",
@@ -65,7 +68,26 @@
     "listen_full": "Listen to Full Surah",
     "pause_full": "Pause Full Surah",
     "error_id_required": "Surah ID is required",
-    "error_invalid_surah": "Invalid Surah number"
+    "error_invalid_surah": "Invalid Surah number",
+    "acheive-quran-goals": "Acheive Your Quran Goals",
+    "quran-goals-description": "Track Streaks, Create Custom Goals, Stay Consistent",
+    "set-quran-goal": "Set a Custom Goal",
+    "discover": "Discover",
+    "discover-tafsir": "Tafsir",
+    "discover-tadabor": "Reflections",
+    "discover-lessons": "Lessons",
+    "read-more": "Read More",
+    "read-again": "Read Again",
+    "My-Quran": "My Quran",
+    "next": "Next",
+    "previous": "Previous",
+    "ayah-details": "Ayah Details",
+    "juz": "Juz",
+    "page": "Page",
+    "hizb": "Hizb",
+    "manzil": "Manzil",
+    "sajda": "Sajda",
+    "verse": "Verse"
   },
   "audio": {
     "playing": "Playing",

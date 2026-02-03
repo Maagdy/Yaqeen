@@ -4,22 +4,27 @@ import { useTranslation } from "react-i18next";
 import {
   PlayCircleFilledRounded,
   PauseCircleFilledRounded,
+  ArrowForward,
 } from "@mui/icons-material";
 import { IconButton } from "../icon-button/icon-button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "../../../hooks";
 import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../hooks/useAudio";
 import type { Ayah } from "../../../api";
 
-export const SurahDetails: React.FC<SurahDetailsProps> = ({ surah, ayahs }) => {
+export const SurahDetails: React.FC<SurahDetailsProps> = ({
+  surah,
+  ayahs,
+  onAyahClick,
+}) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const { play, pause, isPlaying, currentSurahNumber, currentAudio } =
     useAudio();
   const { setNavigationHandlers, clearNavigationHandlers } =
     useSurahNavigation();
-
+  const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
   // TODO: Get full surah audio URL from API
   const fullSurahAudioUrl = `https://server6.mp3quran.net/akdr/002.mp3`;
 
@@ -93,7 +98,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({ surah, ayahs }) => {
   const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
 
   return (
-    <div className="mb-12 pb-24">
+    <div className="mb-12 mt-2">
       {/* Surah Header - Centered */}
       <div className="mb-6 pb-4 border-b-2 border-primary/20 text-center">
         <h2
@@ -151,7 +156,22 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({ surah, ayahs }) => {
               className="leading-loose text-text-primary p-2"
             >
               <div className="flex items-center justify-center gap-2">
-                <div>
+                <div
+                  onMouseEnter={() => setHoveredAyah(ayah.number)}
+                  onMouseLeave={() => setHoveredAyah(null)}
+                  className="relative"
+                >
+                  {hoveredAyah === ayah.number && (
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
+                      <IconButton
+                        label={t("surah.ayah-details")}
+                        onClick={() => onAyahClick?.(ayah)}
+                        size="md"
+                        className="bg-primary-light text-text-primary!"
+                        icon={<ArrowForward fontSize="small" />}
+                      />
+                    </div>
+                  )}
                   <span
                     onClick={() => handleAyahClick(ayah)}
                     className={`text-xl md:text-2xl ${language === "ar" ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${

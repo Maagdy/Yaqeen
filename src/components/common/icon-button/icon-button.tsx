@@ -13,12 +13,12 @@ export function IconButton({
   className = "",
 }: IconButtonProps) {
   const baseClasses =
-    "flex items-center gap-2 rounded-lg transition-all font-medium justify-center";
+    "flex cursor-pointer items-center gap-2 rounded-lg transition-all font-medium justify-center";
 
   const variantClasses = {
     default: "bg-background text-text-primary hover:text-primary",
     primary: "bg-primary text-white hover:opacity-90",
-    ghost: "text-text-primary hover:text-primary",
+    ghost: "bg-surface text-text-primary hover:text-primary",
   };
 
   const sizeClasses = {
@@ -38,7 +38,11 @@ export function IconButton({
   const content = (
     <>
       {iconPosition === "left" && (
-        <span className={iconSizeClasses[size]}>{icon}</span>
+        <span
+          className={`${iconSizeClasses[size]} flex items-center justify-center shrink-0`}
+        >
+          {icon}
+        </span>
       )}
       {label && (
         <span className={hideLabelOnMobile ? "hidden md:inline" : ""}>

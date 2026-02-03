@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage, useTheme } from "../../hooks";
 import { IconButton } from "../common";
@@ -13,14 +13,17 @@ import {
   Close,
 } from "@mui/icons-material";
 import { Drawer, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { language, changeLanguage } = useLanguage();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const path = useLocation().pathname;
   const navigation = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const handleLanguageToggle = () => {
     changeLanguage(language === "en" ? "ar" : "en");
   };
@@ -35,9 +38,31 @@ export function Header() {
     { icon: <Radio />, label: t("navigation.radio"), href: "/radio" },
   ];
 
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== "undefined") {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    window.addEventListener("scroll", controlNavbar);
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+    };
+  }, [lastScrollY]);
+
   return (
     <>
-      <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-background border-b border-border">
+      <header
+        className={`flex sticky top-0 z-1000 items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-2 bg-background border-b border-border transition-transform duration-300 ${
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         {/* Left: Hamburger Menu (Mobile Only) + Logo/Title */}
         <div
           className="flex items-center gap-2 sm:gap-3 cursor-pointer"
@@ -59,7 +84,7 @@ export function Header() {
               onClick={toggleDrawer}
               ariaLabel="Open menu"
               icon={<MenuIcon className="w-7 h-7 text-text-primary" />}
-              variant="ghost"
+              variant="default"
               label=""
               className="p-1"
             />
@@ -91,17 +116,19 @@ export function Header() {
             icon={<MenuBook />}
             label={t("navigation.quran")}
             onClick={() => navigation("/quran")}
-            variant="ghost"
+            variant="default"
             size="md"
+            className={`${path === "/quran" ? "text-primary!" : ""}`}
             ariaLabel={t("navigation.quran")}
           />
 
           <IconButton
-            icon={<Mic />}
+            icon={<Mic className="mt-1" />}
             label={t("navigation.reciters")}
             onClick={() => navigation("/reciters")}
-            variant="ghost"
+            variant="default"
             size="md"
+            className={`${path === "/reciters" ? "text-primary!" : ""}`}
             ariaLabel={t("navigation.reciters")}
           />
 
@@ -109,8 +136,9 @@ export function Header() {
             icon={<Radio />}
             label={t("navigation.radio")}
             onClick={() => navigation("/radio")}
-            variant="ghost"
+            variant="default"
             size="md"
+            className={`${path === "/radio" ? "text-primary!" : ""}`}
             ariaLabel={t("navigation.radio")}
           />
         </Box>
@@ -185,7 +213,7 @@ export function Header() {
             <IconButton
               onClick={toggleDrawer}
               icon={<Close className="text-text-primary" />}
-              variant="ghost"
+              variant="default"
               label=""
               className="p-1 text-text-primary"
             />

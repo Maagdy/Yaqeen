@@ -17,7 +17,9 @@ export const HomeWelcome: React.FC = () => {
         >
           <div className="flex flex-col gap-4">
             <h1 className="text-text-primary text-4xl md:text-5xl lg:text-7xl font-bold">
-              {t("home.header")}
+              {!isRTL && t("home.your")}{" "}
+              <span className="text-primary">{t("home.sabeel-header")} </span>
+              {t("home.to")}
             </h1>
             <h1 className="text-primary text-4xl md:text-5xl lg:text-7xl font-bold">
               {t("home.sub-header")}

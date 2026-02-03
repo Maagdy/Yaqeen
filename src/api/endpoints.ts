@@ -48,6 +48,21 @@ export const ENDPOINTS = {
   AYAH_MANY_EDITIONS: (reference: number | string, editions: string[]) =>
     `/ayah/${reference}/editions/${editions.join(",")}`,
 
+  // --- MUSHAFS ---
+  MUSHAFS: "https://api.quranpedia.net/v1/mushafs",
+  SINGLE_MUSHAF: "https://api.quranpedia.net/v1/mushafs/{mushafId}",
+
+  // ---TAFSIR ---
+  ALL_TAFSIR_BOOKS: "http://api.quran-tafseer.com/tafseer",
+
+  FULL_SURAH_TAFSIR:
+    "https://www.mp3quran.net/api/v3/tafsir?tafsir=1&sura=1&language=ar",
+
+  // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
+  ONE_AYAH_TAFSIR: "http://api.quran-tafseer.com/tafseer/1/1/1",
+  // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number_from}/{ayah_number_to}
+  AYAH_RANGE_TAFSIR: "http://api.quran-tafseer.com/tafseer/1/1/1/6",
+
   // --- SEARCH ---
   SEARCH: (
     keyword: string,

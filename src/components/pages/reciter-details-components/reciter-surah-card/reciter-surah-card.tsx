@@ -3,6 +3,8 @@ import PauseIcon from "@mui/icons-material/Pause";
 import DownloadIcon from "@mui/icons-material/Download";
 import LinkIcon from "@mui/icons-material/Link";
 import type { ReciterSurahCardProps } from "./reciter-surah-card.types";
+import { formatNumber } from "../../../../utils/numbers";
+import { useLanguage } from "../../../../hooks";
 
 export const ReciterSurahCard = ({
   number,
@@ -13,6 +15,7 @@ export const ReciterSurahCard = ({
   onDownload,
   onCopyLink,
 }: ReciterSurahCardProps) => {
+  const { language } = useLanguage();
   return (
     <div className="group relative flex items-center justify-between p-4 h-24 bg-background border border-border rounded-xl transition-all duration-300 hover:border-primary hover:shadow-md">
       {/* LEFT */}
@@ -36,7 +39,7 @@ export const ReciterSurahCard = ({
         {/* Surah Info */}
         <div className="flex flex-col gap-1 min-w-0">
           <h3 className="font-bold text-text-primary text-base sm:text-lg truncate group-hover:text-primary transition-colors duration-300">
-            {number}. {name}
+            {formatNumber(number, language)}. {name}
           </h3>
 
           {arabicName && (
