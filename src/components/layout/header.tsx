@@ -18,7 +18,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-  const { language, changeLanguage } = useLanguage();
+  const { language, changeLanguage, isRtl } = useLanguage();
   const path = useLocation().pathname;
   const navigation = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -27,7 +27,6 @@ export function Header() {
   const handleLanguageToggle = () => {
     changeLanguage(language === "en" ? "ar" : "en");
   };
-  const isRtl = language === "ar";
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };

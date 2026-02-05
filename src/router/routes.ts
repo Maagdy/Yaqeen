@@ -5,6 +5,9 @@ export const ROUTES = {
   JUZ: "/juz/:id",
   RECITERS: "/reciters",
   RECITER_DETAILS: "/reciters/:reciterId",
+  QURAN: "/quran",
+  MUSHAF_DETAILS: "/quran/:mushafId",
+  MUSHAF_SURAH: "/quran/:mushafId/surah/:surahId",
 } as const;
 
 export const generateRoute = {
@@ -14,4 +17,9 @@ export const generateRoute = {
 
   reciterDetails: (reciterId: number | string): string =>
     `/reciters/${reciterId}`,
+
+  mushafDetails: (mushafId: number | string): string => `/quran/${mushafId}`,
+
+  mushafSurah: (mushafId: number | string, surahId: number | string): string =>
+    `/quran/${mushafId}/surah/${surahId}`,
 } as const;

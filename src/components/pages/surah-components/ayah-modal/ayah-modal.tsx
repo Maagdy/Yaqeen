@@ -1,136 +1,189 @@
-import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Box,
-  Divider,
-  Stack,
-  Chip,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+import React, { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { IconButton } from "../../../common";
+import { IconButton, MushafCard } from "../../../common";
 import { useLanguage } from "../../../../hooks";
 import type { AyahModalProps } from "./ayah-modal.types";
 import { formatNumber } from "../../../../utils/numbers";
+import { useAyahTafsir, useTafsirBooks } from "../../../../api/domains/tafsir";
+import {
+  Loading,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Badge,
+  Separator,
+} from "../../../ui";
+import ErrorPage from "../../../../pages/ErrorPage/ErrorPage";
 
 export const AyahModal: React.FC<AyahModalProps> = ({
   open,
   onClose,
   ayah,
   surah,
+  onAyahChange,
 }) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
+  const { language, isRtl } = useLanguage();
+  const [currentTafsirBook, setCurrentTafsirBook] = useState<number>(1);
 
-  if (!ayah) return null;
+  const {
+    data: tafsirBooks,
+    isPending: tafsirBooksLoading,
+    isError: tafsirBooksError,
+  } = useTafsirBooks();
+
+  const {
+    data: tafsir,
+    isPending: ayahTafsirLoading,
+    isError: ayahTafsirError,
+  } = useAyahTafsir(currentTafsirBook, surah.number, ayah?.numberInSurah || 0);
+
+  if (!ayah || !surah) return null;
+
+  const currentAyahIndex = surah.ayahs.findIndex(
+    (a) => a.numberInSurah === ayah.numberInSurah,
+  );
+
+  const handleNext = () => {
+    if (currentAyahIndex < surah.ayahs.length - 1) {
+      onAyahChange(surah.ayahs[currentAyahIndex + 1]);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentAyahIndex > 0) {
+      onAyahChange(surah.ayahs[currentAyahIndex - 1]);
+    }
+  };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-      slotProps={{
-        paper: {
-          sx: {
-            borderRadius: 4,
-            bgcolor: "background.paper",
-            backgroundImage: "none",
-          },
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          pb: 1,
-        }}
-      >
-        <Typography variant="h6" component="span" className="font-bold">
-          {t("surah.ayah-details")}
-        </Typography>
-        <IconButton
-          icon={<Close />}
-          onClick={onClose}
-          label={t("common.close")}
-          size="sm"
-          className="bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
-        />
-      </DialogTitle>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-background border-primary/10">
+        <DialogHeader className="flex flex-row justify-between items-center pb-1">
+          <DialogTitle className="text-xl font-bold">
+            {t("surah.ayah-details")}
+          </DialogTitle>
+        </DialogHeader>
 
-      <DialogContent dividers>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-6">
           {/* Surah Info Header */}
-          <Box className="bg-primary/5 rounded-2xl p-6 text-center border border-primary/10">
-            <Typography
-              variant="h3"
-              className={`font-bold mb-2 text-primary ${language === "ar" ? "font-amiri" : ""}`}
-            >
-              {language === "ar" ? surah.name : surah.englishName}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              className="mb-4"
-            >
-              {language === "ar" ? surah.englishName : surah.name} •{" "}
-              {surah.englishNameTranslation}
-            </Typography>
+          <div className="flex flex-row justify-center items-center gap-4">
+            <IconButton
+              icon={<ChevronRight className="w-4 h-4" />}
+              onClick={handleNext}
+              label={t("surah.next")}
+              size="md"
+              className="bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
+              disabled={currentAyahIndex === surah.ayahs.length - 1}
+            />
 
-            <Stack direction="row" spacing={2} justifyContent="center">
-              <Chip
-                label={t(
+            <h3 className="text-xl font-bold text-primary">
+              {surah.number}:{ayah.numberInSurah}
+            </h3>
+
+            <IconButton
+              icon={<ChevronLeft className="w-4 h-4" />}
+              onClick={handlePrevious}
+              iconPosition="right"
+              label={t("surah.previous")}
+              size="md"
+              className="bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
+              disabled={currentAyahIndex === 0}
+            />
+          </div>
+
+          <div className="bg-primary/5 rounded-2xl p-6 text-center border border-primary/10">
+            <h2
+              className={`text-4xl font-bold mb-2 text-primary ${isRtl ? "font-amiri" : ""}`}
+            >
+              {isRtl ? surah.name : surah.englishName}
+            </h2>
+            <p className="text-base text-muted-foreground mb-4">
+              {isRtl ? surah.englishName : surah.name} •{" "}
+              {surah.englishNameTranslation}
+            </p>
+
+            <div className="flex flex-row gap-2 justify-center">
+              <Badge variant="outline" className="font-medium">
+                {t(
                   surah.revelationType.toLowerCase() === "meccan"
                     ? "home.revelation_place.makkah"
                     : "home.revelation_place.madinah",
                 )}
-                size="small"
-                variant="outlined"
-                color="primary"
-                className="font-medium"
-              />
-              <Chip
-                label={`${formatNumber(surah.numberOfAyahs, language)} ${t("home.verses")}`}
-                size="small"
-                variant="outlined"
-                color="primary"
-                className="font-medium"
-              />
-            </Stack>
-          </Box>
+              </Badge>
+              <Badge variant="outline" className="font-medium">
+                {`${formatNumber(surah.numberOfAyahs, language)} ${t("home.verses")}`}
+              </Badge>
+            </div>
+          </div>
 
-          <Divider>
-            <Chip
-              label={
-                t("surah.verse") +
+          <div className="relative flex items-center">
+            <Separator className="flex-1" />
+            <Badge variant="outline" className="mx-4">
+              {t("surah.verse") +
                 " " +
-                formatNumber(ayah.numberInSurah, language)
-              }
-              size="small"
-            />
-          </Divider>
+                formatNumber(ayah.numberInSurah, language)}
+            </Badge>
+            <Separator className="flex-1" />
+          </div>
 
           {/* Ayah Text */}
-          <Box className="text-center py-2">
-            <Typography
-              variant="h4"
-              className="font-amiri leading-loose text-primary"
-              sx={{ lineHeight: 2.5, fontSize: { xs: "1.5rem", md: "2.2rem" } }}
+          <div className="text-center py-2">
+            <p
+              className="font-amiri flex justify-start px-2 leading-loose text-primary text-2xl md:text-4xl"
+              style={{ lineHeight: 2.5 }}
               dir="rtl"
             >
               {ayah.text}
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
-          <Divider />
+          {tafsirBooks && tafsirBooks.length > 1 && (
+            <div className="flex flex-row flex-wrap gap-2 mb-2">
+              {tafsirBooks.map((book) => (
+                <MushafCard
+                  key={book.id}
+                  name={book.name}
+                  active={currentTafsirBook === book.id}
+                  onClick={() => setCurrentTafsirBook(book.id)}
+                />
+              ))}
+            </div>
+          )}
+
+          {ayahTafsirLoading || tafsirBooksLoading ? (
+            <div className="py-8 flex justify-center">
+              <Loading message={t("surah.loading_tafsir")} size="sm" />
+            </div>
+          ) : ayahTafsirError || tafsirBooksError ? (
+            <div className="py-4">
+              <ErrorPage
+                error={ayahTafsirError || tafsirBooksError}
+                message={
+                  ayahTafsirError
+                    ? t("surah.error_loading_tafsir")
+                    : t("surah.error_loading_tafsir_books")
+                }
+              />
+            </div>
+          ) : (
+            tafsir && (
+              <div>
+                <div className="flex flex-col items-start mb-2">
+                  <h3 className="text-lg font-bold mb-2">
+                    {t("surah.tafsir")}
+                  </h3>
+
+                  <p className="leading-relaxed text-base">{tafsir.text}</p>
+                </div>
+              </div>
+            )
+          )}
 
           {/* Details Grid */}
-          <Box className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <DetailItem
               label={t("surah.juz")}
               value={formatNumber(ayah.juz, language)}
@@ -147,20 +200,17 @@ export const AyahModal: React.FC<AyahModalProps> = ({
               label={t("surah.manzil")}
               value={formatNumber(ayah.manzil, language)}
             />
-          </Box>
+          </div>
 
           {/* Sajda Info if applicable */}
           {ayah.sajda && (
-            <Box className="flex justify-center">
-              <Chip
-                label={t("surah.sajda")}
-                color="primary"
-                variant="outlined"
-                className="font-bold"
-              />
-            </Box>
+            <div className="flex justify-center">
+              <Badge variant="outline" className="font-bold">
+                {t("surah.sajda")}
+              </Badge>
+            </div>
           )}
-        </Stack>
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -173,19 +223,10 @@ const DetailItem = ({
   label: string;
   value: number | string;
 }) => (
-  <Box className="p-3 bg-primary/5 rounded-xl border border-primary/10 hover:bg-primary/10 transition-colors">
-    <Typography
-      variant="caption"
-      color="text.secondary"
-      display="block"
-      mb={0.5}
-    >
-      {label}
-    </Typography>
-    <Typography variant="h6" className="font-bold text-primary">
-      {value}
-    </Typography>
-  </Box>
+  <div className="p-3 bg-primary/5 rounded-xl border border-primary/10 hover:bg-primary/10 transition-colors">
+    <span className="text-xs text-muted-foreground block mb-1">{label}</span>
+    <p className="text-lg font-bold text-primary">{value}</p>
+  </div>
 );
 
 export default AyahModal;

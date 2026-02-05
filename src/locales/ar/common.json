@@ -7,7 +7,8 @@
   },
   "common": {
     "loading": "جاري التحميل ...",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "surah": "سورة"
   },
   "home": {
     "sabeel-header": "سبيلك",
@@ -81,12 +82,21 @@
     "next": "التالي",
     "previous": "السابق",
     "ayah-details": "تفاصيل الآية",
+    "tafsir": "التفسير",
+    "tafsir_books": "كتب التفسير",
+    "loading_tafsir": "جاري تحميل التفسير...",
+    "error_loading_tafsir": "حدث خطأ أثناء تحميل التفسير. حاول مرة أخرى.",
+    "loading_tafsir_books": "جاري تحميل كتب التفسير...",
+    "error_loading_tafsir_books": "حدث خطأ أثناء تحميل كتب التفسير.",
+    "no_tafsir": "لا يوجد تفسير لهذه الآية.",
     "juz": "الجزء",
     "page": "الصفحة",
     "hizb": "الحزب",
     "manzil": "المنزل",
     "sajda": "السجدة",
-    "verse": "الآية"
+    "verse": "الآية",
+    "your-goals": "أهدافك",
+    "start-your-journy": "ابدأ رحلتك"
   },
   "audio": {
     "playing": "جاري التشغيل",
@@ -137,5 +147,36 @@
     "privacy": "الخصوصية",
     "terms": "الشروط والأحكام",
     "copyright": "© {{year}} سبيل.كوم. جميع الحقوق محفوظة"
+  },
+  "quran": {
+    "title": "مصاحف القرآن",
+    "subtitle": "استكشف القراءات والأنماط المختلفة للقرآن",
+    "rawi": "الراوي",
+    "qiraa": "القراءة",
+    "qiraa-school": "مدرسة القراءة",
+    "view_details": "عرض التفاصيل",
+    "loading": "جاري تحميل القرآن...",
+    "error_loading": "خطأ في تحميل القرآن",
+    "error_loading_page": "خطأ في تحميل القرآن. يرجى المحاولة مرة أخرى.",
+    "error_id_required": "معرف القرآن مطلوب",
+    "error_invalid_quran": "رقم القرآن غير صحيح",
+    "no_mushafs": "لا توجد مصاحف متاحة"
+  },
+  "mushaf-details": {
+    "loading": "جاري تحميل تفاصيل المصحف...",
+    "error_loading": "خطأ في تحميل تفاصيل المصحف",
+    "error_loading_page": "خطأ في تحميل تفاصيل المصحف. يرجى المحاولة مرة أخرى.",
+    "error_id_required": "معرف المصحف مطلوب",
+    "error_invalid_mushaf": "رقم المصحف غير صحيح",
+    "narrator": "الراوي",
+    "qiraa": "القراءة",
+    "surahs": "السور",
+    "of": "من",
+    "ayahs": "آيات",
+    "loading_surahs": "جاري تحميل السور...",
+    "error_loading_surahs": "خطأ في تحميل السور. يرجى المحاولة مرة أخرى.",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "الصفحة"
   }
 }

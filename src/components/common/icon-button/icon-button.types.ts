@@ -11,4 +11,5 @@ export interface IconButtonProps {
   ariaLabel?: string;
   hideLabelOnMobile?: boolean;
   className?: string;
+  disabled?: boolean;
 }

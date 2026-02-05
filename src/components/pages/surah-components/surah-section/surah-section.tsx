@@ -14,9 +14,11 @@ const SurahSection: React.FC<SurahSectionProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between gap-4 p-4 sm:p-6 border-b border-border/50">
         <div className="flex flex-col gap-1">
-          <h2 className="font-bold text-text-primary text-lg sm:text-xl leading-tight">
-            {title}
-          </h2>
+          {title && (
+            <h2 className="font-bold text-text-primary text-lg sm:text-xl leading-tight">
+              {title}
+            </h2>
+          )}
 
           {description && (
             <p className="text-text-secondary text-xs sm:text-sm leading-relaxed max-w-xl">

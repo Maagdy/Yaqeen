@@ -5,6 +5,8 @@ import {
   PlayCircleFilledRounded,
   PauseCircleFilledRounded,
   ArrowForward,
+  ArrowBack,
+  BookmarkAdd,
 } from "@mui/icons-material";
 import { IconButton } from "../icon-button/icon-button";
 import { useEffect, useState } from "react";
@@ -12,6 +14,7 @@ import { useLanguage } from "../../../hooks";
 import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../hooks/useAudio";
 import type { Ayah } from "../../../api";
+import { formatNumber } from "@/utils/numbers";
 
 export const SurahDetails: React.FC<SurahDetailsProps> = ({
   surah,
@@ -19,7 +22,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   onAyahClick,
 }) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
+  const { isRtl, language } = useLanguage();
   const { play, pause, isPlaying, currentSurahNumber, currentAudio } =
     useAudio();
   const { setNavigationHandlers, clearNavigationHandlers } =
@@ -103,10 +106,19 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
       <div className="mb-6 pb-4 border-b-2 border-primary/20 text-center">
         <h2
           className={`text-2xl md:text-3xl font-bold text-primary mb-2 ${
-            language === "ar" ? "font-amiri" : ""
+            isRtl ? "font-amiri" : ""
           }`}
         >
-          {language === "ar" ? surah.name : surah.englishName}
+          {isRtl ? surah.name : surah.englishName}
+          <IconButton
+            icon={<BookmarkAdd fontSize="medium" />}
+            onClick={() => {
+              // TODO: Implement bookmark logic
+              console.log("Bookmark clicked");
+            }}
+            variant="default"
+            size="sm"
+          />
         </h2>
         {/* Listen to Full Surah Button */}
         {fullSurahAudioUrl && (
@@ -134,15 +146,13 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
               ? "home.revelation_place.makkah"
               : "home.revelation_place.madinah",
           )}{" "}
-          • {surah.numberOfAyahs} {t("home.verses")}
+          • {formatNumber(surah.numberOfAyahs, language)} {t("home.verses")}
         </p>
       </div>
       {/* Ayahs - Centered and Clickable */}
       <div
-        className={`space-y-4 text-center ${
-          language === "ar" ? "font-amiri" : ""
-        }`}
-        dir={language === "ar" ? "rtl" : "ltr"}
+        className={`space-y-4 text-center ${isRtl ? "font-amiri" : ""}`}
+        dir={isRtl ? "rtl" : "ltr"}
       >
         {ayahs.map((ayah) => {
           const isAyahPlaying =
@@ -167,14 +177,21 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
                         label={t("surah.ayah-details")}
                         onClick={() => onAyahClick?.(ayah)}
                         size="md"
-                        className="bg-primary-light text-text-primary!"
-                        icon={<ArrowForward fontSize="small" />}
+                        iconPosition="right"
+                        variant="primary"
+                        icon={
+                          isRtl ? (
+                            <ArrowBack fontSize="small" />
+                          ) : (
+                            <ArrowForward fontSize="small" />
+                          )
+                        }
                       />
                     </div>
                   )}
                   <span
                     onClick={() => handleAyahClick(ayah)}
-                    className={`text-xl md:text-2xl ${language === "ar" ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${
+                    className={`text-xl md:text-2xl ${isRtl ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${
                       isAyahPlaying ? "text-primary" : ""
                     }`}
                     title={t("audio.click_to_play")}
@@ -200,7 +217,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
                         />
                       </svg>
                       <span className="relative z-10 text-sm font-bold text-text-primary">
-                        {ayah.numberInSurah}
+                        {formatNumber(ayah.numberInSurah, language)}
                       </span>
                     </span>
                   </span>

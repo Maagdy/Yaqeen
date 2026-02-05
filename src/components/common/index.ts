@@ -4,3 +4,6 @@ export * from "./juz-card";
 export * from "./reciter-card";
 export * from "./surah-card";
 export * from "./surah-details";
+export * from "./mushaf-card";
+export * from "./full-mushaf-card";
+export * from "./mushaf-surah";

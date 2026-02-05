@@ -1,4 +1,4 @@
-import type { Surah } from "../../../api/queries/queries.types";
+import type { Surah } from "@/api";
 
 export interface SurahCardProps {
   chapter: Surah;

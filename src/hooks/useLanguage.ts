@@ -22,8 +22,11 @@ export function useLanguage() {
     setLanguage(lang);
   };
 
+  const isRtl = language === "ar";
+
   return {
     language,
     changeLanguage,
+    isRtl,
   };
 }

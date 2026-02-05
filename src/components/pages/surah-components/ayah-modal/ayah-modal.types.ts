@@ -1,8 +1,9 @@
-import type { Ayah, Surah } from "../../../../api";
+import type { Ayah, SurahData } from "../../../../api";
 
 export interface AyahModalProps {
   open: boolean;
   onClose: () => void;
   ayah: Ayah | null;
-  surah: Surah;
+  surah: SurahData;
+  onAyahChange: (ayah: Ayah) => void;
 }

@@ -7,7 +7,8 @@
   },
   "common": {
     "loading": "Loading...",
-    "close": "Close"
+    "close": "Close",
+    "surah": "Surah"
   },
   "home": {
     "sabeel-header": "Sabeel",
@@ -82,12 +83,21 @@
     "next": "Next",
     "previous": "Previous",
     "ayah-details": "Ayah Details",
+    "tafsir": "Tafsir",
+    "tafsir_books": "Tafsir Books",
+    "loading_tafsir": "Loading Tafsir...",
+    "error_loading_tafsir": "Error loading tafsir. Please try again.",
+    "loading_tafsir_books": "Loading tafsir books...",
+    "error_loading_tafsir_books": "Error loading tafsir books.",
+    "no_tafsir": "No tafsir available for this ayah.",
     "juz": "Juz",
     "page": "Page",
     "hizb": "Hizb",
     "manzil": "Manzil",
     "sajda": "Sajda",
-    "verse": "Verse"
+    "verse": "Verse",
+    "your-goals": "Your Goals",
+    "start-your-journy": "Start Your Journy"
   },
   "audio": {
     "playing": "Playing",
@@ -139,5 +149,36 @@
     "privacy": "Privacy",
     "terms": "Terms and Conditions",
     "copyright": "© {{year}} Sabeel.com. All Rights Reserved"
+  },
+  "quran": {
+    "title": "Quran Mushafs",
+    "subtitle": "Explore different Quran recitations and styles",
+    "rawi": "Rawi",
+    "qiraa": "Qiraa",
+    "qiraa-school": "Qiraa School",
+    "view_details": "View Details",
+    "loading": "Loading Quran...",
+    "error_loading": "Error loading Quran",
+    "error_loading_page": "Error loading Quran. Please try again.",
+    "error_id_required": "Quran ID is required",
+    "error_invalid_quran": "Invalid Quran number",
+    "no_mushafs": "No mushafs available"
+  },
+  "mushaf-details": {
+    "loading": "Loading Mushaf Details...",
+    "error_loading": "Error loading Mushaf Details",
+    "error_loading_page": "Error loading Mushaf Details. Please try again.",
+    "error_id_required": "Mushaf ID is required",
+    "error_invalid_mushaf": "Invalid Mushaf number",
+    "narrator": "Narrator",
+    "qiraa": "Qiraa",
+    "surahs": "Surahs",
+    "of": "of",
+    "ayahs": "Ayahs",
+    "loading_surahs": "Loading Surahs...",
+    "error_loading_surahs": "Error loading Surahs. Please try again.",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page"
   }
 }

@@ -49,12 +49,12 @@ const SurahPage: React.FC<SurahPageProps> = () => {
 
   const NotAuthGoalContent = () => {
     return (
-      <div className="w-full flex flex-col items-center gap-2 p-4 pb-2 max-w-sm justify-center">
+      <div className="w-full flex flex-col items-center gap-2 p-4 pb-2 justify-center">
         <div className="flex items-center justify-center gap-2 w-full">
-          <Target className="text-primary" />
-          <h3 className="text-primary-light">
+          <h3 className="text-primary-light text-lg sm:text-2xl">
             {t("surah.acheive-quran-goals")}
           </h3>
+          <Target className="text-primary" />
         </div>
         <h5 className="font-semibold tracking-tight leading-relaxed text-center mb-2">
           {t("surah.quran-goals-description")}
@@ -72,7 +72,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
 
   const DiscoverContent = () => {
     return (
-      <div className="flex gap-4 items-center justify-start w-full flex-wrap">
+      <div className="flex gap-2 items-center justify-start w-full flex-wrap">
         {discoverItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -154,11 +154,31 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           onClose={() => setAyahModalVisible(false)}
           ayah={selectedAyah}
           surah={surah}
+          onAyahChange={setSelectedAyah}
         />
       )}
-      <div className="flex justify-center w-full my-10 gap-10 px-10">
-        <SurahSection>{NotAuthGoalContent()}</SurahSection>
+      <div className="flex flex-col lg:flex-row justify-center w-full my-10 gap-10 px-10">
         <SurahSection
+          className="flex-1"
+          title={t("surah.your-goals")}
+          headerAction={
+            <IconButton
+              icon={<Target fontSize="small" className="text-primary" />}
+              label={t("surah.start-your-journy")}
+              variant="default"
+              size="md"
+              iconPosition="right"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                // navigate("/quran");
+              }}
+            />
+          }
+        >
+          {NotAuthGoalContent()}
+        </SurahSection>
+        <SurahSection
+          className="flex-1"
           title={t("surah.discover")}
           headerAction={
             <IconButton
@@ -177,6 +197,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           {DiscoverContent()}
         </SurahSection>
         <SurahSection
+          className="flex-1"
           title={t("surah.read-more")}
           headerAction={
             <IconButton

@@ -1,3 +1,4 @@
+import { MushafCard } from "../../../common";
 import type { ReciterInfoProps } from "./reciter-info.types";
 
 export const ReciterInfo: React.FC<ReciterInfoProps> = ({
@@ -20,17 +21,12 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
       {reciter?.moshaf && reciter.moshaf.length > 1 && (
         <div className="flex flex-wrap gap-3">
           {reciter.moshaf.map((m, index) => (
-            <button
+            <MushafCard
               key={m.id}
+              name={m.name}
+              active={selectedMoshafIndex === index}
               onClick={() => onMoshafSelect(index)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border cursor-pointer ${
-                selectedMoshafIndex === index
-                  ? "bg-primary text-white border-primary shadow-md"
-                  : "bg-surface text-text-secondary border-border hover:border-primary hover:text-primary"
-              }`}
-            >
-              {m.name}
-            </button>
+            />
           ))}
         </div>
       )}

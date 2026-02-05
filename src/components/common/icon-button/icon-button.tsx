@@ -11,6 +11,7 @@ export function IconButton({
   ariaLabel,
   hideLabelOnMobile = false,
   className = "",
+  disabled = false,
 }: IconButtonProps) {
   const baseClasses =
     "flex cursor-pointer items-center gap-2 rounded-lg transition-all font-medium justify-center";
@@ -33,7 +34,11 @@ export function IconButton({
     lg: "w-6 h-6",
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const disabledClasses = disabled
+    ? "opacity-50 cursor-not-allowed pointer-events-none"
+    : "";
+
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`;
 
   const content = (
     <>
@@ -68,6 +73,7 @@ export function IconButton({
       onClick={onClick}
       className={classes}
       aria-label={ariaLabel || label}
+      disabled={disabled}
     >
       {content}
     </button>

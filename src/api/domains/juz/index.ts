@@ -1,3 +1,3 @@
 export * from "./juz.queries";
 export * from "./juz.types";
-export * from "./useJuzsQuery";
+export * from "./useJuzsQueries";
