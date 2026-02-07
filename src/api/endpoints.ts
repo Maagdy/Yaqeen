@@ -49,12 +49,12 @@ export const ENDPOINTS = {
     `/ayah/${reference}/editions/${editions.join(",")}`,
 
   // --- MUSHAFS ---
-  // Note: Using CORS proxy for development. Remove in production if API adds CORS headers.
-  MUSHAFS: "https://corsproxy.io/?https://api.quranpedia.net/v1/mushafs",
+  // Note: Using local serverless proxy to bypass CORS
+  MUSHAFS: "/api/proxy?url=https://api.quranpedia.net/v1/mushafs",
   SINGLE_MUSHAF: (mushafId: number) =>
-    `https://corsproxy.io/?https://api.quranpedia.net/v1/mushafs/${mushafId}`,
+    `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}`,
   MUSHAF_SURAH: (mushafId: number, surahNumber: number) =>
-    `https://corsproxy.io/?https://api.quranpedia.net/v1/mushafs/${mushafId}/${surahNumber}`,
+    `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}/${surahNumber}`,
 
   // ---TAFSIR ---
   ALL_TAFSIR_BOOKS: "http://api.quran-tafseer.com/tafseer",
@@ -93,6 +93,10 @@ export const ENDPOINTS = {
   // --- MANZIL (7 total) ---
   MANZIL: (number: number, edition: string = "quran-uthmani") =>
     `/manzil/${number}/${edition}`,
+
+  // --- RADIO ---
+  RADIO: (language: string = "eng") =>
+    `https://www.mp3quran.net/api/v3/radios?language=${language}`,
 
   // --- RUKU (556 total) ---
   RUKUS: "/rukus", // All rukus references

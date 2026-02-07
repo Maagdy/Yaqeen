@@ -8,6 +8,7 @@ export const ROUTES = {
   QURAN: "/quran",
   MUSHAF_DETAILS: "/quran/:mushafId",
   MUSHAF_SURAH: "/quran/:mushafId/surah/:surahId",
+  RADIO: "/radio",
 } as const;
 
 export const generateRoute = {

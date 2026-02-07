@@ -7,44 +7,91 @@ import { useTranslation } from "react-i18next";
 import { useSurahQuery, type Ayah } from "../../api";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { Target } from "lucide-react";
-import { discoverItems } from "../../components/pages/surah-components/surah-utils/surah-constants";
+import { getDiscoverItems } from "../../components/pages/surah-components/surah-utils/surah-constants";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { quranSurahs } from "../../utils/constants";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MenuBook } from "@mui/icons-material";
 import { NextSurahCard } from "../../components/pages/surah-components/next-surah-card";
 import { AyahModal } from "../../components/pages/surah-components/ayah-modal";
 import SurahSection from "../../components/pages/surah-components/surah-section/surah-section";
+import { useHadithCollections, useSurahTafsir } from "@/api/domains/tafsir";
+import { TafsirCard } from "../../components/pages/surah-components/tafsir-card";
+import { useAudio } from "../../hooks";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
   const { id } = useParams<{ id: string }>();
-  const { language } = useLanguage();
+  const { language, isRtl } = useLanguage();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [ayahModalVisible, setAyahModalVisible] = useState(false);
+  const [selectedDiscoverContent, setSelectedDiscoverContent] =
+    useState<React.ReactNode | null>(null);
+  const [activeDiscoverType, setActiveDiscoverType] = useState<
+    "tafsir" | "tadabor" | "lessons" | null
+  >(null);
   const [selectedAyah, setSelectedAyah] = useState<Ayah | null>(null);
+  const discoverContentRef = useRef<HTMLDivElement>(null);
   const surahNumber = Number(id);
   const edition = language === "ar" ? "ar.alafasy" : "en.asad";
+  const { data } = useHadithCollections();
+  console.log(data);
 
   const {
     data: surah,
     isLoading,
     isError,
+    refetch: refetchSurah,
   } = useSurahQuery({
     surahNumber,
     edition,
   });
 
+  const { data: tafsirData } = useSurahTafsir(1, surahNumber, language);
+
+  const { play, toggle, currentAudio } = useAudio();
+
+  useEffect(() => {
+    return () => {
+      setSelectedDiscoverContent(null);
+      setActiveDiscoverType(null);
+    };
+  }, [id]);
+
+  // Scroll to discover content when it's set
+  useEffect(() => {
+    if (selectedDiscoverContent) {
+      setTimeout(() => {
+        discoverContentRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  }, [selectedDiscoverContent]);
+
   if (isLoading) {
+    const currentSurah = quranSurahs.find((s) => s.number === surahNumber);
+    const surahName = isRtl ? currentSurah?.arabicName : currentSurah?.name;
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loading size="lg" />
+        <Loading size="lg" message={t("surah.loading", { surahName })} />
       </div>
     );
   }
-
+  // "loading": "Loading Surah {{surahName}}...",
+  // "error-loading": "Error loading Surah {{surahName}}",
   if (isError || !surah) {
-    return <ErrorPage message={t("surah.error_loading_page")} showBackButton />;
+    return (
+      <ErrorPage
+        message={t("surah.error_loading_page", {
+          surahName: isRtl ? surah?.name : surah?.englishName,
+        })}
+        showBackButton
+        showRetryButton
+        onRetry={refetchSurah}
+      />
+    );
   }
 
   const NotAuthGoalContent = () => {
@@ -69,12 +116,76 @@ const SurahPage: React.FC<SurahPageProps> = () => {
       </div>
     );
   };
-
   const DiscoverContent = () => {
+    const discoverItems = getDiscoverItems({
+      onTafsirClick: () => {
+        // Toggle: if tafsir is already showing, hide it
+        if (activeDiscoverType === "tafsir") {
+          setSelectedDiscoverContent(null);
+          setActiveDiscoverType(null);
+        } else if (tafsirData) {
+          const surahTafsirSegments =
+            tafsirData.tafasir.soar[surahNumber.toString()];
+          setSelectedDiscoverContent(
+            <div className="space-y-4">
+              <h1 className="text-2xl font-bold mb-4">
+                {tafsirData.tafasir.name}
+              </h1>
+              {surahTafsirSegments && surahTafsirSegments.length > 0 ? (
+                <div className="space-y-3">
+                  {surahTafsirSegments.map((segment) => (
+                    <TafsirCard
+                      key={segment.id}
+                      segment={segment}
+                      isPlaying={currentAudio === segment.url}
+                      onToggle={() => {
+                        if (currentAudio === segment.url) {
+                          // If this segment is playing, toggle (pause/play)
+                          toggle();
+                        } else {
+                          // If a different segment or nothing is playing, play this one
+                          play(segment.url, surahNumber);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-text-secondary">
+                  No tafsir segments available for this surah.
+                </p>
+              )}
+            </div>,
+          );
+          setActiveDiscoverType("tafsir");
+        }
+      },
+      onTadaborClick: () => {
+        // Toggle: if tadabor is already showing, hide it
+        if (activeDiscoverType === "tadabor") {
+          setSelectedDiscoverContent(null);
+          setActiveDiscoverType(null);
+        } else {
+          setSelectedDiscoverContent(<div>tadabor</div>);
+          setActiveDiscoverType("tadabor");
+        }
+      },
+      onLessonsClick: () => {
+        // Toggle: if lessons is already showing, hide it
+        if (activeDiscoverType === "lessons") {
+          setSelectedDiscoverContent(null);
+          setActiveDiscoverType(null);
+        } else {
+          setSelectedDiscoverContent(<div>lessons</div>);
+          setActiveDiscoverType("lessons");
+        }
+      },
+    });
     return (
       <div className="flex gap-2 items-center justify-start w-full flex-wrap">
         {discoverItems.map((item) => {
           const Icon = item.icon;
+
           return (
             <IconButton
               key={item.key}
@@ -82,6 +193,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
               variant="ghost"
               size="md"
               label={t(item.labelKey) as string}
+              onClick={item.onClick}
             />
           );
         })}
@@ -215,6 +327,14 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           {PlayNextSurah()}
         </SurahSection>
       </div>
+      {selectedDiscoverContent && (
+        <div
+          ref={discoverContentRef}
+          className="max-w-4xl justify-start  mx-auto px-4 py-8"
+        >
+          {selectedDiscoverContent}
+        </div>
+      )}
     </>
   );
 };

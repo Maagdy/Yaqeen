@@ -4,7 +4,7 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Moshaf } from "../../../assets/images";
 import { useLanguage } from "../../../hooks";
 
-export const HomeWelcome: React.FC = () => {
+export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
   const { t } = useTranslation();
   const { isRtl } = useLanguage();
 
@@ -37,6 +37,7 @@ export const HomeWelcome: React.FC = () => {
               variant="primary"
               size="lg"
               iconPosition={isRtl ? "right" : "left"}
+              href={id}
               icon={isRtl ? <ArrowBack /> : <ArrowForward />}
             />
           </div>

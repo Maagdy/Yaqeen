@@ -73,7 +73,10 @@ export default function HomeQuranTabs() {
     navigate(generateRoute.surah(chapterNumber));
   };
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 mt-8 mb-16">
+    <div
+      id="quran-tabs"
+      className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 mt-8 mb-16"
+    >
       {/* Tabs Header */}
       <div className={`flex justify-start mb-8`}>
         <div className="inline-flex bg-background border border-border rounded-xl p-1 relative gap-1">

@@ -8,7 +8,8 @@
   "common": {
     "loading": "جاري التحميل ...",
     "close": "إغلاق",
-    "surah": "سورة"
+    "surah": "سورة",
+    "date": "التاريخ"
   },
   "home": {
     "sabeel-header": "سبيلك",
@@ -136,6 +137,16 @@
     "error_loading_page": "خطأ في تحميل الجزء. يرجى المحاولة مرة أخرى.",
     "error_id_required": "معرف الجزء مطلوب",
     "error_invalid_juz": "رقم الجزء غير صحيح"
+  },
+  "radio": {
+    "title": "إذاعات القرآن",
+    "subtitle": "استمع إلى تلاوات قرآنية حية على مدار 24 ساعة",
+    "station": "محطة إذاعية",
+    "loading": "جاري تحميل الإذاعات...",
+    "error": "فشل تحميل المحطات الإذاعية",
+    "browse": "تصفح {{count}} محطة إذاعية",
+    "showing_count": "عرض {{formattedCount}} محطة",
+    "live": "مباشر"
   },
   "footer": {
     "navigate": "التنقل",

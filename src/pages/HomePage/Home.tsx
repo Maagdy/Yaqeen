@@ -14,7 +14,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
         value={""}
         placeholder={t("home.search_placeholder")}
       />
-      <HomeWelcome />
+      <HomeWelcome id="quran-tabs" />
       <HomeQuranTabs />
     </>
   );

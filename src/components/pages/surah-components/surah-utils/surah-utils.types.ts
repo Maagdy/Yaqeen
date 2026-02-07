@@ -1,10 +1,11 @@
-import type { SvgIconComponent } from "@mui/icons-material";
+import * as React from "react";
 
 export type DiscoverItem = {
   key: string;
-  icon: SvgIconComponent;
+  icon: React.ComponentType;
   labelKey:
     | "surah.discover-tafsir"
     | "surah.discover-tadabor"
     | "surah.discover-lessons";
+  onClick: () => void;
 };

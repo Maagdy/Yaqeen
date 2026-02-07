@@ -8,7 +8,8 @@
   "common": {
     "loading": "Loading...",
     "close": "Close",
-    "surah": "Surah"
+    "surah": "Surah",
+    "date": "Date"
   },
   "home": {
     "sabeel-header": "Sabeel",
@@ -138,6 +139,16 @@
     "error_loading_page": "Error loading Juz. Please try again.",
     "error_id_required": "Juz ID is required",
     "error_invalid_juz": "Invalid Juz number"
+  },
+  "radio": {
+    "title": "Radio Stations",
+    "subtitle": "Listen to 24/7 live Quran recitations",
+    "station": "Radio Station",
+    "loading": "Loading Radios...",
+    "error": "Failed to load radio stations",
+    "browse": "Browse {{count}} radio stations",
+    "showing_count": "Showing {{formattedCount}} stations",
+    "live": "Live"
   },
   "footer": {
     "navigate": "Navigate",

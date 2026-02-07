@@ -4,7 +4,7 @@ import { useLanguage } from "@/hooks";
 import { quranSurahs } from "@/utils/constants";
 import { useState } from "react";
 import { formatNumber } from "@/utils/numbers";
-import { BookmarkAdd } from "@mui/icons-material";
+import { BookmarkAdd, Share } from "@mui/icons-material";
 import { IconButton } from "@/components/common";
 
 export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
@@ -22,33 +22,47 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   return (
     <div className="mb-12 mt-2">
       {/* Surah Header - Centered */}
-      <div className="mb-6 pb-4 border-b-2 border-primary/20 text-center">
-        <h2
-          className={`text-2xl md:text-3xl font-bold text-primary mb-2 ${
-            isRtl ? "font-amiri" : ""
-          }`}
-        >
-          {isRtl ? surah.name : englishName}
-          <div className="inline-block mx-2">
+      <div className="mb-6 pb-4 border-b-2 border-primary/20">
+        <div className="flex items-start justify-between">
+          {/* Empty space for alignment */}
+          <div className="w-20"></div>
+
+          {/* Surah Name and Verse Count - Centered */}
+          <div className="flex-1 text-center">
+            <h2
+              className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
+                isRtl ? "font-amiri" : ""
+              }`}
+            >
+              {isRtl ? surah.name : englishName}
+            </h2>
+            <p className="text-sm text-text-secondary">
+              {formatNumber(surah.ayahs.length, language)} {t("home.verses")}
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            <IconButton
+              icon={<Share fontSize="medium" />}
+              onClick={() => {
+                // TODO: Implement share logic
+                console.log("Share clicked");
+              }}
+              className="text-primary/70 hover:text-primary"
+              size="sm"
+            />
             <IconButton
               icon={<BookmarkAdd fontSize="medium" />}
               onClick={() => {
                 // TODO: Implement bookmark logic
                 console.log("Bookmark clicked");
               }}
-              variant="default"
               className="text-primary/70 hover:text-primary"
               size="sm"
             />
           </div>
-        </h2>
-
-        <p className="text-sm text-text-secondary">
-          {/* Defaulting to Meccan as placeholder or skipping if preferred. 
-              Since user asked to skip revelation type in previous card, 
-              we can just show verse count here. */}
-          {formatNumber(surah.ayahs.length, language)} {t("home.verses")}
-        </p>
+        </div>
       </div>
 
       {/* Ayahs - Centered */}

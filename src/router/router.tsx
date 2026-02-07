@@ -9,6 +9,7 @@ import ReciterDetailsPage from "@/pages/ReciterDetailsPage/ReciterDetailsPage";
 import QuranPage from "@/pages/QuranPage/QuranPage";
 import MushafDetailsPage from "@/pages/MushafDetailsPage/MushafDetailsPage";
 import MushafSurahPage from "@/pages/MushafSurahPage/MushafSurahPage";
+import RadioPage from "@/pages/RadioPage/RadioPage";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.QURAN, element: <QuranPage /> },
       { path: ROUTES.MUSHAF_DETAILS, element: <MushafDetailsPage /> },
       { path: ROUTES.MUSHAF_SURAH, element: <MushafSurahPage /> },
+      { path: ROUTES.RADIO, element: <RadioPage /> },
     ],
   },
 ]);

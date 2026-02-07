@@ -1,9 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import type { AyahTafsir, TafsirBook, TafsirResponse } from "./tafsir.types";
+import type {
+  AyahTafsir,
+  TafsirBook,
+  TafsirResponse,
+  HadithParams,
+  HadithResponse,
+  HadithCollection,
+} from "./tafsir.types";
 import {
   getAyahTafsir,
   getSurahTafsir,
   getTafsirBooks,
+  getHadiths,
+  getHadithCollections,
 } from "./tafsir.queries";
 
 export const useTafsirBooks = () => {
@@ -37,5 +46,22 @@ export const useAyahTafsir = (
     queryFn: () => getAyahTafsir(tafsirId, suraNumber, ayahNumber),
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     enabled: Boolean(tafsirId) && Boolean(suraNumber) && Boolean(ayahNumber),
+  });
+};
+
+export const useHadiths = (params?: HadithParams) => {
+  return useQuery<HadithResponse>({
+    queryKey: ["hadiths", params],
+    queryFn: () => getHadiths(params),
+    staleTime: 1000 * 60 * 60, // 1 hour
+    enabled: Boolean(params), // Only fetch if params are provided
+  });
+};
+
+export const useHadithCollections = (exclusions?: string[]) => {
+  return useQuery<HadithCollection[]>({
+    queryKey: ["hadith-collections", exclusions],
+    queryFn: () => getHadithCollections(exclusions),
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours - collections don't change often
   });
 };

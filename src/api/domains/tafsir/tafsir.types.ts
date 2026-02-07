@@ -36,3 +36,35 @@ export interface AyahTafsir {
   ayah_number: number;
   text: string;
 }
+
+// Hadith API Types
+export interface HadithCollectionInfo {
+  lang: string;
+  title: string;
+  shortIntro: string;
+}
+
+export interface HadithCollection {
+  name: string;
+  hasBooks: boolean;
+  hasChapters: boolean;
+  collection: HadithCollectionInfo[];
+  totalHadith: number;
+  totalAvailableHadith: number;
+}
+
+export interface HadithResponse {
+  data: HadithCollection[];
+  total: number;
+  limit: number;
+  previous: number;
+  next: number;
+}
+
+export interface HadithParams {
+  collection?: string;
+  book?: number;
+  hadithNumber?: number;
+  limit?: number;
+  page?: number;
+}

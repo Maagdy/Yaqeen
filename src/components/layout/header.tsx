@@ -58,25 +58,17 @@ export function Header() {
   return (
     <>
       <header
-        className={`flex sticky top-0 z-1000 items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-2 bg-background border-b border-border transition-transform duration-300 ${
+        className={`flex sticky top-0 z-1000 items-center justify-between  sm:px-6 lg:px-8 py-3 sm:py-2 bg-background border-b border-border transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
         {/* Left: Hamburger Menu (Mobile Only) + Logo/Title */}
-        <div
-          className="flex items-center gap-2 sm:gap-3 cursor-pointer"
-          onClick={() => {
-            navigation("/");
-          }}
-        >
-          {/* Hamburger Menu Button - Show below 769px */}
+        <div className="flex items-center gap-1">
+          {/* Hamburger Menu Button - Always Show */}
           <Box
             component="div"
             sx={{
-              display: { sm: "flex", md: "none" },
-              "@media (min-width: 769px)": {
-                display: "none",
-              },
+              display: "flex", // Always visible
             }}
           >
             <IconButton
@@ -85,26 +77,33 @@ export function Header() {
               icon={<MenuIcon className="w-7 h-7 text-text-primary" />}
               variant="default"
               label=""
-              className="p-1"
+              className="py-1"
             />
           </Box>
 
-          <img
-            src={Logo}
-            className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
-            alt="Logo"
-          />
-          <h2 className="font-bold text-primary text-lg sm:text-2xl lg:text-3xl">
-            {t("app.title")}
-          </h2>
+          <div
+            className="flex items-center gap-2 cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-[960px]:static min-[960px]:transform-none min-[960px]:translate-0 select-none"
+            onClick={() => {
+              navigation("/");
+            }}
+          >
+            <img
+              src={Logo}
+              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
+              alt="Logo"
+            />
+            <h2 className="font-bold text-primary text-2xl lg:text-3xl whitespace-nowrap leading-none pt-1">
+              {t("app.title")}
+            </h2>
+          </div>
         </div>
 
-        {/* Center: Navigation Icons - Visible from 769px and up */}
+        {/* Center: Navigation Icons - Visible from 960px (md/lg boundary) and up */}
         <Box
           component="nav"
           sx={{
             display: "none",
-            "@media (min-width: 769px)": {
+            "@media (min-width: 960px)": {
               display: "flex",
             },
             alignItems: "center",
@@ -143,15 +142,15 @@ export function Header() {
         </Box>
 
         {/* Right: Sign Up, Language & Theme Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Sign Up Button - Hidden below 769px */}
+        <div className="flex items-center sm:gap-3 z-10 relative">
+          {/* Sign Up Button - Hidden below 960px */}
           <Box
             component="button"
-            className="px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+            className="px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2  text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
             aria-label="Sign Up"
             sx={{
               display: "none",
-              "@media (min-width: 769px)": {
+              "@media (min-width: 960px)": {
                 display: "block",
               },
             }}
@@ -162,7 +161,7 @@ export function Header() {
           {/* Language Toggle */}
           <button
             onClick={handleLanguageToggle}
-            className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg bg-background text-text-primary hover:bg-border transition-all"
+            className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 text-sm font-medium rounded-lg bg-background text-text-primary hover:bg-border transition-all"
             aria-label={t("language.toggle")}
           >
             {language === "en" ? "عربي" : "EN"}
@@ -190,9 +189,7 @@ export function Header() {
         onClose={toggleDrawer}
         sx={{
           display: "block",
-          "@media (min-width: 769px)": {
-            display: "none",
-          },
+
           "& .MuiDrawer-paper": {
             width: 280,
             backgroundColor: "var(--color-background)",

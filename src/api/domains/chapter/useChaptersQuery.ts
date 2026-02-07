@@ -24,5 +24,6 @@ export const useSurahQuery = ({
     queryKey: ["surah", surahNumber, edition, offset, limit],
     queryFn: () => getSurah(surahNumber, edition, offset, limit),
     staleTime: 24 * 60 * 60 * 1000,
+    enabled: Boolean(surahNumber),
   });
 };

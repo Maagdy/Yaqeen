@@ -71,7 +71,13 @@ export const AyahModal: React.FC<AyahModalProps> = ({
           {/* Surah Info Header */}
           <div className="flex flex-row justify-center items-center gap-4">
             <IconButton
-              icon={<ChevronRight className="w-4 h-4" />}
+              icon={
+                isRtl ? (
+                  <ChevronRight className="w-4 h-4" />
+                ) : (
+                  <ChevronLeft className="w-4 h-4" />
+                )
+              }
               onClick={handleNext}
               label={t("surah.next")}
               size="md"
@@ -84,7 +90,13 @@ export const AyahModal: React.FC<AyahModalProps> = ({
             </h3>
 
             <IconButton
-              icon={<ChevronLeft className="w-4 h-4" />}
+              icon={
+                isRtl ? (
+                  <ChevronLeft className="w-4 h-4" />
+                ) : (
+                  <ChevronRight className="w-4 h-4" />
+                )
+              }
               onClick={handlePrevious}
               iconPosition="right"
               label={t("surah.previous")}
@@ -134,7 +146,6 @@ export const AyahModal: React.FC<AyahModalProps> = ({
             <p
               className="font-amiri flex justify-start px-2 leading-loose text-primary text-2xl md:text-4xl"
               style={{ lineHeight: 2.5 }}
-              dir="rtl"
             >
               {ayah.text}
             </p>

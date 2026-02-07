@@ -1,5 +1,5 @@
 // src/components/global-audio-player/global-audio-player.tsx
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import {
   PlayArrow,
@@ -12,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../hooks/useAudio";
+import { useTranslation } from "react-i18next";
 
 export const GlobalAudioPlayer: React.FC = () => {
   const {
@@ -25,8 +26,8 @@ export const GlobalAudioPlayer: React.FC = () => {
     setVolume,
     stop,
   } = useAudio();
+  const { t } = useTranslation();
   const { onNext, onPrevious, canGoNext, canGoPrevious } = useSurahNavigation();
-
   const progressRef = useRef<HTMLDivElement>(null);
   const volumeRef = useRef<HTMLDivElement>(null);
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
@@ -39,22 +40,28 @@ export const GlobalAudioPlayer: React.FC = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const updateProgress = (clientX: number) => {
-    if (!progressRef.current) return;
-    const rect = progressRef.current.getBoundingClientRect();
-    const clickX = clientX - rect.left;
-    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-    const newTime = percentage * duration;
-    seek(newTime);
-  };
+  const updateProgress = useCallback(
+    (clientX: number) => {
+      if (!progressRef.current) return;
+      const rect = progressRef.current.getBoundingClientRect();
+      const clickX = clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+      const newTime = percentage * duration;
+      seek(newTime);
+    },
+    [duration, seek],
+  );
 
-  const updateVolume = (clientX: number) => {
-    if (!volumeRef.current) return;
-    const rect = volumeRef.current.getBoundingClientRect();
-    const clickX = clientX - rect.left;
-    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-    setVolume(percentage);
-  };
+  const updateVolume = useCallback(
+    (clientX: number) => {
+      if (!volumeRef.current) return;
+      const rect = volumeRef.current.getBoundingClientRect();
+      const clickX = clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+      setVolume(percentage);
+    },
+    [setVolume],
+  );
 
   // Progress handlers
   const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -109,7 +116,6 @@ export const GlobalAudioPlayer: React.FC = () => {
     if (isDraggingProgress || isDraggingVolume) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
-      document.addEventListener("touchmove", handleTouchMove);
       document.addEventListener("touchend", handleTouchEnd);
     }
 
@@ -119,10 +125,18 @@ export const GlobalAudioPlayer: React.FC = () => {
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDraggingProgress, isDraggingVolume, duration]);
+  }, [isDraggingProgress, isDraggingVolume, updateProgress, updateVolume]);
+
+  // Check if audio is live stream (infinite duration)
+  const isLive = !Number.isFinite(duration) || duration === Infinity;
 
   // Calculate progress percentage
-  const progressPercentage = duration > 0 ? (progress / duration) * 100 : 0;
+  // For live streams, we can't calculate percentage, so show 100% or 0%
+  const progressPercentage = isLive
+    ? 100
+    : duration > 0
+      ? (progress / duration) * 100
+      : 0;
   const volumePercentage = volume * 100;
 
   // Early return AFTER all hooks
@@ -137,30 +151,32 @@ export const GlobalAudioPlayer: React.FC = () => {
         {/* Progress Bar */}
         <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
           <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10">
-            {formatTime(progress)}
+            {isLive ? t("radio.live") : formatTime(progress)}
           </span>
           <div
             ref={progressRef}
-            className="flex-1 relative h-4 flex items-center cursor-pointer select-none"
-            onMouseDown={handleProgressMouseDown}
-            onTouchStart={handleProgressTouchStart}
+            className={`flex-1 relative h-4 flex items-center select-none ${isLive ? "cursor-default" : "cursor-pointer"}`}
+            onMouseDown={isLive ? undefined : handleProgressMouseDown}
+            onTouchStart={isLive ? undefined : handleProgressTouchStart}
           >
             {/* Background track */}
             <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
               {/* Played portion (colored) */}
               <div
-                className="h-full bg-primary transition-all duration-100"
+                className={`h-full bg-primary transition-all duration-100 ${isLive ? "animate-pulse" : ""}`}
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
-            {/* Thumb (ball) */}
-            <div
-              className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
-              style={{ left: `${progressPercentage}%` }}
-            />
+            {/* Thumb (ball) - Hide for live streams */}
+            {!isLive && (
+              <div
+                className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
+                style={{ left: `${progressPercentage}%` }}
+              />
+            )}
           </div>
-          <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10">
-            {formatTime(duration)}
+          <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10 text-right">
+            {isLive ? t("radio.live") : formatTime(duration)}
           </span>
         </div>
 

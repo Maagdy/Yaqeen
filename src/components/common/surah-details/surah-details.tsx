@@ -4,13 +4,13 @@ import { useTranslation } from "react-i18next";
 import {
   PlayCircleFilledRounded,
   PauseCircleFilledRounded,
-  ArrowForward,
-  ArrowBack,
   BookmarkAdd,
+  Share,
 } from "@mui/icons-material";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { IconButton } from "../icon-button/icon-button";
 import { useEffect, useState } from "react";
-import { useLanguage } from "../../../hooks";
+import { useLanguage, useMediaQuery } from "../../../hooks";
 import { useSurahNavigation } from "../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../hooks/useAudio";
 import type { Ayah } from "../../../api";
@@ -28,6 +28,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   const { setNavigationHandlers, clearNavigationHandlers } =
     useSurahNavigation();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   // TODO: Get full surah audio URL from API
   const fullSurahAudioUrl = `https://server6.mp3quran.net/akdr/002.mp3`;
 
@@ -101,53 +102,77 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
 
   return (
-    <div className="mb-12 mt-2">
+    <div className="mb-12 mt-4">
       {/* Surah Header - Centered */}
-      <div className="mb-6 pb-4 border-b-2 border-primary/20 text-center">
-        <h2
-          className={`text-2xl md:text-3xl font-bold text-primary mb-2 ${
-            isRtl ? "font-amiri" : ""
-          }`}
-        >
-          {isRtl ? surah.name : surah.englishName}
-          <IconButton
-            icon={<BookmarkAdd fontSize="medium" />}
-            onClick={() => {
-              // TODO: Implement bookmark logic
-              console.log("Bookmark clicked");
-            }}
-            variant="default"
-            size="sm"
-          />
-        </h2>
+      <div className="mb-6 pb-4 border-b-2 border-primary/20">
+        <div className="flex items-start justify-between">
+          {/* Empty space for alignment */}
+          <div className="w-20"></div>
+
+          {/* Surah Name and Verse Count - Centered */}
+          <div className="flex-1 text-center">
+            <h2
+              className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
+                isRtl ? "font-amiri" : ""
+              }`}
+            >
+              {isRtl ? surah.name : surah.englishName}
+            </h2>
+            <p className="text-sm text-text-secondary">
+              {t(
+                surah.revelationType.toLowerCase() === "meccan"
+                  ? "home.revelation_place.makkah"
+                  : "home.revelation_place.madinah",
+              )}{" "}
+              • {formatNumber(surah.numberOfAyahs, language)} {t("home.verses")}
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            <IconButton
+              icon={<Share fontSize="medium" />}
+              onClick={() => {
+                // TODO: Implement share logic
+                console.log("Share clicked");
+              }}
+              className="text-primary/70 hover:text-primary"
+              size="sm"
+            />
+            <IconButton
+              icon={<BookmarkAdd fontSize="medium" />}
+              onClick={() => {
+                // TODO: Implement bookmark logic
+                console.log("Bookmark clicked");
+              }}
+              className="text-primary/70 hover:text-primary"
+              size="sm"
+            />
+          </div>
+        </div>
+
         {/* Listen to Full Surah Button */}
         {fullSurahAudioUrl && (
-          <IconButton
-            onClick={handleFullSurahClick}
-            icon={
-              isFullSurahPlaying ? (
-                <PauseCircleFilledRounded />
-              ) : (
-                <PlayCircleFilledRounded />
-              )
-            }
-            label={
-              isFullSurahPlaying
-                ? t("surah.pause_full")
-                : t("surah.listen_full")
-            }
-            className="mx-auto"
-            size="md"
-          />
+          <div className="mt-4 text-center">
+            <IconButton
+              onClick={handleFullSurahClick}
+              icon={
+                isFullSurahPlaying ? (
+                  <PauseCircleFilledRounded />
+                ) : (
+                  <PlayCircleFilledRounded />
+                )
+              }
+              label={
+                isFullSurahPlaying
+                  ? t("surah.pause_full")
+                  : t("surah.listen_full")
+              }
+              className="mx-auto"
+              size="md"
+            />
+          </div>
         )}
-        <p className="text-sm text-text-secondary">
-          {t(
-            surah.revelationType.toLowerCase() === "meccan"
-              ? "home.revelation_place.makkah"
-              : "home.revelation_place.madinah",
-          )}{" "}
-          • {formatNumber(surah.numberOfAyahs, language)} {t("home.verses")}
-        </p>
       </div>
       {/* Ayahs - Centered and Clickable */}
       <div
@@ -167,25 +192,24 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
             >
               <div className="flex items-center justify-center gap-2">
                 <div
-                  onMouseEnter={() => setHoveredAyah(ayah.number)}
-                  onMouseLeave={() => setHoveredAyah(null)}
+                  onMouseEnter={() => !isMobile && setHoveredAyah(ayah.number)}
+                  onMouseLeave={() => !isMobile && setHoveredAyah(null)}
                   className="relative"
                 >
-                  {hoveredAyah === ayah.number && (
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
+                  {/* Desktop: Show on hover, Mobile: Always show */}
+                  {(hoveredAyah === ayah.number || isMobile) && (
+                    <div
+                      className={`${
+                        isMobile
+                          ? "inline-flex ml-2"
+                          : "absolute bottom-full left-1/2 transform -translate-x-1/2 z-10"
+                      }`}
+                    >
                       <IconButton
-                        label={t("surah.ayah-details")}
+                        label={isMobile ? "" : t("surah.ayah-details")}
                         onClick={() => onAyahClick?.(ayah)}
-                        size="md"
-                        iconPosition="right"
-                        variant="primary"
-                        icon={
-                          isRtl ? (
-                            <ArrowBack fontSize="small" />
-                          ) : (
-                            <ArrowForward fontSize="small" />
-                          )
-                        }
+                        size={isMobile ? "sm" : "md"}
+                        icon={<TipsAndUpdatesIcon fontSize="small" />}
                       />
                     </div>
                   )}
@@ -199,8 +223,8 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
                     {ayah.text}
                   </span>
                   {/* Ayah Number Badge - Arabic Glyph Style */}
-                  <span className="inline-flex items-center justify-center relative">
-                    <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
+                  <span className="inline-flex items-center justify-center relative ">
+                    <span className="inline-flex items-center justify-center relative mx-1 w-10 h-10 pt-1">
                       <svg
                         className="absolute inset-0 w-full h-full"
                         viewBox="0 0 36 36"
@@ -216,7 +240,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
                           }
                         />
                       </svg>
-                      <span className="relative z-10 text-sm font-bold text-text-primary">
+                      <span className="relative z-10 text-base font-bold text-text-primary">
                         {formatNumber(ayah.numberInSurah, language)}
                       </span>
                     </span>
