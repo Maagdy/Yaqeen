@@ -1,13 +1,13 @@
 import { useRadios } from "@/api/domains/radio";
-import { RadioCard } from "@/components/pages/radio-components/radio-card";
+import {
+  RadioCard,
+  RadioControls,
+  RadioResultsCount,
+} from "@/components/pages";
 import { Loading } from "@/components/ui";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
-
 import { useState, useMemo } from "react";
-import { RadioControls } from "@/components/pages/radio-components/radio-controls";
-
-import { RadioResultsCount } from "@/components/pages/radio-components/radio-results-count";
 
 function RadioPage() {
   const { t } = useTranslation();

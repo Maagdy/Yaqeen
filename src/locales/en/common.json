@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Sabeel",
+    "title": "Yaqeen",
     "description": "Your path to Islamic knowledge",
     "error-page-title": "Error 404!",
     "not-found-message": "Page Not Found!"
@@ -9,14 +9,27 @@
     "loading": "Loading...",
     "close": "Close",
     "surah": "Surah",
-    "date": "Date"
+    "date": "Date",
+    "save": "Save",
+    "saved_successfully": "Saved successfully!",
+    "favorites": "Favorites",
+    "no_favorites": "No favorites yet. Explore the Quran and Reciters to add some!",
+    "member_since": "Member since",
+    "reciter": "Reciter",
+    "days": "Days",
+    "save_changes": "Save Changes",
+    "login_to_favorite": "Please login to manage favorites",
+    "added_to_favorites": "Added to favorites",
+    "removed_from_favorites": "Removed from favorites",
+    "error_adding_favorite": "Failed to add favorite",
+    "error_removing_favorite": "Failed to remove favorite"
   },
   "home": {
-    "sabeel-header": "Sabeel",
+    "Yaqeen-header": "Yaqeen",
     "your": "Your",
-    "to": "to",
+    "to": "in",
     "sub-header": "Allah.",
-    "description": "Quran is the central religious text of Islam, believed by Muslims to be a revelation directly from God",
+    "description": "Deepen your connection with the Quran, the eternal word of Allah, and find tranquility, guidance, and certainty in every verse you recite.",
     "read-quran": "Read Quran",
     "verses": "Verses",
     "surahs": "Surahs",
@@ -58,7 +71,12 @@
     "error_id_required": "Reciter ID is required",
     "error_invalid_reciter": "Invalid Reciter number",
     "link_copied": "Link copied to clipboard!",
-    "link_copy_failed": "Failed to copy link"
+    "link_copy_failed": "Failed to copy link",
+    "login_to_favorite": "Please login to manage favorites",
+    "added_to_favorites": "Reciter added to favorites",
+    "removed_from_favorites": "Reciter removed from favorites",
+    "error_adding_favorite": "Failed to add favorite",
+    "error_removing_favorite": "Failed to remove favorite"
   },
   "surah": {
     "end": "End of Surah",
@@ -98,7 +116,8 @@
     "sajda": "Sajda",
     "verse": "Verse",
     "your-goals": "Your Goals",
-    "start-your-journy": "Start Your Journy"
+    "start-your-journy": "Start Your Journy",
+    "go_to_ayah": "Read Ayah {{number}}"
   },
   "audio": {
     "playing": "Playing",
@@ -111,7 +130,19 @@
   "navigation": {
     "quran": "Quran",
     "reciters": "Reciters",
-    "radio": "Radio"
+    "radio": "Radio",
+    "search": "Search"
+  },
+  "search": {
+    "title": "Search Results",
+    "placeholder": "Search in Quran...",
+    "no_results": "No results found for \"{{keyword}}\"",
+    "results_count": "Found {{count}} results for \"{{keyword}}\"",
+    "loading": "Searching...",
+    "error": "Error searching for \"{{keyword}}\"",
+    "surah": "Surah {{number}}: {{name}}",
+    "ayah_reference": "{{surah}}, Ayah {{ayah}}",
+    "ayah": "Ayah {{number}}"
   },
   "theme": {
     "toggle": "Toggle Theme",
@@ -122,8 +153,29 @@
     "toggle": "Change Language"
   },
   "auth": {
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "signin": "Sign In",
+    "signout": "Sign Out",
+    "profile": "Profile",
+    "email": "Email",
+    "password": "Password",
+    "createAccount": "Create Account",
+    "signupDescription": "Enter your details to create your account.",
+    "signinDescription": "Enter your email below to sign in to your account.",
+    "haveAccount": "Already have an account? Sign in",
+    "noAccount": "Don't have an account? Sign up",
+    "signupSuccess": "Account created successfully! Please check your email to verify.",
+    "signinSuccess": "Signed in successfully!",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "signingUp": "Signing Up...",
+    "signingIn": "Signing In...",
+    "error_invalid_credentials": "Invalid email or password",
+    "error_user_exists": "User already registered",
+    "error_email_not_confirmed": "Email not confirmed. Please check your inbox.",
+    "error_generic": "An error occurred during authentication"
   },
+
   "error": {
     "title": "Oops! Something went wrong",
     "message": "We couldn't load the content you requested. Please try again.",
@@ -155,11 +207,11 @@
     "network": "Network",
     "popular-links": "Popular Links",
     "subtitle": "Read, study, and learn The Noble Quran.",
-    "description": "Sabeel.com is a Sadaqah Jariyah. We hope to make it easy for everyone to read, study, and learn The Noble Quran. The Noble Quran has many names including Al-Quran Al-Kareem, Al-Ketab, Al-Furqan, Al-Maw'itha, Al-Thikr, and Al-Noor.",
+    "description": "Yaqeen.com is a Sadaqah Jariyah. We hope to make it easy for everyone to read, study, and learn The Noble Quran. The Noble Quran has many names including Al-Quran Al-Kareem, Al-Ketab, Al-Furqan, Al-Maw'itha, Al-Thikr, and Al-Noor.",
     "sitemap": "Sitemap",
     "privacy": "Privacy",
     "terms": "Terms and Conditions",
-    "copyright": "© {{year}} Sabeel.com. All Rights Reserved"
+    "copyright": "© {{year}} Yaqeen.com. All Rights Reserved"
   },
   "quran": {
     "title": "Quran Mushafs",
@@ -191,5 +243,19 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page"
+  },
+  "profile": {
+    "activity": "Activity",
+    "current_streak": "Current Streak",
+    "total_pages_read": "Total Pages Read",
+    "favorite_reciters": "Favorite Reciters",
+    "favorite_surahs": "Favorite Surahs",
+    "no_favorites": "No favorites yet. Explore the Quran and Reciters to add some!",
+    "details": "Profile Details",
+    "manage_info": "Manage your personal information"
+  },
+  "validation": {
+    "first_name_short": "First name is too short",
+    "last_name_short": "Last name is too short"
   }
 }

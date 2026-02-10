@@ -189,6 +189,7 @@ const ReciterDetailsPage: React.FC<ReciterDetailsPageProps> = () => {
         onPlay={handlePlay}
         onDownload={handleDownload}
         onCopyLink={handleCopyLink}
+        reciter={reciter}
       />
     </div>
   );

@@ -12,18 +12,18 @@ export const ReciterCard = ({ reciter, onClick }: ReciterCardProps) => {
   return (
     <div
       onClick={onClick}
-      className="group relative flex flex-col p-6 bg-background border border-border rounded-xl transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer"
+      className="group relative flex flex-col p-6 bg-background border border-border rounded-xl transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer h-full"
     >
       {/* Header with Letter Badge */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors duration-300">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-12 h-12 shrink-0 flex items-center justify-center bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors duration-300">
             <span className="text-primary font-bold text-lg">
               {reciter.letter}
             </span>
           </div>
-          <div className="flex flex-col">
-            <h3 className="font-bold text-text-primary text-lg group-hover:text-primary transition-colors duration-300">
+          <div className="flex flex-col flex-1 min-w-0">
+            <h3 className="font-bold text-text-primary text-lg group-hover:text-primary transition-colors duration-300 line-clamp-1">
               {reciter.name}
             </h3>
             <span className="text-text-secondary text-sm">

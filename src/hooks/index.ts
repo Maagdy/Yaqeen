@@ -3,3 +3,4 @@ export * from "./useTheme";
 export * from "./useAudio";
 export * from "./useSurahNavigation";
 export * from "./useMediaQuery";
+export * from "./useAuth";

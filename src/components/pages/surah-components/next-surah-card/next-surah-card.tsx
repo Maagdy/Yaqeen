@@ -11,7 +11,7 @@ export const NextSurahCard = ({
   isPrevious = false,
 }: NextSurahCardProps) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
+  const { language, isRtl } = useLanguage();
   return (
     <div
       onClick={onClick}
@@ -20,10 +20,10 @@ export const NextSurahCard = ({
       <div className="flex items-center gap-4 flex-1 min-w-0">
         <div className="flex flex-col gap-1 min-w-0">
           <h3 className="font-bold text-text-primary text-base sm:text-lg group-hover:text-primary transition-colors duration-300 truncate">
-            {language === "ar" ? chapter.arabicName : chapter.name}
+            {isRtl ? chapter.arabicName : chapter.name}
           </h3>
           <span
-            className={`text-text-secondary text-xs sm:text-sm font-bold ${language === "ar" ? "font-amiri" : ""}`}
+            className={`text-text-secondary text-xs sm:text-sm font-bold ${isRtl ? "font-amiri" : ""}`}
           >
             {formatNumber(chapter.verses, language)} {t("home.verses")}
           </span>
@@ -36,7 +36,7 @@ export const NextSurahCard = ({
           variant="default"
           size="md"
           icon={
-            language === "ar" ? (
+            isRtl ? (
               <ArrowBackIcon fontSize="small" />
             ) : (
               <ArrowForwardIcon fontSize="small" />

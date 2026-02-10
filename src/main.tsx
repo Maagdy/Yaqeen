@@ -9,19 +9,23 @@ import { QueryProvider } from "./providers/QueryProvider";
 
 import { router } from "./router/router";
 import { AudioProvider } from "./providers/AudioProvider";
+import { AuthProvider } from "./providers/AuthProvider";
 import { SurahNavigationProvider } from "./providers/SurahNavigationProvider";
+
 import { GlobalAudioPlayer } from "./components/common/global-audio-player";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
       <ThemeProvider>
-        <AudioProvider>
-          <SurahNavigationProvider>
-            <RouterProvider router={router} />
-            <GlobalAudioPlayer />
-          </SurahNavigationProvider>
-        </AudioProvider>
+        <AuthProvider>
+          <AudioProvider>
+            <SurahNavigationProvider>
+              <RouterProvider router={router} />
+              <GlobalAudioPlayer />
+            </SurahNavigationProvider>
+          </AudioProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryProvider>
   </StrictMode>,

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap");
 @import "tailwindcss";
 #root {
   padding: 1rem;
@@ -13,6 +14,9 @@
   --color-primary-dark: var(--color-primaryDark);
   --color-primary-muted: var(--color-primaryMuted);
   --color-border: var(--color-border);
+
+  /* Set Cairo as the default sans font */
+  --font-sans: "Cairo", system-ui, sans-serif;
 }
 
 @layer base {
@@ -28,11 +32,20 @@
     --color-primaryMuted: "";
     --color-border: "";
 
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: "Cairo", system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Apply font globally */
+  * {
+    font-family: var(--font-sans);
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {

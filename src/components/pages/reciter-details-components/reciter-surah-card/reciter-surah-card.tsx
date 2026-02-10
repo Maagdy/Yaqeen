@@ -4,7 +4,17 @@ import DownloadIcon from "@mui/icons-material/Download";
 import LinkIcon from "@mui/icons-material/Link";
 import type { ReciterSurahCardProps } from "./reciter-surah-card.types";
 import { formatNumber } from "../../../../utils/numbers";
-import { useLanguage } from "../../../../hooks";
+import { useLanguage, useAuth } from "../../../../hooks";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import {
+  useAddFavoriteSurahMutation,
+  useFavoriteSurahsQuery,
+  useRemoveFavoriteSurahMutation,
+} from "@/api/domains/user/useUserQueries";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { getReciters } from "@/api";
 
 export const ReciterSurahCard = ({
   number,
@@ -14,8 +24,89 @@ export const ReciterSurahCard = ({
   isPlaying = false,
   onDownload,
   onCopyLink,
+  reciter,
 }: ReciterSurahCardProps) => {
   const { language } = useLanguage();
+  const { isLoggedIn, user } = useAuth();
+  const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
+  const { mutate: addFavoriteSurah, isPending: isAdding } =
+    useAddFavoriteSurahMutation(user?.id);
+  const { mutate: removeFavoriteSurah, isPending: isRemoving } =
+    useRemoveFavoriteSurahMutation(user?.id);
+  const { t } = useTranslation();
+  const [isFetchingInfo, setIsFetchingInfo] = useState(false);
+
+  const isFavorite = favoriteSurahs?.some(
+    (f) => f.surah_number === number && f.reciter_id === reciter?.id,
+  );
+
+  const toggleFavorite = async () => {
+    if (!isLoggedIn) {
+      toast.warning(t("common.login_to_favorite"));
+      return;
+    }
+
+    if (!reciter) return;
+
+    if (isFavorite) {
+      removeFavoriteSurah(
+        { surahNumber: number, reciterId: reciter.id },
+        {
+          onSuccess: () => toast.success(t("common.removed_from_favorites")),
+          onError: () => toast.error(t("common.error_removing_favorite")),
+        },
+      );
+    } else {
+      setIsFetchingInfo(true);
+      try {
+        let nameAr = reciter.name;
+        let nameEn = reciter.englishName;
+
+        if (language === "en") {
+          nameEn = reciter.name;
+          // Fetch Arabic name if missing
+          try {
+            const arData = await getReciters({
+              reciter: reciter.id,
+              language: "ar",
+            });
+            if (arData?.[0]) nameAr = arData[0].name;
+          } catch (error) {
+            console.error("Failed to fetch Arabic name", error);
+          }
+        } else {
+          // Assuming Arabic or other
+          // nameAr is already reciter.name
+          // Fetch English name if missing
+          try {
+            const enData = await getReciters({
+              reciter: reciter.id,
+              language: "eng",
+            });
+            if (enData?.[0]) nameEn = enData[0].name;
+          } catch (error) {
+            console.error("Failed to fetch English name", error);
+          }
+        }
+
+        addFavoriteSurah(
+          {
+            surahNumber: number,
+            reciterId: reciter.id,
+            reciterName: nameAr,
+            reciterNameEnglish: nameEn,
+          },
+          {
+            onSuccess: () => toast.success(t("common.added_to_favorites")),
+            onError: () => toast.error(t("common.error_adding_favorite")),
+          },
+        );
+      } finally {
+        setIsFetchingInfo(false);
+      }
+    }
+  };
+
   return (
     <div className="group relative flex items-center justify-between p-4 h-24 bg-background border border-border rounded-xl transition-all duration-300 hover:border-primary hover:shadow-md">
       {/* LEFT */}
@@ -64,6 +155,21 @@ export const ReciterSurahCard = ({
           className="cursor-pointer text-text-secondary hover:text-primary transition-colors duration-200"
         >
           <DownloadIcon fontSize="small" />
+        </button>
+        <button
+          onClick={toggleFavorite}
+          disabled={isAdding || isRemoving || isFetchingInfo}
+          className={`cursor-pointer transition-colors duration-200 ${
+            isFavorite
+              ? "text-primary"
+              : "text-text-secondary hover:text-primary"
+          }`}
+        >
+          {isFavorite ? (
+            <Favorite fontSize="small" />
+          ) : (
+            <FavoriteBorder fontSize="small" />
+          )}
         </button>
       </div>
     </div>

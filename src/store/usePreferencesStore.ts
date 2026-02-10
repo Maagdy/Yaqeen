@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { Theme, Language, AudioSettings } from '../types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { Theme, Language, AudioSettings } from "../types";
 
 interface PreferencesState {
   theme: Theme;
@@ -14,8 +14,8 @@ interface PreferencesState {
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
-      theme: 'light',
-      language: 'en',
+      theme: "light",
+      language: "en",
       audioSettings: {
         volume: 1,
         autoplay: false,
@@ -28,7 +28,7 @@ export const usePreferencesStore = create<PreferencesState>()(
         })),
     }),
     {
-      name: 'sabeel-preferences',
-    }
-  )
+      name: "Yaqeen-preferences",
+    },
+  ),
 );

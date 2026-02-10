@@ -9,6 +9,9 @@ export const ROUTES = {
   MUSHAF_DETAILS: "/quran/:mushafId",
   MUSHAF_SURAH: "/quran/:mushafId/surah/:surahId",
   RADIO: "/radio",
+  AUTH: "/auth",
+  SEARCH: "/search",
+  PROFILE: "/profile",
 } as const;
 
 export const generateRoute = {
@@ -23,4 +26,7 @@ export const generateRoute = {
 
   mushafSurah: (mushafId: number | string, surahId: number | string): string =>
     `/quran/${mushafId}/surah/${surahId}`,
+
+  search: (keyword: string): string =>
+    `/search?q=${encodeURIComponent(keyword)}`,
 } as const;

@@ -3,7 +3,7 @@ import { Loading } from "@/components/ui";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
-import { MushafSurahDetails } from "@/components/pages/mushaf-surah-components";
+import { MushafSurahDetails } from "@/components/pages";
 import { IconButton } from "@/components/common";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";

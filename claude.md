@@ -1,6 +1,6 @@
-# Project Guidelines – Sabeel Islamic Website
+# Project Guidelines – Yaqeen Islamic Website
 
-This document defines the architecture, tools, and design rules for the Sabeel Islamic Website project.
+This document defines the architecture, tools, and design rules for the Yaqeen Islamic Website project.
 
 The goal is to build a **clean, scalable, and professional Islamic / Qur’an website** using modern best practices, with a strong foundation that can grow over time without refactoring.
 

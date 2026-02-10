@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useLanguage, useTheme } from "../../hooks";
+import { useAuth, useLanguage, useTheme } from "../../hooks";
 import { IconButton } from "../common";
 import { Logo } from "../../assets/images";
 import {
@@ -11,7 +11,10 @@ import {
   LightMode,
   Menu as MenuIcon,
   Close,
+  Person,
+  Logout,
 } from "@mui/icons-material";
+
 import { Drawer, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -21,14 +24,23 @@ export function Header() {
   const { language, changeLanguage, isRtl } = useLanguage();
   const path = useLocation().pathname;
   const navigation = useNavigate();
+  const { user, signOut } = useAuth();
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
   const handleLanguageToggle = () => {
     changeLanguage(language === "en" ? "ar" : "en");
   };
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setDrawerOpen(false);
+    navigation("/");
   };
 
   const navigationItems = [
@@ -58,7 +70,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`flex sticky top-0 z-1000 items-center justify-between  sm:px-6 lg:px-8 py-3 sm:py-2 bg-background border-b border-border transition-transform duration-300 ${
+        className={`flex sticky top-0 z-1000 items-center justify-between sm:px-6 lg:px-8 py-3 sm:py-2 bg-background border-b border-border transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -69,6 +81,7 @@ export function Header() {
             component="div"
             sx={{
               display: "flex", // Always visible
+              alignItems: "center",
             }}
           >
             <IconButton
@@ -79,20 +92,30 @@ export function Header() {
               label=""
               className="py-1"
             />
+            <Person
+              sx={{
+                display: { xs: "block", md: "none" },
+                color: "text-primary",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigation("/profile");
+              }}
+            />
           </Box>
 
           <div
-            className="flex items-center gap-2 cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-[960px]:static min-[960px]:transform-none min-[960px]:translate-0 select-none"
+            className="flex items-center -ml-2 sm:ml-0  cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-[960px]:static min-[960px]:transform-none min-[960px]:translate-0 select-none"
             onClick={() => {
               navigation("/");
             }}
           >
             <img
               src={Logo}
-              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
+              className="-ml-2 w-20 h-20 lg:w-18 lg:h-18 object-contain"
               alt="Logo"
             />
-            <h2 className="font-bold text-primary text-2xl lg:text-3xl whitespace-nowrap leading-none pt-1">
+            <h2 className="font-bold -ml-2 text-primary text-2xl lg:text-3xl whitespace-nowrap leading-none pt-1">
               {t("app.title")}
             </h2>
           </div>
@@ -143,11 +166,9 @@ export function Header() {
 
         {/* Right: Sign Up, Language & Theme Toggle */}
         <div className="flex items-center sm:gap-3 z-10 relative">
-          {/* Sign Up Button - Hidden below 960px */}
+          {/* Auth Button - Hidden below 960px */}
           <Box
-            component="button"
-            className="px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2  text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
-            aria-label="Sign Up"
+            component="div"
             sx={{
               display: "none",
               "@media (min-width: 960px)": {
@@ -155,7 +176,24 @@ export function Header() {
               },
             }}
           >
-            {t("auth.signup")}
+            {user ? (
+              <button
+                onClick={() => navigation("/profile")}
+                className="px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 text-sm font-medium rounded-lg bg-background text-text-primary border border-border hover:bg-border transition-all flex items-center gap-2"
+                aria-label="Profile"
+              >
+                <Person className="w-4 h-4" />
+                {t("auth.profile")}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigation("/auth")}
+                className="px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+                aria-label="Sign Up"
+              >
+                {t("auth.signup")}
+              </button>
+            )}
           </Box>
 
           {/* Language Toggle */}
@@ -237,13 +275,38 @@ export function Header() {
 
           {/* Actions in Drawer */}
           <div className="flex flex-col p-4 gap-3">
-            {/* Sign Up Button */}
-            <button
-              className="w-full px-4 py-3 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
-              aria-label="Sign Up"
-            >
-              {t("auth.signup")}
-            </button>
+            {/* Auth Action */}
+            {user ? (
+              <>
+                <button
+                  onClick={() => navigation("/profile")}
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium rounded-lg bg-background text-text-primary border border-border hover:bg-border transition-all"
+                  aria-label="Profile"
+                >
+                  <Person className="w-4 h-4" />
+                  {t("auth.profile")}
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium rounded-lg bg-background text-text-primary border border-border hover:bg-border transition-all"
+                  aria-label="Profile"
+                >
+                  <Logout className="w-4 h-4" />
+                  {t("auth.signout")}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  toggleDrawer();
+                  navigation("/auth");
+                }}
+                className="w-full px-4 py-3 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+                aria-label="Sign Up"
+              >
+                {t("auth.signup")}
+              </button>
+            )}
 
             {/* Theme Toggle */}
             <button

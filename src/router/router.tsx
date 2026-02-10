@@ -10,6 +10,9 @@ import QuranPage from "@/pages/QuranPage/QuranPage";
 import MushafDetailsPage from "@/pages/MushafDetailsPage/MushafDetailsPage";
 import MushafSurahPage from "@/pages/MushafSurahPage/MushafSurahPage";
 import RadioPage from "@/pages/RadioPage/RadioPage";
+import { AuthPage } from "@/pages/AuthPage";
+import SearchPage from "@/pages/SearchPage/SearchPage";
+import ProfilePage from "@/pages/ProfilePage/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +30,9 @@ export const router = createBrowserRouter([
       { path: ROUTES.MUSHAF_DETAILS, element: <MushafDetailsPage /> },
       { path: ROUTES.MUSHAF_SURAH, element: <MushafSurahPage /> },
       { path: ROUTES.RADIO, element: <RadioPage /> },
+      { path: ROUTES.AUTH, element: <AuthPage /> },
+      { path: ROUTES.SEARCH, element: <SearchPage /> },
+      { path: ROUTES.PROFILE, element: <ProfilePage /> },
     ],
   },
 ]);

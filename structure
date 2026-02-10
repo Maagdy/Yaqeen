@@ -1,4 +1,4 @@
-sabeel-islamic-website/
+Yaqeen-islamic-website/
 ├── public/                    # Static assets served directly
 │   ├── vite.svg
 │   └── ...                    # Other static files (favicon, images, etc.)

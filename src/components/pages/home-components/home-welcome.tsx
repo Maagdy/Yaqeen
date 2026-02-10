@@ -19,7 +19,7 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
           <div className="flex flex-col gap-4">
             <h1 className="text-text-primary text-4xl md:text-5xl lg:text-7xl font-bold">
               {!isRtl && t("home.your")}{" "}
-              <span className="text-primary">{t("home.sabeel-header")} </span>
+              <span className="text-primary">{t("home.Yaqeen-header")} </span>
               {t("home.to")}
             </h1>
             <h1 className="text-primary text-4xl md:text-5xl lg:text-7xl font-bold">
@@ -37,7 +37,7 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
               variant="primary"
               size="lg"
               iconPosition={isRtl ? "right" : "left"}
-              href={id}
+              href={`#${id}`}
               icon={isRtl ? <ArrowBack /> : <ArrowForward />}
             />
           </div>

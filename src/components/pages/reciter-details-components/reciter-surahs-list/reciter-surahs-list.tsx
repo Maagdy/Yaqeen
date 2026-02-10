@@ -11,6 +11,7 @@ export const ReciterSurahsList: React.FC<ReciterSurahsListProps> = ({
   onPlay,
   onDownload,
   onCopyLink,
+  reciter,
 }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -38,6 +39,7 @@ export const ReciterSurahsList: React.FC<ReciterSurahsListProps> = ({
             isPlaying={isSurahPlaying}
             onDownload={() => onDownload(surahNumber)}
             onCopyLink={() => onCopyLink(surahNumber)}
+            reciter={reciter}
           />
         );
       })}

@@ -4,3 +4,6 @@ export * from "./domains/chapter";
 export * from "./domains/juz";
 export * from "./domains/reciters";
 export * from "./domains/radio";
+export * from "./domains/user";
+export * from "./domains/search";
+export * from "./domains/user";
