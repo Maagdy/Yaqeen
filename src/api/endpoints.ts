@@ -2,7 +2,7 @@
 // - mp3quran for surah metadata (fast, reliable)
 // - AlQuran Cloud for verse/ayah content
 export const MP3QURAN_BASE_URL = "https://mp3quran.net/api/v3";
-export const ALQURAN_BASE_URL = "http://api.alquran.cloud/v1";
+export const ALQURAN_BASE_URL = "https://api.alquran.cloud/v1";
 
 // Legacy - keeping for backward compatibility
 export const API_BASE_URL = ALQURAN_BASE_URL;
@@ -57,7 +57,7 @@ export const ENDPOINTS = {
     `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}/${surahNumber}`,
 
   // ---TAFSIR ---
-  ALL_TAFSIR_BOOKS: "http://api.quran-tafseer.com/tafseer",
+  ALL_TAFSIR_BOOKS: "https://api.quran-tafseer.com/tafseer",
 
   TAFSIR: (tafsirId: number = 1, suraId: number = 1, language: string = "ar") =>
     `https://www.mp3quran.net/api/v3/tafsir?tafsir=${tafsirId}&sura=${suraId}&language=${language}`,
@@ -68,7 +68,7 @@ export const ENDPOINTS = {
     suraNumber: number,
     ayahNumber: number,
   ) =>
-    `http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
+    `https://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
 
   // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number_from}/{ayah_number_to}
   AYAH_RANGE_TAFSIR: (
@@ -77,7 +77,7 @@ export const ENDPOINTS = {
     ayahFrom: number,
     ayahTo: number,
   ) =>
-    `http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
+    `https://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
 
   // --- SEARCH ---
   SEARCH: (
