@@ -57,27 +57,29 @@ export const ENDPOINTS = {
     `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}/${surahNumber}`,
 
   // ---TAFSIR ---
-  ALL_TAFSIR_BOOKS: "https://api.quran-tafseer.com/tafseer",
+  // Note: Using local serverless proxy to bypass CORS/HTTPS
+  ALL_TAFSIR_BOOKS: "/api/proxy?url=http://api.quran-tafseer.com/tafseer",
 
   TAFSIR: (tafsirId: number = 1, suraId: number = 1, language: string = "ar") =>
     `https://www.mp3quran.net/api/v3/tafsir?tafsir=${tafsirId}&sura=${suraId}&language=${language}`,
 
   // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
+  // Note: Using local serverless proxy to bypass CORS/HTTPS
   ONE_AYAH_TAFSIR: (
     tafsirId: number = 1,
     suraNumber: number,
     ayahNumber: number,
   ) =>
-    `https://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
+    `/api/proxy?url=http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
 
-  // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number_from}/{ayah_number_to}
+  // Note: Using local serverless proxy to bypass CORS/HTTPS
   AYAH_RANGE_TAFSIR: (
     tafsirId: number,
     suraNumber: number,
     ayahFrom: number,
     ayahTo: number,
   ) =>
-    `https://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
+    `/api/proxy?url=http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
 
   // --- SEARCH ---
   SEARCH: (
