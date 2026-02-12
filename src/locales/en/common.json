@@ -22,7 +22,14 @@
     "added_to_favorites": "Added to favorites",
     "removed_from_favorites": "Removed from favorites",
     "error_adding_favorite": "Failed to add favorite",
-    "error_removing_favorite": "Failed to remove favorite"
+    "error_removing_favorite": "Failed to remove favorite",
+    "play": "Play",
+    "bookmark": "Bookmark",
+    "copy": "Copy",
+    "share": "Share",
+    "more": "More",
+    "copied": "Copied to clipboard",
+    "error": "An error occurred"
   },
   "home": {
     "Yaqeen-header": "Yaqeen",
@@ -117,7 +124,11 @@
     "verse": "Verse",
     "your-goals": "Your Goals",
     "start-your-journy": "Start Your Journy",
-    "go_to_ayah": "Read Ayah {{number}}"
+    "go_to_ayah": "Read Ayah {{number}}",
+    "tafsirs": "Tafsirs",
+    "reflections": "Reflections",
+    "benefits": "Benefits",
+    "hadith": "Hadith"
   },
   "audio": {
     "playing": "Playing",
@@ -173,7 +184,13 @@
     "error_invalid_credentials": "Invalid email or password",
     "error_user_exists": "User already registered",
     "error_email_not_confirmed": "Email not confirmed. Please check your inbox.",
-    "error_generic": "An error occurred during authentication"
+    "error_generic": "An error occurred during authentication",
+    "login_required": "Please login to bookmark ayahs"
+  },
+
+  "favorites": {
+    "ayah_added": "Ayah added to favorites",
+    "ayah_removed": "Ayah removed from favorites"
   },
 
   "error": {

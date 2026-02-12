@@ -26,6 +26,17 @@ export interface FavoriteSurah {
   created_at: string;
 }
 
+export interface FavoriteAyah {
+  id: string;
+  user_id: string;
+  surah_number: number;
+  ayah_number: number;
+  surah_name: string | null;
+  ayah_text: string | null;
+  surah_name_english: string | null;
+  created_at: string;
+}
+
 export interface UserProgress {
   id: number;
   user_id: string;

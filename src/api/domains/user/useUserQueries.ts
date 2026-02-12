@@ -4,12 +4,15 @@ import {
   updateProfile,
   getFavoriteReciters,
   getFavoriteSurahs,
+  getFavoriteAyahs,
   getUserProgress,
   getUserStreaks,
   addFavoriteReciter,
   removeFavoriteReciter,
   addFavoriteSurah,
   removeFavoriteSurah,
+  addFavoriteAyah,
+  removeFavoriteAyah,
 } from "./user-queries";
 import type { Profile } from "./user.types";
 import { queryClient } from "@/contexts/queryClient";
@@ -168,6 +171,77 @@ export const useRemoveFavoriteSurahMutation = (userId: string | undefined) => {
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["favorite-surahs", userId],
+      });
+    },
+  });
+};
+
+export const useFavoriteAyahsQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-ayahs", userId],
+    queryFn: () => (userId ? getFavoriteAyahs(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteAyahMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      surahNumber,
+      ayahNumber,
+      surahName,
+      ayahText,
+      surahNameEnglish,
+    }: {
+      surahNumber: number;
+      ayahNumber: number;
+      surahName?: string;
+      ayahText?: string;
+      surahNameEnglish?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteAyah(
+        userId,
+        surahNumber,
+        ayahNumber,
+        surahName,
+        ayahText,
+        surahNameEnglish,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-ayahs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-ayahs", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteAyahMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      surahNumber,
+      ayahNumber,
+    }: {
+      surahNumber: number;
+      ayahNumber: number;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteAyah(userId, surahNumber, ayahNumber);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-ayahs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-ayahs", userId],
       });
     },
   });

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import type { SurahPageProps } from "./SurahPage.types";
-import { IconButton, SurahDetails } from "../../components/common";
+import { IconButton } from "../../components/common";
 import { useLanguage } from "../../hooks";
 import { Loading } from "../../components/ui";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,7 @@ import SurahSection from "../../components/pages/surah-components/surah-section/
 import { useHadithCollections, useSurahTafsir } from "@/api/domains/tafsir";
 import { TafsirCard } from "../../components/pages/surah-components/tafsir-card";
 import { useAudio } from "../../hooks";
+import { SurahDetails } from "@/components/pages";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const surahNumber = Number(id);
   const edition = language === "ar" ? "ar.alafasy" : "en.asad";
   const { data } = useHadithCollections();
-  console.log(data);
+  console.log("hadiths", data);
 
   const {
     data: surah,

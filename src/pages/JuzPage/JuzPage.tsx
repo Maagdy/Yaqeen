@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useJuzQuery, type Ayah } from "../../api";
 import { useLanguage } from "../../hooks";
 import { Loading } from "../../components/ui";
-import { SurahDetails } from "../../components/common";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import { SurahDetails } from "@/components/pages/surah-components/surah-details";
 
 const JuzPage: React.FC<JuzPageProps> = () => {
   const { id } = useParams<{ id: string }>();

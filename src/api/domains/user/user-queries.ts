@@ -2,6 +2,7 @@ import supabase from "@/lib/supabase-client";
 import type {
   FavoriteReciter,
   FavoriteSurah,
+  FavoriteAyah,
   Profile,
   UserGoal,
   UserProgress,
@@ -130,6 +131,56 @@ export const removeFavoriteSurah = async (
     query = query.is("reciter_id", null);
   }
   const { error } = await query;
+  if (error) throw error;
+};
+
+export const getFavoriteAyahs = async (
+  userId: string,
+): Promise<FavoriteAyah[]> => {
+  const { data, error } = await supabase
+    .from("favorite_ayahs")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteAyah = async (
+  userId: string,
+  surahNumber: number,
+  ayahNumber: number,
+  surahName?: string,
+  ayahText?: string,
+  surahNameEnglish?: string,
+): Promise<FavoriteAyah | null> => {
+  const { data, error } = await supabase
+    .from("favorite_ayahs")
+    .insert([
+      {
+        user_id: userId,
+        surah_number: surahNumber,
+        ayah_number: ayahNumber,
+        surah_name: surahName,
+        ayah_text: ayahText,
+        surah_name_english: surahNameEnglish,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteAyah = async (
+  userId: string,
+  surahNumber: number,
+  ayahNumber: number,
+): Promise<void> => {
+  const { error } = await supabase.from("favorite_ayahs").delete().match({
+    user_id: userId,
+    surah_number: surahNumber,
+    ayah_number: ayahNumber,
+  });
   if (error) throw error;
 };
 

@@ -1,23 +1,160 @@
 import type { MushafSurahDetailsProps } from "./mushaf-surah-details.types";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/hooks";
+import { useLanguage, useMediaQuery, useAuth } from "@/hooks";
 import { quranSurahs } from "@/utils/constants";
 import { useState } from "react";
 import { formatNumber } from "@/utils/numbers";
 import { BookmarkAdd, Share } from "@mui/icons-material";
 import { IconButton } from "@/components/common";
+import { MobileAyahCard } from "@/components/common/mobile-ayah-card";
+import {
+  useFavoriteAyahsQuery,
+  useAddFavoriteAyahMutation,
+  useRemoveFavoriteAyahMutation,
+} from "@/api/domains/user";
+import { toast } from "sonner";
+import type { Ayah } from "@/api";
 
 export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   surah,
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
+  const { user } = useAuth();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // Favorite ayahs functionality
+  const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
+  const addFavoriteAyah = useAddFavoriteAyahMutation(user?.id);
+  const removeFavoriteAyah = useRemoveFavoriteAyahMutation(user?.id);
 
   // Lookup extra info from constants
   const surahInfo = quranSurahs.find((s) => s.number === surah.id);
   const englishName = surahInfo?.name || "";
   // Note: Revelation type is not available in current constants
+
+  // Mobile card event handlers
+  const handleMobileAyahPlay = () => {
+    // TODO: Implement audio for mushaf when available
+    console.log("Play ayah in mushaf - not yet implemented");
+  };
+
+  const handleMobileAyahBookmark = async (
+    ayahNumber: number,
+    ayahText: string,
+  ) => {
+    if (!user) {
+      toast.error(
+        t("auth.login_required", {
+          defaultValue: "Please login to bookmark ayahs",
+        }),
+      );
+      return;
+    }
+
+    const isBookmarked = favoriteAyahs.some(
+      (fav) => fav.surah_number === surah.id && fav.ayah_number === ayahNumber,
+    );
+
+    try {
+      if (isBookmarked) {
+        await removeFavoriteAyah.mutateAsync({
+          surahNumber: surah.id,
+          ayahNumber,
+        });
+        toast.success(
+          t("favorites.ayah_removed", {
+            defaultValue: "Ayah removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteAyah.mutateAsync({
+          surahNumber: surah.id,
+          ayahNumber,
+          surahName: surah.name,
+          ayahText,
+          surahNameEnglish: englishName,
+        });
+        toast.success(
+          t("favorites.ayah_added", {
+            defaultValue: "Ayah added to favorites",
+          }),
+        );
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error(t("common.error", { defaultValue: "An error occurred" }));
+    }
+  };
+
+  const handleMobileAyahShare = async (
+    ayahNumber: number,
+    ayahText: string,
+  ) => {
+    const shareText = `${ayahText}\n\n${surah.name} (${surah.id}:${ayahNumber})`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          text: shareText,
+        });
+      } catch (error) {
+        // User cancelled or error occurred
+        console.log(error);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(shareText);
+      toast.success(
+        t("common.copied", { defaultValue: "Copied to clipboard" }),
+      );
+    }
+  };
+
+  const handleMobileAyahCopy = async (ayahText: string) => {
+    try {
+      await navigator.clipboard.writeText(ayahText);
+      toast.success(
+        t("common.copied", { defaultValue: "Copied to clipboard" }),
+      );
+    } catch (error) {
+      console.log(error);
+
+      toast.error(t("common.error", { defaultValue: "An error occurred" }));
+    }
+  };
+
+  const isAyahBookmarked = (ayahNumber: number) => {
+    return favoriteAyahs.some(
+      (fav) => fav.surah_number === surah.id && fav.ayah_number === ayahNumber,
+    );
+  };
+
+  // Helper to create surah object for mobile card
+  const getSurahForMobileCard = () => ({
+    name: surah.name,
+    number: surah.id,
+    englishName,
+    englishNameTranslation: englishName,
+    numberOfAyahs: surah.ayahs.length,
+    revelationType: "Meccan",
+  });
+
+  // Convert MushafAyah to Ayah type for mobile card
+  const convertToAyah = (mushafAyah: (typeof surah.ayahs)[0]): Ayah => ({
+    number: mushafAyah.id,
+    text: mushafAyah.text,
+    numberInSurah: mushafAyah.number,
+    juz: mushafAyah.juz,
+    manzil: mushafAyah.manzil,
+    page: mushafAyah.page_number,
+    ruku: mushafAyah.ruku,
+    hizbQuarter: mushafAyah.hizb * 4,
+    sajda: false,
+    surah: getSurahForMobileCard(),
+  });
 
   return (
     <div className="mb-12 mt-2">
@@ -65,61 +202,82 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         </div>
       </div>
 
-      {/* Ayahs - Centered */}
-      <div
-        className={`space-y-4 text-center ${isRtl ? "font-amiri" : ""}`}
-        dir={"rtl"}
-      >
-        {surah.ayahs.map((ayah) => {
-          return (
-            <div
+      {/* Ayahs - Mobile: Card View, Desktop: Centered View */}
+      {isMobile ? (
+        <div className="space-y-4">
+          {surah.ayahs.map((ayah) => (
+            <MobileAyahCard
               key={ayah.number}
-              className="leading-loose text-text-primary p-2"
-            >
-              <div className="flex items-center justify-center gap-2">
-                <div
-                  onMouseEnter={() => setHoveredAyah(ayah.number)}
-                  onMouseLeave={() => setHoveredAyah(null)}
-                  className="relative"
-                >
-                  {/* Hover Actions (Optional - currently just placeholder without audio) */}
-                  {hoveredAyah === ayah.number && (
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
-                      {/* You can add actions here if needed like bookmarking in future */}
-                    </div>
-                  )}
+              ayah={convertToAyah(ayah)}
+              surah={getSurahForMobileCard()}
+              isPlaying={false}
+              onPlay={handleMobileAyahPlay}
+              onBookmark={() =>
+                handleMobileAyahBookmark(ayah.number, ayah.text)
+              }
+              onShare={() => handleMobileAyahShare(ayah.number, ayah.text)}
+              onCopy={() => handleMobileAyahCopy(ayah.text)}
+              onTafsirClick={() => console.log("Tafsir - not yet implemented")}
+              isBookmarked={isAyahBookmarked(ayah.number)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`space-y-4 text-center ${isRtl ? "font-amiri" : ""}`}
+          dir={"rtl"}
+        >
+          {surah.ayahs.map((ayah) => {
+            return (
+              <div
+                key={ayah.number}
+                className="leading-loose text-text-primary p-2"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <div
+                    onMouseEnter={() => setHoveredAyah(ayah.number)}
+                    onMouseLeave={() => setHoveredAyah(null)}
+                    className="relative"
+                  >
+                    {/* Hover Actions (Optional - currently just placeholder without audio) */}
+                    {hoveredAyah === ayah.number && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
+                        {/* You can add actions here if needed like bookmarking in future */}
+                      </div>
+                    )}
 
-                  <span className={`text-xl md:text-2xl transition-colors`}>
-                    {ayah.text}
-                  </span>
+                    <span className={`text-xl md:text-2xl transition-colors`}>
+                      {ayah.text}
+                    </span>
 
-                  {/* Ayah Number Badge - Arabic Glyph Style */}
-                  <span className="inline-flex items-center justify-center relative">
-                    <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
-                      <svg
-                        className="absolute inset-0 w-full h-full"
-                        viewBox="0 0 36 36"
-                      >
-                        {/* Octagonal shape */}
-                        <path
-                          d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
-                          fill="currentColor"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          className="text-primary/90"
-                        />
-                      </svg>
-                      <span className="relative z-10 text-sm font-bold text-text-primary">
-                        {formatNumber(ayah.number, language)}
+                    {/* Ayah Number Badge - Arabic Glyph Style */}
+                    <span className="inline-flex items-center justify-center relative">
+                      <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
+                        <svg
+                          className="absolute inset-0 w-full h-full"
+                          viewBox="0 0 36 36"
+                        >
+                          {/* Octagonal shape */}
+                          <path
+                            d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
+                            fill="currentColor"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            className="text-primary/90"
+                          />
+                        </svg>
+                        <span className="relative z-10 text-sm font-bold text-text-primary">
+                          {formatNumber(ayah.number, language)}
+                        </span>
                       </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* End of Surah Marker */}
       <div className="mt-8 flex items-center justify-center gap-3">

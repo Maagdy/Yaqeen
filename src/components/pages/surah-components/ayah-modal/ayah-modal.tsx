@@ -57,6 +57,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
       onAyahChange(surah.ayahs[currentAyahIndex - 1]);
     }
   };
+  console.log("tafsirBooks", tafsirBooks);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>

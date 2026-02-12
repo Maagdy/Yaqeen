@@ -1,4 +1,4 @@
-import type { Ayah, Surah, SurahData } from "../../../api";
+import type { Ayah, Surah, SurahData } from "../../../../api";
 
 export interface SurahDetailsProps {
   surah: Surah | SurahData;

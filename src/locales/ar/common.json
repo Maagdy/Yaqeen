@@ -22,7 +22,14 @@
     "added_to_favorites": "تمت الإضافة إلى المفضلة",
     "removed_from_favorites": "تمت الإزالة من المفضلة",
     "error_adding_favorite": "فشلت الإضافة إلى المفضلة",
-    "error_removing_favorite": "فشل الحذف من المفضلة"
+    "error_removing_favorite": "فشل الحذف من المفضلة",
+    "play": "تشغيل",
+    "bookmark": "إضافة للمفضلة",
+    "copy": "نسخ",
+    "share": "مشاركة",
+    "more": "المزيد",
+    "copied": "تم النسخ",
+    "error": "حدث خطأ"
   },
   "home": {
     "Yaqeen-header": "يقينك",
@@ -116,7 +123,11 @@
     "verse": "الآية",
     "your-goals": "أهدافك",
     "start-your-journy": "ابدأ رحلتك",
-    "go_to_ayah": "اقرأ الآية {{number}}"
+    "go_to_ayah": "اقرأ الآية {{number}}",
+    "tafsirs": "التفاسير",
+    "reflections": "تدبر",
+    "benefits": "الفوائد",
+    "hadith": "الحديث"
   },
   "audio": {
     "playing": "جاري التشغيل",
@@ -171,7 +182,13 @@
     "error_invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
     "error_user_exists": "المستخدم مسجل بالفعل",
     "error_email_not_confirmed": "البريد الإلكتروني غير مؤكد. يرجى التحقق من صندوق الوارد.",
-    "error_generic": "حدث خطأ أثناء المصادقة"
+    "error_generic": "حدث خطأ أثناء المصادقة",
+    "login_required": "يرجى تسجيل الدخول لحفظ الآيات"
+  },
+
+  "favorites": {
+    "ayah_added": "تمت إضافة الآية إلى المفضلة",
+    "ayah_removed": "تمت إزالة الآية من المفضلة"
   },
 
   "error": {
