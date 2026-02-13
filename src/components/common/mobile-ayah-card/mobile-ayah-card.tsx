@@ -40,10 +40,10 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
       );
       return;
     }
-    onBookmark();
+
+    if (onBookmark) onBookmark();
   };
 
-  const isArabic = language === "ar";
   // If we are in English mode, the ayah.text is English (from API).
   // If we are in Arabic mode, the ayah.text is Arabic.
   // We don't have the "other" language text readily available in the current ayah object from single-edition fetch.
@@ -99,10 +99,12 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
               <ContentCopy fontSize="small" className="text-muted-foreground" />
             }
             onClick={() => {
-              onCopy();
-              toast.success(
-                t("common.copied", { defaultValue: "Copied to clipboard" }),
-              );
+              if (onCopy) {
+                onCopy();
+                toast.success(
+                  t("common.copied", { defaultValue: "Copied to clipboard" }),
+                );
+              }
             }}
             size="sm"
             variant="ghost"
@@ -112,10 +114,12 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
           <IconButton
             icon={<Share fontSize="small" className="text-muted-foreground" />}
             onClick={() => {
-              onShare();
-              toast.success(
-                t("common.shared", { defaultValue: "Shared successfully" }),
-              );
+              if (onShare) {
+                onShare();
+                toast.success(
+                  t("common.shared", { defaultValue: "Shared successfully" }),
+                );
+              }
             }}
             size="sm"
             variant="ghost"
@@ -138,7 +142,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
       {/* Body */}
       <div className="p-5 flex flex-col gap-6">
         {/* Arabic Text Slot - Only show if language is Arabic (or if we had separate arabic text field) */}
-        {isArabic && (
+        {isRtl && (
           <div className="w-full text-right" dir="rtl">
             <p className="text-3xl font-amiri leading-[2.5] text-foreground">
               {ayah.text}
@@ -147,7 +151,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
         )}
 
         {/* Translation/English Text Slot - Show if language is English */}
-        {!isArabic && (
+        {!isRtl && (
           <div className="text-left w-full" dir="ltr">
             <p className="text-lg text-muted-foreground leading-relaxed font-sans text-foreground">
               {ayah.text}
