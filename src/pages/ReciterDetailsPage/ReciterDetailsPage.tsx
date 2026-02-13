@@ -22,6 +22,7 @@ const ReciterDetailsPage: React.FC<ReciterDetailsPageProps> = () => {
     reciter: Number(reciterId),
     language,
   });
+  console.log(data);
   const { t } = useTranslation();
   const { play, pause, isPlaying, currentSurahNumber } = useAudio();
   const { setNavigationHandlers, clearNavigationHandlers } =

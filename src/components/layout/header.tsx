@@ -105,14 +105,14 @@ export function Header() {
           </Box>
 
           <div
-            className="flex items-center -ml-2 sm:ml-0  cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-[960px]:static min-[960px]:transform-none min-[960px]:translate-0 select-none"
+            className={`flex items-center justify-center ${isRtl ? "ml-2" : "-ml-2"} sm:ml-0  cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-[960px]:static min-[960px]:transform-none min-[960px]:translate-0 select-none`}
             onClick={() => {
               navigation("/");
             }}
           >
             <img
               src={Logo}
-              className="-ml-2 w-20 h-20 lg:w-18 lg:h-18 object-contain"
+              className="-ml-2 w-20 h-20 lg:w-18 lg:h-18 object-contain sm:-mt-1"
               alt="Logo"
             />
             <h2 className="font-bold -ml-2 text-primary text-2xl lg:text-3xl whitespace-nowrap leading-none pt-1">

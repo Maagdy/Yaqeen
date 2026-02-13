@@ -3,6 +3,7 @@ import type {
   FavoriteReciter,
   FavoriteSurah,
   FavoriteAyah,
+  FavoriteJuz,
   Profile,
   UserGoal,
   UserProgress,
@@ -181,6 +182,47 @@ export const removeFavoriteAyah = async (
     surah_number: surahNumber,
     ayah_number: ayahNumber,
   });
+  if (error) throw error;
+};
+
+// --- Favorite Juz ---
+export const getFavoriteJuzs = async (
+  userId: string,
+): Promise<FavoriteJuz[]> => {
+  const { data, error } = await supabase
+    .from("favorite_juz")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteJuz = async (
+  userId: string,
+  juzNumber: number,
+): Promise<FavoriteJuz | null> => {
+  const { data, error } = await supabase
+    .from("favorite_juz")
+    .insert([
+      {
+        user_id: userId,
+        juz_number: juzNumber,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteJuz = async (
+  userId: string,
+  juzNumber: number,
+): Promise<void> => {
+  const { error } = await supabase
+    .from("favorite_juz")
+    .delete()
+    .match({ user_id: userId, juz_number: juzNumber });
   if (error) throw error;
 };
 

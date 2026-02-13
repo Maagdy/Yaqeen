@@ -190,7 +190,11 @@
 
   "favorites": {
     "ayah_added": "Ayah added to favorites",
-    "ayah_removed": "Ayah removed from favorites"
+    "ayah_removed": "Ayah removed from favorites",
+    "surah_added": "Surah added to favorites",
+    "surah_removed": "Surah removed from favorites",
+    "juz_added": "Juz added to favorites",
+    "juz_removed": "Juz removed from favorites"
   },
 
   "error": {
@@ -267,6 +271,8 @@
     "total_pages_read": "Total Pages Read",
     "favorite_reciters": "Favorite Reciters",
     "favorite_surahs": "Favorite Surahs",
+    "favorite_juzs": "Favorite Juzs",
+    "favorite_ayahs": "Favorite Ayahs",
     "no_favorites": "No favorites yet. Explore the Quran and Reciters to add some!",
     "details": "Profile Details",
     "manage_info": "Manage your personal information"

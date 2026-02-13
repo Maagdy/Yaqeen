@@ -13,6 +13,9 @@ import {
   removeFavoriteSurah,
   addFavoriteAyah,
   removeFavoriteAyah,
+  getFavoriteJuzs,
+  addFavoriteJuz,
+  removeFavoriteJuz,
 } from "./user-queries";
 import type { Profile } from "./user.types";
 import { queryClient } from "@/contexts/queryClient";
@@ -242,6 +245,52 @@ export const useRemoveFavoriteAyahMutation = (userId: string | undefined) => {
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["favorite-ayahs", userId],
+      });
+    },
+  });
+};
+
+export const useFavoriteJuzsQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-juzs", userId],
+    queryFn: () => (userId ? getFavoriteJuzs(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteJuzMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: (juzNumber: number) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteJuz(userId, juzNumber);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-juzs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-juzs", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteJuzMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: (juzNumber: number) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteJuz(userId, juzNumber);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-juzs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-juzs", userId],
       });
     },
   });

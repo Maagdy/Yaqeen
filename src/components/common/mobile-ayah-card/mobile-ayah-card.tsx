@@ -10,13 +10,13 @@ import {
   MenuBook,
   School,
   TipsAndUpdates,
-  FormatQuote,
   Pause,
 } from "@mui/icons-material";
 import type { MobileAyahCardProps } from "./mobile-ayah-card.types";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "@/utils/numbers";
-import { useLanguage } from "@/hooks";
+import { useLanguage, useAuth } from "@/hooks";
+import { toast } from "sonner";
 
 export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
   ayah,
@@ -31,6 +31,23 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
+  const { user } = useAuth();
+
+  const handleBookmark = () => {
+    if (!user) {
+      toast.error(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    if (onBookmark) onBookmark();
+  };
+
+  // If we are in English mode, the ayah.text is English (from API).
+  // If we are in Arabic mode, the ayah.text is Arabic.
+  // We don't have the "other" language text readily available in the current ayah object from single-edition fetch.
+  // So we render based on what we have.
 
   return (
     <div className="w-full bg-card rounded-xl border border-border shadow-sm overflow-hidden mb-4">
@@ -67,7 +84,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
                   />
                 )
               }
-              onClick={onBookmark}
+              onClick={handleBookmark}
               size="sm"
               variant="ghost"
               className="hover:bg-primary/10 hover:text-primary"
@@ -81,7 +98,14 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             icon={
               <ContentCopy fontSize="small" className="text-muted-foreground" />
             }
-            onClick={onCopy}
+            onClick={() => {
+              if (onCopy) {
+                onCopy();
+                toast.success(
+                  t("common.copied", { defaultValue: "Copied to clipboard" }),
+                );
+              }
+            }}
             size="sm"
             variant="ghost"
             className="hover:bg-primary/10 hover:text-primary"
@@ -89,7 +113,14 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
           />
           <IconButton
             icon={<Share fontSize="small" className="text-muted-foreground" />}
-            onClick={onShare}
+            onClick={() => {
+              if (onShare) {
+                onShare();
+                toast.success(
+                  t("common.shared", { defaultValue: "Shared successfully" }),
+                );
+              }
+            }}
             size="sm"
             variant="ghost"
             className="hover:bg-primary/10 hover:text-primary"
@@ -110,25 +141,26 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
 
       {/* Body */}
       <div className="p-5 flex flex-col gap-6">
-        {/* Arabic Text */}
-        <div
-          className={`w-full ${isRtl ? "text-right" : "text-left"}`}
-          dir={isRtl ? "rtl" : "ltr"}
-        >
-          <p className="text-3xl font-amiri leading-[2.5] text-foreground">
-            {ayah.text}
-          </p>
-        </div>
+        {/* Arabic Text Slot - Only show if language is Arabic (or if we had separate arabic text field) */}
+        {isRtl && (
+          <div className="w-full text-right" dir="rtl">
+            <p className="text-3xl font-amiri leading-[2.5] text-foreground">
+              {ayah.text}
+            </p>
+          </div>
+        )}
 
-        {/* Translation (Placeholder for now) */}
-        <div className="text-left w-full" dir="ltr">
-          <p className="text-lg text-muted-foreground leading-relaxed font-sans">
-            {/* TODO: Integrate translation data */}
-            {ayah.text.length > 50
-              ? "In the Name of Allah—the Most Compassionate, Most Merciful."
-              : "Translation text will appear here."}
-          </p>
-        </div>
+        {/* Translation/English Text Slot - Show if language is English */}
+        {!isRtl && (
+          <div className="text-left w-full" dir="ltr">
+            <p className="text-lg text-muted-foreground leading-relaxed font-sans text-foreground">
+              {ayah.text}
+            </p>
+          </div>
+        )}
+
+        {/* If we had translation available separately, we would show it here. 
+            Currently removing the placeholder as requested. */}
       </div>
 
       {/* Horizontal Divider */}
@@ -148,10 +180,6 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
         <FooterButton
           icon={<TipsAndUpdates fontSize="small" />}
           label={t("surah.benefits", { defaultValue: "Benefits" })}
-        />
-        <FooterButton
-          icon={<FormatQuote fontSize="small" />}
-          label={t("surah.hadith", { defaultValue: "Hadith" })}
         />
       </div>
     </div>

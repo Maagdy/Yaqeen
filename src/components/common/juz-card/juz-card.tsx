@@ -5,18 +5,83 @@ import { SurahCard } from "../surah-card/surah-card";
 import type { JuzCardProps } from "./juz-card.types";
 import { useNavigate } from "react-router-dom";
 
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import { useAuth } from "@/hooks";
+import {
+  useFavoriteJuzsQuery,
+  useAddFavoriteJuzMutation,
+  useRemoveFavoriteJuzMutation,
+} from "@/api/domains/user";
+import { toast } from "sonner";
+import { IconButton } from "../icon-button";
+
 export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const navigation = useNavigate();
+  const { user } = useAuth();
+
+  const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
+  const addFavoriteJuzMutation = useAddFavoriteJuzMutation(user?.id);
+  const removeFavoriteJuzMutation = useRemoveFavoriteJuzMutation(user?.id);
+
+  const isFavorite = favoriteJuzs?.some((fav) => fav.juz_number === juzNumber);
+
+  const handleBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast.error(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await removeFavoriteJuzMutation.mutateAsync(juzNumber);
+        toast.success(
+          t("favorites.juz_removed", {
+            defaultValue: "Juz removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteJuzMutation.mutateAsync(juzNumber);
+        toast.success(
+          t("favorites.juz_added", { defaultValue: "Juz added to favorites" }),
+        );
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite juz", error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
+    }
+  };
 
   return (
-    <div className="bg-surface border border-transparent rounded-xl overflow-hidden p-4 break-inside-avoid mb-4">
+    <div className="bg-surface border border-transparent rounded-xl overflow-hidden p-4 break-inside-avoid mb-4 shadow-sm hover:shadow-md transition-shadow relative">
       {/* Juz Header */}
       <div className="w-full flex items-center justify-between mb-4">
-        <span className="font-bold text-text-primary text-base">
-          {t("home.tabs.juz")} {formatNumber(juzNumber, language)}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-text-primary text-base">
+            {t("home.tabs.juz")} {formatNumber(juzNumber, language)}
+          </span>
+          <IconButton
+            icon={
+              isFavorite ? (
+                <Bookmark fontSize="small" className="text-primary" />
+              ) : (
+                <BookmarkBorder
+                  fontSize="small"
+                  className="text-muted-foreground hover:text-primary"
+                />
+              )
+            }
+            onClick={handleBookmarkClick}
+            size="sm"
+            className="ml-2"
+          />
+        </div>
 
         <button
           onClick={() => onClick?.()}
