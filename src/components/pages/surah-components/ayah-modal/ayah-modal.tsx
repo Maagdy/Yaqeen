@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { IconButton, MushafCard } from "../../../common";
-import { useLanguage } from "../../../../hooks";
+import { useLanguage, useAuth } from "../../../../hooks";
 import type { AyahModalProps } from "./ayah-modal.types";
 import { formatNumber } from "../../../../utils/numbers";
 import { useAyahTafsir, useTafsirBooks } from "../../../../api/domains/tafsir";
+import {
+  useFavoriteAyahsQuery,
+  useAddFavoriteAyahMutation,
+  useRemoveFavoriteAyahMutation,
+} from "@/api/domains/user";
+import { toast } from "sonner";
 import {
   Loading,
   Dialog,
@@ -26,6 +33,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const { language, isRtl } = useLanguage();
+  const { user } = useAuth();
   const [currentTafsirBook, setCurrentTafsirBook] = useState<number>(1);
 
   const {
@@ -39,6 +47,60 @@ export const AyahModal: React.FC<AyahModalProps> = ({
     isPending: ayahTafsirLoading,
     isError: ayahTafsirError,
   } = useAyahTafsir(currentTafsirBook, surah.number, ayah?.numberInSurah || 0);
+
+  // Favorite ayahs functionality
+  const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
+  const addFavoriteAyah = useAddFavoriteAyahMutation(user?.id);
+  const removeFavoriteAyah = useRemoveFavoriteAyahMutation(user?.id);
+
+  const isBookmarked = favoriteAyahs.some(
+    (fav) =>
+      fav.surah_number === surah.number &&
+      fav.ayah_number === ayah?.numberInSurah,
+  );
+
+  const handleBookmarkToggle = async () => {
+    if (!user) {
+      toast.error(
+        t("auth.login_required", {
+          defaultValue: "Please login to bookmark ayahs",
+        }),
+      );
+      return;
+    }
+
+    if (!ayah) return;
+
+    try {
+      if (isBookmarked) {
+        await removeFavoriteAyah.mutateAsync({
+          surahNumber: surah.number,
+          ayahNumber: ayah.numberInSurah,
+        });
+        toast.success(
+          t("favorites.ayah_removed", {
+            defaultValue: "Ayah removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteAyah.mutateAsync({
+          surahNumber: surah.number,
+          ayahNumber: ayah.numberInSurah,
+          surahName: surah.name,
+          ayahText: ayah.text,
+          surahNameEnglish: surah.englishName,
+        });
+        toast.success(
+          t("favorites.ayah_added", {
+            defaultValue: "Ayah added to favorites",
+          }),
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(t("common.error", { defaultValue: "An error occurred" }));
+    }
+  };
 
   if (!ayah || !surah) return null;
 
@@ -66,6 +128,19 @@ export const AyahModal: React.FC<AyahModalProps> = ({
           <DialogTitle className="text-xl font-bold">
             {t("surah.ayah-details")}
           </DialogTitle>
+          <IconButton
+            icon={
+              isBookmarked ? (
+                <Bookmark fontSize="medium" className="text-primary" />
+              ) : (
+                <BookmarkBorder fontSize="medium" className="text-primary" />
+              )
+            }
+            onClick={handleBookmarkToggle}
+            size="sm"
+            className="hover:bg-primary/10"
+            label={t("common.bookmark")}
+          />
         </DialogHeader>
 
         <div className="flex flex-col gap-6">

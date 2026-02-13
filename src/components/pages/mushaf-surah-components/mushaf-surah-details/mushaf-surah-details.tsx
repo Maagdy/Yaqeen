@@ -4,9 +4,16 @@ import { useLanguage, useMediaQuery, useAuth } from "@/hooks";
 import { quranSurahs } from "@/utils/constants";
 import { useState } from "react";
 import { formatNumber } from "@/utils/numbers";
-import { BookmarkAdd, Share } from "@mui/icons-material";
+import { padSurahNumber } from "@/utils/surahUtils";
+import {
+  BookmarkAdd,
+  Share,
+  PlayCircleFilledRounded,
+  PauseCircleFilledRounded,
+} from "@mui/icons-material";
 import { IconButton } from "@/components/common";
 import { MobileAyahCard } from "@/components/common/mobile-ayah-card";
+import { useAudio } from "@/hooks/useAudio";
 import {
   useFavoriteAyahsQuery,
   useAddFavoriteAyahMutation,
@@ -33,6 +40,22 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   const surahInfo = quranSurahs.find((s) => s.number === surah.id);
   const englishName = surahInfo?.name || "";
   // Note: Revelation type is not available in current constants
+
+  // Audio player for full surah
+  const { play, pause, isPlaying, currentAudio } = useAudio();
+  const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
+  const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.id)}.mp3`;
+  const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
+
+  const handleFullSurahClick = () => {
+    if (fullSurahAudioUrl) {
+      if (isPlaying && currentAudio === fullSurahAudioUrl) {
+        pause();
+      } else {
+        play(fullSurahAudioUrl, surah.id);
+      }
+    }
+  };
 
   // Mobile card event handlers
   const handleMobileAyahPlay = () => {
@@ -200,6 +223,29 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             />
           </div>
         </div>
+
+        {/* Listen to Full Surah Button */}
+        {fullSurahAudioUrl && (
+          <div className="mt-4 text-center">
+            <IconButton
+              onClick={handleFullSurahClick}
+              icon={
+                isFullSurahPlaying ? (
+                  <PauseCircleFilledRounded />
+                ) : (
+                  <PlayCircleFilledRounded />
+                )
+              }
+              label={
+                isFullSurahPlaying
+                  ? t("surah.pause_full")
+                  : t("surah.listen_full")
+              }
+              className="mx-auto"
+              size="md"
+            />
+          </div>
+        )}
       </div>
 
       {/* Ayahs - Mobile: Card View, Desktop: Centered View */}

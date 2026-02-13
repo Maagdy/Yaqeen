@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSearchQueries } from "../../api/domains/search";
@@ -10,6 +10,7 @@ import { ArrowBack, ArrowForward, MenuBook } from "@mui/icons-material";
 import { Pagination } from "@mui/material";
 import { generateRoute } from "../../router/routes";
 import { useLanguage } from "@/hooks";
+import HomeSearchBar from "@/components/pages/home-components/home-search-bar/home-search-bar";
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,6 +21,24 @@ const SearchPage: React.FC = () => {
   // Page is now derived from URL, defaulting to 1
   const page = parseInt(searchParams.get("page") || "1", 10);
   const ITEMS_PER_PAGE = 20;
+
+  // Local state for the search bar input to allow editing without triggering search immediately
+  const [searchInput, setSearchInput] = useState(rawKeyword);
+
+  // Sync local state with URL param when it changes
+  useEffect(() => {
+    setSearchInput(rawKeyword);
+  }, [rawKeyword]);
+
+  const handleSearch = (term: string) => {
+    if (term.trim()) {
+      setSearchParams((prev) => {
+        prev.set("q", term);
+        prev.set("page", "1"); // Reset to first page on new search
+        return prev;
+      });
+    }
+  };
 
   // Smart Query Parsing
   const parsedQuery = useMemo(() => {
@@ -47,6 +66,7 @@ const SearchPage: React.FC = () => {
     }
 
     // 2. Language Detection
+    // Moved core API language logic to search-queries.ts, but we keep some UI-specific detections (like Surah names) here.
     const arabicPattern = /[\u0600-\u06FF]/;
     const isArabic = arabicPattern.test(keyword);
 
@@ -142,8 +162,22 @@ const SearchPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!rawKeyword) {
-    return <div className="p-8 text-center">{t("search.placeholder")}</div>;
+  if (!rawKeyword && !searchInput) {
+    // Show just the search bar if nothing is searched yet
+    return (
+      <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-bold mb-8 text-primary">
+          {t("search.title")}
+        </h1>
+        <HomeSearchBar
+          value={searchInput}
+          onChange={setSearchInput}
+          onSearch={handleSearch}
+          placeholder={t("search.placeholder")}
+          className="w-full max-w-2xl"
+        />
+      </div>
+    );
   }
 
   // If we detected a Surah but the remaining keyword was too short, checking if we should just redirect or show a big card?
@@ -154,9 +188,15 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)]">
-      <h1 className="text-3xl font-bold mb-6 text-primary">
-        {t("search.title")}
-      </h1>
+      <div className="mb-8">
+        <HomeSearchBar
+          value={searchInput}
+          onChange={setSearchInput}
+          onSearch={handleSearch}
+          placeholder={t("search.placeholder")}
+          className="w-full max-w-2xl"
+        />
+      </div>
 
       {/* Surah Navigation Card */}
       {parsedQuery.detectedSurah && (

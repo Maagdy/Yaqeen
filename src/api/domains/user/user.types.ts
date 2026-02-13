@@ -37,6 +37,13 @@ export interface FavoriteAyah {
   created_at: string;
 }
 
+export interface FavoriteJuz {
+  id: number;
+  user_id: string;
+  juz_number: number;
+  created_at: string;
+}
+
 export interface UserProgress {
   id: number;
   user_id: string;

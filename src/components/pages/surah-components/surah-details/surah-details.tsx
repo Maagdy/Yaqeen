@@ -9,6 +9,7 @@ import { useFavoriteAyahsQuery } from "@/api/domains/user";
 import { useMobileAyahHandlers } from "./hooks";
 import { SurahHeader, MobileAyahsList, DesktopAyahsList } from "./components";
 import { useTranslation } from "react-i18next";
+import { padSurahNumber } from "@/utils/surahUtils";
 
 export const SurahDetails: React.FC<SurahDetailsProps> = ({
   surah,
@@ -28,8 +29,9 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   // Favorite ayahs functionality
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
 
-  // TODO: Get full surah audio URL from API
-  const fullSurahAudioUrl = `https://server6.mp3quran.net/akdr/002.mp3`;
+  // Default server for full surah audio
+  const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
+  const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.number)}.mp3`;
 
   // Set up navigation handlers when component mounts
   useEffect(() => {
@@ -57,19 +59,25 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   }, [surah.number, setNavigationHandlers, clearNavigationHandlers]);
 
   const handleAyahClick = (ayah: Ayah) => {
-    if (!ayah.audio) {
-      console.warn("No audio URL available for this ayah");
-      return;
+    let audioUrl = ayah.audio;
+
+    if (!audioUrl) {
+      // Fallback to Alafasy audio if specific edition audio is missing (e.g. for translation editions)
+      // Ayah number is absolute number (1-6236)
+      audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`;
     }
 
     // If clicking the same ayah that's playing, pause it
-    if (isPlaying && currentSurahNumber === ayah.number) {
+    if (
+      isPlaying &&
+      (currentSurahNumber === ayah.number || currentAudio === audioUrl)
+    ) {
       pause();
       return;
     }
 
     // Play the ayah
-    play(ayah.audio, surah.number);
+    play(audioUrl, surah.number);
   };
 
   const handleFullSurahClick = () => {

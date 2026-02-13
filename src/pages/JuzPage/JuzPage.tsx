@@ -7,15 +7,62 @@ import { Loading } from "../../components/ui";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { SurahDetails } from "@/components/pages/surah-components/surah-details";
 
+import {
+  useFavoriteJuzsQuery,
+  useAddFavoriteJuzMutation,
+  useRemoveFavoriteJuzMutation,
+} from "@/api/domains/user";
+import { useAuth } from "@/hooks";
+import { toast } from "sonner";
+import { IconButton } from "@/components/common/icon-button/icon-button";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+
 const JuzPage: React.FC<JuzPageProps> = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { language } = useLanguage();
+  const { user } = useAuth();
 
   const juzNumber = Number(id);
   const edition = language === "ar" ? "ar.alafasy" : "en.asad";
 
   const { data: juz, isLoading, isError } = useJuzQuery(juzNumber, edition);
+
+  const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
+  const addFavoriteJuzMutation = useAddFavoriteJuzMutation(user?.id);
+  const removeFavoriteJuzMutation = useRemoveFavoriteJuzMutation(user?.id);
+
+  const isFavorite = favoriteJuzs?.some((fav) => fav.juz_number === juzNumber);
+
+  const handleBookmarkClick = async () => {
+    if (!user) {
+      toast.error(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await removeFavoriteJuzMutation.mutateAsync(juzNumber);
+        toast.success(
+          t("favorites.juz_removed", {
+            defaultValue: "Juz removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteJuzMutation.mutateAsync(juzNumber);
+        toast.success(
+          t("favorites.juz_added", { defaultValue: "Juz added to favorites" }),
+        );
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite juz", error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
+    }
+  };
 
   if (isLoading) {
     return (
@@ -48,10 +95,29 @@ const JuzPage: React.FC<JuzPageProps> = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border py-6">
-        <div className="max-w-4xl mx-auto px-4 ">
+        <div className="max-w-4xl mx-auto px-4 flex items-center justify-center gap-3 relative">
           <h1 className="text-3xl font-bold text-text-primary text-center">
             {t("juz.title", { number: juzNumber })}
           </h1>
+          <IconButton
+            icon={
+              isFavorite ? (
+                <Bookmark fontSize="medium" className="text-primary" />
+              ) : (
+                <BookmarkBorder
+                  fontSize="medium"
+                  className="text-muted-foreground hover:text-primary"
+                />
+              )
+            }
+            onClick={handleBookmarkClick}
+            className={
+              isFavorite
+                ? "text-primary hover:text-primary/80 absolute right-4 md:static"
+                : "text-primary/70 hover:text-primary absolute right-4 md:static"
+            }
+            size="sm"
+          />
         </div>
       </div>
 
