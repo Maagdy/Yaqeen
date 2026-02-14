@@ -12,7 +12,7 @@ import {
   useAddFavoriteAyahMutation,
   useRemoveFavoriteAyahMutation,
 } from "@/api/domains/user";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import {
   Loading,
   Dialog,
@@ -33,7 +33,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const { language, isRtl } = useLanguage();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const [currentTafsirBook, setCurrentTafsirBook] = useState<number>(1);
 
   const {
@@ -60,7 +60,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
   );
 
   const handleBookmarkToggle = async () => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",
@@ -253,6 +253,8 @@ export const AyahModal: React.FC<AyahModalProps> = ({
                     ? t("surah.error_loading_tafsir")
                     : t("surah.error_loading_tafsir_books")
                 }
+                showBackButton
+                showHomeButton
               />
             </div>
           ) : (

@@ -16,7 +16,7 @@ import {
   useAddFavoriteSurahMutation,
   useRemoveFavoriteSurahMutation,
 } from "@/api/domains/user";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 export const SurahHeader: React.FC<SurahHeaderProps> = ({
   surah,
@@ -27,7 +27,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   onFullSurahClick,
 }) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
   const addFavoriteSurahMutation = useAddFavoriteSurahMutation(user?.id);
   const removeFavoriteSurahMutation = useRemoveFavoriteSurahMutation(user?.id);
@@ -40,7 +40,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   );
 
   const handleBookmarkClick = async () => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
@@ -85,29 +85,6 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   return (
     <div className="mb-6 pb-4 border-b-2 border-primary/20">
       <div className="flex items-start justify-between">
-        {/* Empty space for alignment */}
-        <div className="w-20"></div>
-
-        {/* Surah Name and Verse Count - Centered */}
-        <div className="flex-1 text-center">
-          <h2
-            className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
-              isRtl ? "font-amiri" : ""
-            }`}
-          >
-            {"name" in surah ? (isRtl ? surah.name : surah.englishName) : ""}
-          </h2>
-          <p className="text-sm text-text-secondary">
-            {"revelationType" in surah &&
-              t(
-                surah.revelationType.toLowerCase() === "meccan"
-                  ? "home.revelation_place.makkah"
-                  : "home.revelation_place.madinah",
-              )}{" "}
-            • {formatNumber(surah.numberOfAyahs, language)} {t("home.verses")}
-          </p>
-        </div>
-
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <IconButton
@@ -139,6 +116,29 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
             size="sm"
           />
         </div>
+
+        {/* Surah Name and Verse Count - Centered */}
+        <div className="flex-1 text-center">
+          <h2
+            className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
+              isRtl ? "font-amiri" : ""
+            }`}
+          >
+            {"name" in surah ? (isRtl ? surah.name : surah.englishName) : ""}
+          </h2>
+          <p className="text-sm text-text-secondary">
+            {"revelationType" in surah &&
+              t(
+                surah.revelationType.toLowerCase() === "meccan"
+                  ? "home.revelation_place.makkah"
+                  : "home.revelation_place.madinah",
+              )}{" "}
+            • {formatNumber(surah.numberOfAyahs, language)} {t("home.verses")}
+          </p>
+        </div>
+
+        {/* Empty space for alignment */}
+        <div className="w-20"></div>
       </div>
 
       {/* Listen to Full Surah Button */}

@@ -13,6 +13,8 @@ import RadioPage from "@/pages/RadioPage/RadioPage";
 import { AuthPage } from "@/pages/AuthPage";
 import SearchPage from "@/pages/SearchPage/SearchPage";
 import ProfilePage from "@/pages/ProfilePage/ProfilePage";
+import HadithsPage from "@/pages/HadithsPage/HadithsPage";
+import HadithDetailsPage from "@/pages/HadithDetailsPage/HadithDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +35,8 @@ export const router = createBrowserRouter([
       { path: ROUTES.AUTH, element: <AuthPage /> },
       { path: ROUTES.SEARCH, element: <SearchPage /> },
       { path: ROUTES.PROFILE, element: <ProfilePage /> },
+      { path: ROUTES.HADITHS, element: <HadithsPage /> },
+      { path: ROUTES.HADITH_DETAILS, element: <HadithDetailsPage /> },
     ],
   },
 ]);

@@ -53,10 +53,39 @@ export interface HadithCollection {
   totalAvailableHadith: number;
 }
 
-export interface HadithResponse {
+export interface HadithContent {
+  lang: string;
+  chapterNumber: string;
+  chapterTitle: string;
+  urn: number;
+  body: string;
+  grades: {
+    value: string;
+    grade: string;
+  }[];
+}
+
+export interface Hadith {
+  collection: string;
+  bookNumber: string;
+  chapterId: string;
+  hadithNumber: string;
+  hadith: HadithContent[];
+}
+
+export interface HadithCollectionResponse {
   data: HadithCollection[];
   total: number;
   limit: number;
+  previous: number;
+  next: number;
+}
+
+export interface HadithListResponse {
+  data: Hadith[];
+  total: number;
+  limit: number;
+  page: number;
   previous: number;
   next: number;
 }
@@ -67,4 +96,25 @@ export interface HadithParams {
   hadithNumber?: number;
   limit?: number;
   page?: number;
+}
+
+export interface HadithBookInfo {
+  lang: string;
+  name: string;
+}
+
+export interface HadithBook {
+  bookNumber: string;
+  book: HadithBookInfo[];
+  hadithStartNumber: number;
+  hadithEndNumber: number;
+  numberOfHadith: number;
+}
+
+export interface HadithBookResponse {
+  data: HadithBook[];
+  total: number;
+  limit: number;
+  previous: number;
+  next: number;
 }

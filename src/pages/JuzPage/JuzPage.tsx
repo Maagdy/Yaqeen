@@ -13,7 +13,7 @@ import {
   useRemoveFavoriteJuzMutation,
 } from "@/api/domains/user";
 import { useAuth } from "@/hooks";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { IconButton } from "@/components/common/icon-button/icon-button";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 
@@ -21,12 +21,17 @@ const JuzPage: React.FC<JuzPageProps> = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const juzNumber = Number(id);
   const edition = language === "ar" ? "ar.alafasy" : "en.asad";
 
-  const { data: juz, isLoading, isError } = useJuzQuery(juzNumber, edition);
+  const {
+    data: juz,
+    isLoading,
+    isError,
+    refetch: juzRefetch,
+  } = useJuzQuery(juzNumber, edition);
 
   const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
   const addFavoriteJuzMutation = useAddFavoriteJuzMutation(user?.id);
@@ -35,7 +40,7 @@ const JuzPage: React.FC<JuzPageProps> = () => {
   const isFavorite = favoriteJuzs?.some((fav) => fav.juz_number === juzNumber);
 
   const handleBookmarkClick = async () => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
@@ -73,7 +78,15 @@ const JuzPage: React.FC<JuzPageProps> = () => {
   }
 
   if (isError || !juz) {
-    return <ErrorPage message={t("juz.error_loading_page")} />;
+    return (
+      <ErrorPage
+        message={t("juz.error_loading_page")}
+        showBackButton
+        showHomeButton
+        showRetryButton
+        onRetry={() => juzRefetch()}
+      />
+    );
   }
 
   // Group ayahs by surah

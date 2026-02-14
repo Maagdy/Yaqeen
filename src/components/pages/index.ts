@@ -5,3 +5,4 @@ export * from "./surah-components";
 export * from "./profile-components";
 export * from "./mushaf-surah-components";
 export * from "./radio-components";
+export * from "./hadiths-components";

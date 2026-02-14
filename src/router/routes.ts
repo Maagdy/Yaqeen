@@ -12,6 +12,8 @@ export const ROUTES = {
   AUTH: "/auth",
   SEARCH: "/search",
   PROFILE: "/profile",
+  HADITHS: "/hadiths",
+  HADITH_DETAILS: "/hadiths/:collectionName",
 } as const;
 
 export const generateRoute = {
@@ -29,4 +31,7 @@ export const generateRoute = {
 
   search: (keyword: string): string =>
     `/search?q=${encodeURIComponent(keyword)}`,
+
+  hadithDetails: (collectionName: string): string =>
+    `/hadiths/${collectionName}`,
 } as const;

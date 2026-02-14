@@ -1,8 +1,8 @@
 // Hybrid API approach:
 // - mp3quran for surah metadata (fast, reliable)
 // - AlQuran Cloud for verse/ayah content
-export const MP3QURAN_BASE_URL = "https://mp3quran.net/api/v3";
-export const ALQURAN_BASE_URL = "https://api.alquran.cloud/v1";
+export const MP3QURAN_BASE_URL = "/api/proxy?url=https://mp3quran.net/api/v3";
+export const ALQURAN_BASE_URL = "/api/proxy?url=https://api.alquran.cloud/v1";
 
 // Legacy - keeping for backward compatibility
 export const API_BASE_URL = ALQURAN_BASE_URL;
@@ -61,7 +61,7 @@ export const ENDPOINTS = {
   ALL_TAFSIR_BOOKS: "/api/proxy?url=http://api.quran-tafseer.com/tafseer",
 
   TAFSIR: (tafsirId: number = 1, suraId: number = 1, language: string = "ar") =>
-    `https://www.mp3quran.net/api/v3/tafsir?tafsir=${tafsirId}&sura=${suraId}&language=${language}`,
+    `/api/proxy?url=https://www.mp3quran.net/api/v3/tafsir?tafsir=${tafsirId}&sura=${suraId}&language=${language}`,
 
   // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
   // Note: Using local serverless proxy to bypass CORS/HTTPS
@@ -98,7 +98,7 @@ export const ENDPOINTS = {
 
   // --- RADIO ---
   RADIO: (language: string = "eng") =>
-    `https://www.mp3quran.net/api/v3/radios?language=${language}`,
+    `/api/proxy?url=https://www.mp3quran.net/api/v3/radios?language=${language}`,
 
   // --- RUKU (556 total) ---
   RUKUS: "/rukus", // All rukus references
@@ -115,7 +115,7 @@ export const ENDPOINTS = {
   // --- MEDIA ---
   // Note: Media URL conventions are often handled by CDN directly, but here are specific API helpers if needed
   AUDIO_URL: (editionId: string) =>
-    `https://cdn.islamic.network/quran/audio/128/${editionId}`,
+    `/api/proxy?url=https://cdn.islamic.network/quran/audio/128/${editionId}`,
   IMAGE_URL: (ayahId: number) =>
-    `https://cdn.islamic.network/quran/images/${ayahId}.png`,
+    `/api/proxy?url=https://cdn.islamic.network/quran/images/${ayahId}.png`,
 } as const;

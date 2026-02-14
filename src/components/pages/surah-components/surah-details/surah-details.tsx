@@ -18,7 +18,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const { play, pause, isPlaying, currentSurahNumber, currentAudio } =
     useAudio();
   const { setNavigationHandlers, clearNavigationHandlers } =
@@ -109,6 +109,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
     surah: getSurahForMobileCard(),
     favoriteAyahs,
     user,
+    isLoggedIn,
     onAyahClick: handleAyahClick,
   });
 

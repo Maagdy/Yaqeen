@@ -15,7 +15,7 @@ export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
       theme: "light",
-      language: "en",
+      language: "ar",
       audioSettings: {
         volume: 1,
         autoplay: false,

@@ -4,3 +4,6 @@ export type Radio = {
   url: string;
   recent_date: Date | string;
 };
+export interface RadioResponse {
+  radios: Radio[];
+}

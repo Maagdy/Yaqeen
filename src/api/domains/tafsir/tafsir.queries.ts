@@ -6,8 +6,11 @@ import type {
   TafsirBook,
   TafsirResponse,
   HadithParams,
-  HadithResponse,
+  HadithListResponse,
+  HadithCollectionResponse,
   HadithCollection,
+  HadithBook,
+  HadithBookResponse,
 } from "./tafsir.types";
 import axios from "axios";
 
@@ -37,18 +40,34 @@ export const getAyahTafsir = async (
 
 export async function getHadiths(
   params?: HadithParams,
-): Promise<HadithResponse> {
+): Promise<HadithListResponse> {
   try {
-    const { data } = await axios.get<HadithResponse>(
-      "https://api.sunnah.com/v1/hadiths",
-      {
-        headers: {
-          Accept: "application/json",
-          "X-API-Key": API_KEY,
-        },
-        params,
+    let url = "/api/proxy?url=https://api.sunnah.com/v1/hadiths";
+
+    // If we have collection and book, use the specific endpoint
+    if (params?.collection && params?.book) {
+      url = `/api/proxy?url=https://api.sunnah.com/v1/collections/${params.collection}/books/${params.book}/hadiths`;
+    }
+
+    const { data } = await axios.get<HadithListResponse>(url, {
+      headers: {
+        Accept: "application/json",
+        "X-API-Key": API_KEY,
       },
-    );
+      params: {
+        page: params?.page,
+        limit: params?.limit,
+        // Only include hadithNumber if we're NOT using the specific endpoint or if the specific endpoint supports it (filtering)
+        // For now, let's pass other params generally, but excludes collection/book which are in URL
+        ...(!params?.collection || !params?.book
+          ? {
+              collection: params?.collection,
+              book: params?.book,
+              hadithNumber: params?.hadithNumber,
+            }
+          : {}),
+      },
+    });
 
     return data;
   } catch (error) {
@@ -61,7 +80,7 @@ export async function getHadithCollections(
   exclusions: string[] = ["darimi", "nawawi40", "malik"],
 ): Promise<HadithCollection[]> {
   try {
-    const { data } = await axios.get<HadithResponse>(
+    const { data } = await axios.get<HadithCollectionResponse>(
       "/api/proxy?url=https://api.sunnah.com/v1/collections",
       {
         headers: {
@@ -79,6 +98,27 @@ export async function getHadithCollections(
     return filteredCollections;
   } catch (error) {
     console.error("Failed to fetch hadith collections:", error);
+    throw error;
+  }
+}
+
+export async function getCollectionBooks(
+  collectionName: string,
+): Promise<HadithBook[]> {
+  try {
+    const { data } = await axios.get<HadithBookResponse>(
+      `/api/proxy?url=https://api.sunnah.com/v1/collections/${collectionName}/books`,
+      {
+        headers: {
+          Accept: "application/json",
+          "X-API-Key": API_KEY,
+        },
+      },
+    );
+
+    return data.data;
+  } catch (error) {
+    console.error("Failed to fetch collection books:", error);
     throw error;
   }
 }

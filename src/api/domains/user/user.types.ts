@@ -69,3 +69,23 @@ export interface UserGoal {
   period: "daily" | "weekly";
   created_at: string;
 }
+
+export interface FavoriteBook {
+  id: string;
+  user_id: string;
+  collection_name: string;
+  book_number?: string;
+  book_name?: string;
+  created_at: string;
+}
+
+export interface FavoriteHadith {
+  id: string;
+  user_id: string;
+  collection_name: string;
+  book_number: string;
+  hadith_number: string;
+  chapter_id?: string;
+  hadith_text?: string;
+  created_at: string;
+}

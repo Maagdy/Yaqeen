@@ -15,7 +15,7 @@ import { MenuBook } from "@mui/icons-material";
 import { NextSurahCard } from "../../components/pages/surah-components/next-surah-card";
 import { AyahModal } from "../../components/pages/surah-components/ayah-modal";
 import SurahSection from "../../components/pages/surah-components/surah-section/surah-section";
-import { useHadithCollections, useSurahTafsir } from "@/api/domains/tafsir";
+import { useSurahTafsir } from "@/api/domains/tafsir";
 import { TafsirCard } from "../../components/pages/surah-components/tafsir-card";
 import { useAudio } from "../../hooks";
 import { SurahDetails } from "@/components/pages";
@@ -35,8 +35,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const discoverContentRef = useRef<HTMLDivElement>(null);
   const surahNumber = Number(id);
   const edition = language === "ar" ? "ar.alafasy" : "en.asad";
-  const { data } = useHadithCollections();
-  console.log("hadiths", data);
 
   const {
     data: surah,
