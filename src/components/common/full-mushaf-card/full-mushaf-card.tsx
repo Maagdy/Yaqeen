@@ -2,9 +2,66 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslation } from "react-i18next";
 import type { FullMushafCardProps } from "./full-mushaf-card.types";
 
+import { IconButton } from "@/components/common/icon-button/icon-button";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import {
+  useFavoriteMushafsQuery,
+  useAddFavoriteMushafMutation,
+  useRemoveFavoriteMushafMutation,
+} from "@/api/domains/user";
+import { useAuth } from "@/hooks";
+import { toast } from "react-toastify";
+
 export const FullMushafCard = ({ mushaf, onClick }: FullMushafCardProps) => {
   const { t } = useTranslation();
   const { isRtl } = useLanguage();
+  const { user, isLoggedIn } = useAuth();
+
+  const { data: favoriteMushafs } = useFavoriteMushafsQuery(user?.id);
+  const addFavoriteMushafMutation = useAddFavoriteMushafMutation(user?.id);
+  const removeFavoriteMushafMutation = useRemoveFavoriteMushafMutation(
+    user?.id,
+  );
+
+  const isFavorite = favoriteMushafs?.some(
+    (fav) => fav.mushaf_id === mushaf.id,
+  );
+
+  const handleBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      toast.warning(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await removeFavoriteMushafMutation.mutateAsync(mushaf.id);
+        toast.success(
+          t("favorites.mushaf_removed", {
+            defaultValue: "Mushaf removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteMushafMutation.mutateAsync({
+          mushafId: mushaf.id,
+          mushafName: mushaf.name,
+        });
+        toast.success(
+          t("favorites.mushaf_added", {
+            defaultValue: "Mushaf added to favorites",
+          }),
+        );
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite mushaf", error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
+    }
+  };
 
   return (
     <div
@@ -63,6 +120,17 @@ export const FullMushafCard = ({ mushaf, onClick }: FullMushafCardProps) => {
             >
               {mushaf.rawi.name}
             </p>
+          </div>
+          {/* Favorite Button */}
+          <div className="z-10">
+            <IconButton
+              icon={
+                isFavorite ? <Bookmark color="primary" /> : <BookmarkBorder />
+              }
+              onClick={handleBookmarkClick}
+              size="sm"
+              className="bg-transparent!"
+            />
           </div>
         </div>
 

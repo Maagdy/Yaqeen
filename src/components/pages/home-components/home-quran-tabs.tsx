@@ -13,6 +13,7 @@ import {
   type JuzMeta,
   type Surah,
 } from "../../../api";
+import { Loading } from "@/components/ui";
 
 export default function HomeQuranTabs() {
   const { t } = useTranslation();
@@ -115,9 +116,7 @@ export default function HomeQuranTabs() {
             className="w-full"
           >
             {isLoading ? (
-              <div className="w-full h-40 flex items-center justify-center text-text-secondary">
-                {t("common.loading")}
-              </div>
+              <Loading size="lg" message={t("common.loading")} />
             ) : activeTab === "juz" ? (
               // Juz View - Masonry Layout
               <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">

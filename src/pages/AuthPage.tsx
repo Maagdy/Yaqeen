@@ -1,289 +1,36 @@
-import { useState } from "react";
-import supabase from "@/lib/supabase-client";
-import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { authSchema, type AuthFormData } from "@/schemas/auth-schema";
 import { useNavigate } from "react-router-dom";
-import {
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Loading } from "@/components/ui/loading/Loading";
-import { Moshaf } from "@/assets/images";
-import { motion, AnimatePresence } from "framer-motion";
 import { ArrowBack } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
+import { AuthForm, AuthBanner } from "@/components/pages/auth-components";
 
 export const AuthPage = () => {
-  const { t } = useTranslation();
   const { isRtl } = useLanguage();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      first_name: "",
-      last_name: "",
-    },
-  });
-
-  const toggleMode = () => {
-    setIsSignUp(!isSignUp);
-    reset();
-  };
-
-  const getErrorMessage = (error: Error) => {
-    if (error.message.includes("Invalid login credentials")) {
-      return t("auth.error_invalid_credentials");
-    }
-    if (error.message.includes("User already registered")) {
-      return t("auth.error_user_exists");
-    }
-    if (error.message.includes("Email not confirmed")) {
-      return t("auth.error_email_not_confirmed");
-    }
-    return error.message;
-  };
-
-  const onSubmit = async (data: AuthFormData) => {
-    setLoading(true);
-    const { email, password, first_name, last_name } = data;
-
-    try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              first_name,
-              last_name,
-            },
-          },
-        });
-        if (error) throw error;
-        toast.success(t("auth.signupSuccess"));
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        toast.success(t("auth.signinSuccess"));
-        navigate("/");
-      }
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? getErrorMessage(error)
-          : t("auth.error_generic");
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loading
-          size="lg"
-          message={isSignUp ? t("auth.signingUp") : t("auth.signingIn")}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex w-full bg-background relative overflow-hidden">
-      {/* Background Pattern (Optional subtle texture) */}
+      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]"></div>
 
       {/* Back Button */}
       <button
         onClick={() => navigate("/")}
-        className={`absolute top-4 ${isRtl ? "left-4" : "right-4"} z-20 p-2 rounded-full cursor-pointer  hover:bg-surface text-text-primary transition-colors`}
+        className={`absolute top-4 ${isRtl ? "left-4" : "right-4"} z-20 p-2 rounded-full cursor-pointer hover:bg-surface text-text-primary transition-colors`}
       >
         <ArrowBack className={isRtl ? "rotate-180" : ""} />
       </button>
 
-      {/* Left Interface (Form) */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 z-10 w-full lg:w-1/2">
-        <div className="w-full max-w-md space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <CardHeader className="px-0">
-              <CardTitle className="text-3xl font-bold text-center text-primary">
-                {isSignUp ? t("auth.createAccount") : t("auth.signin")}
-              </CardTitle>
-              <CardDescription className="text-center text-base mt-2">
-                {isSignUp
-                  ? t("auth.signupDescription")
-                  : t("auth.signinDescription")}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="px-0 mt-6">
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                <AnimatePresence mode="wait">
-                  {isSignUp && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="grid grid-cols-2 gap-4"
-                    >
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="first_name"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {t("auth.firstName")}
-                        </label>
-                        <input
-                          id="first_name"
-                          type="text"
-                          {...register("first_name")}
-                          className="flex h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:border-primary"
-                        />
-                        {errors.first_name && (
-                          <span className="text-xs text-red-500 font-medium">
-                            {errors.first_name.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="last_name"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {t("auth.lastName")}
-                        </label>
-                        <input
-                          id="last_name"
-                          type="text"
-                          {...register("last_name")}
-                          className="flex h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:border-primary"
-                        />
-                        {errors.last_name && (
-                          <span className="text-xs text-red-500 font-medium">
-                            {errors.last_name.message}
-                          </span>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {t("auth.email")}
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    {...register("email")}
-                    className="flex h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:border-primary"
-                  />
-                  {errors.email && (
-                    <span className="text-xs text-red-500 font-medium">
-                      {errors.email.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {t("auth.password")}
-                    </label>
-                  </div>
-                  <input
-                    id="password"
-                    type="password"
-                    {...register("password")}
-                    className="flex h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:border-primary"
-                  />
-                  {errors.password && (
-                    <span className="text-xs text-red-500 font-medium">
-                      {errors.password.message}
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center justify-center rounded-lg text-sm font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full shadow-lg shadow-primary/20"
-                >
-                  {isSignUp ? t("auth.signup") : t("auth.signin")}
-                </button>
-              </form>
-
-              <div className="text-center text-sm mt-8">
-                <span className="text-muted-foreground">
-                  {isSignUp ? t("auth.haveAccount") : t("auth.noAccount")}{" "}
-                </span>
-                <button
-                  type="button"
-                  onClick={toggleMode}
-                  className="font-semibold text-primary hover:underline underline-offset-4"
-                >
-                  {isSignUp ? t("auth.signin") : t("auth.signup")}
-                </button>
-              </div>
-            </CardContent>
-          </motion.div>
+      {/* Auth Form Section */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 z-10 w-full lg:w-1/2 relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-3xl" />
         </div>
+        <AuthForm />
       </div>
 
-      {/* Right Interface (Image) - Hidden on mobile */}
-      <div className="hidden lg:flex flex-1 relative items-center justify-center overflow-hidden  w-1/2">
-        <div className="absolute inset-0  z-0" />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-10 p-12 max-w-2xl"
-        >
-          <img
-            src={Moshaf}
-            alt="Quran Mushaf"
-            className="w-full h-auto object-contain drop-shadow-2xl opacity-90"
-          />
-          <div className="mt-8 text-center space-y-2">
-            <h2 className="text-3xl font-bold text-primary">
-              {t("app.title")}
-            </h2>
-            <p className="text-text-secondary text-lg max-w-md mx-auto">
-              {t("app.description")}
-            </p>
-          </div>
-        </motion.div>
-      </div>
+      {/* Auth Banner Section */}
+      <AuthBanner />
     </div>
   );
 };

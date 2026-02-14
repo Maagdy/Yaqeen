@@ -1,121 +1,151 @@
-// Hybrid API approach:
-// - mp3quran for surah metadata (fast, reliable)
-// - AlQuran Cloud for verse/ayah content
-export const MP3QURAN_BASE_URL = "/api/proxy?url=https://mp3quran.net/api/v3";
-export const ALQURAN_BASE_URL = "/api/proxy?url=https://api.alquran.cloud/v1";
+import { proxyUrl, buildUrl } from "./utils";
 
-// Legacy - keeping for backward compatibility
+// Base URLs for external APIs
+const MP3QURAN_API = "https://mp3quran.net/api/v3";
+const ALQURAN_API = "https://api.alquran.cloud/v1";
+const QURANPEDIA_API = "https://api.quranpedia.net/v1";
+const QURAN_TAFSEER_API = "http://api.quran-tafseer.com";
+const SUNNAH_API = "https://api.sunnah.com/v1";
+const ISLAMIC_NETWORK_CDN = "https://cdn.islamic.network/quran";
+
+// Legacy exports (deprecated - use ENDPOINTS instead)
+export const MP3QURAN_BASE_URL = proxyUrl(MP3QURAN_API);
+export const ALQURAN_BASE_URL = ALQURAN_API; // AlQuran Cloud supports CORS - no proxy needed
 export const API_BASE_URL = ALQURAN_BASE_URL;
 
 export const ENDPOINTS = {
   // --- MP3QURAN v3 ENDPOINTS (for metadata) ---
-  MP3QURAN_SUWAR: (language: string = "eng") => `/suwar?language=${language}`,
-  RECITERS: "/reciters",
+  // MP3Quran needs proxy due to CORS
+  MP3QURAN_SUWAR: (language: string = "eng") =>
+    proxyUrl(buildUrl(`${MP3QURAN_API}/suwar`, { language })),
+  RECITERS: proxyUrl(`${MP3QURAN_API}/reciters`),
+
   // --- METADATA & EDITIONS ---
-  META: "/meta",
-  EDITIONS: "/edition",
-  EDITION_BY_LANGUAGE: (language: string) => `/edition/language/${language}`,
-  EDITION_BY_TYPE: (type: string) => `/edition/type/${type}`,
-  EDITION_BY_FORMAT: (format: string) => `/edition/format/${format}`,
+  // AlQuran Cloud supports CORS - direct calls
+  META: `${ALQURAN_API}/meta`,
+  EDITIONS: `${ALQURAN_API}/edition`,
+  EDITION_BY_LANGUAGE: (language: string) =>
+    `${ALQURAN_API}/edition/language/${language}`,
+  EDITION_BY_TYPE: (type: string) => `${ALQURAN_API}/edition/type/${type}`,
+  EDITION_BY_FORMAT: (format: string) =>
+    `${ALQURAN_API}/edition/format/${format}`,
 
   // --- COMPLETE QURAN ---
-  QURAN: (edition: string = "quran-uthmani") => `/quran/${edition}`,
+  QURAN: (edition: string = "quran-uthmani") =>
+    `${ALQURAN_API}/quran/${edition}`,
 
   // --- SURAHS ---
-  SURAHS: "/surah",
+  SURAHS: `${ALQURAN_API}/surah`,
   SURAH: (number: number, edition: string = "quran-uthmani") =>
-    `/surah/${number}/${edition}`,
+    `${ALQURAN_API}/surah/${number}/${edition}`,
   SURAH_WITH_OFFSET: (
     number: number,
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => `/surah/${number}/${edition}?offset=${offset}&limit=${limit}`,
+  ) => buildUrl(`${ALQURAN_API}/surah/${number}/${edition}`, { offset, limit }),
 
   // --- JUZ ---
   JUZ: (number: number, edition: string = "quran-uthmani") =>
-    `/juz/${number}/${edition}`,
+    `${ALQURAN_API}/juz/${number}/${edition}`,
   JUZ_WITH_OFFSET: (
     number: number,
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => `/juz/${number}/${edition}?offset=${offset}&limit=${limit}`,
+  ) => buildUrl(`${ALQURAN_API}/juz/${number}/${edition}`, { offset, limit }),
 
   // --- AYAH (Verse) ---
   AYAH: (reference: number | string, edition: string = "quran-uthmani") =>
-    `/ayah/${reference}/${edition}`,
+    `${ALQURAN_API}/ayah/${reference}/${edition}`,
   AYAH_MANY_EDITIONS: (reference: number | string, editions: string[]) =>
-    `/ayah/${reference}/editions/${editions.join(",")}`,
+    `${ALQURAN_API}/ayah/${reference}/editions/${editions.join(",")}`,
 
   // --- MUSHAFS ---
-  // Note: Using local serverless proxy to bypass CORS
-  MUSHAFS: "/api/proxy?url=https://api.quranpedia.net/v1/mushafs",
+  // Quranpedia needs proxy
+  MUSHAFS: proxyUrl(`${QURANPEDIA_API}/mushafs`),
   SINGLE_MUSHAF: (mushafId: number) =>
-    `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}`,
+    proxyUrl(`${QURANPEDIA_API}/mushafs/${mushafId}`),
   MUSHAF_SURAH: (mushafId: number, surahNumber: number) =>
-    `/api/proxy?url=https://api.quranpedia.net/v1/mushafs/${mushafId}/${surahNumber}`,
+    proxyUrl(`${QURANPEDIA_API}/mushafs/${mushafId}/${surahNumber}`),
 
-  // ---TAFSIR ---
-  // Note: Using local serverless proxy to bypass CORS/HTTPS
-  ALL_TAFSIR_BOOKS: "/api/proxy?url=http://api.quran-tafseer.com/tafseer",
-
+  // --- TAFSIR ---
+  // Tafsir APIs need proxy
+  ALL_TAFSIR_BOOKS: proxyUrl(`${QURAN_TAFSEER_API}/tafseer`),
   TAFSIR: (tafsirId: number = 1, suraId: number = 1, language: string = "ar") =>
-    `/api/proxy?url=https://www.mp3quran.net/api/v3/tafsir?tafsir=${tafsirId}&sura=${suraId}&language=${language}`,
+    proxyUrl(
+      buildUrl(`${MP3QURAN_API}/tafsir`, {
+        tafsir: tafsirId,
+        sura: suraId,
+        language,
+      }),
+    ),
 
-  // api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
-  // Note: Using local serverless proxy to bypass CORS/HTTPS
   ONE_AYAH_TAFSIR: (
     tafsirId: number = 1,
     suraNumber: number,
     ayahNumber: number,
   ) =>
-    `/api/proxy?url=http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
+    proxyUrl(
+      `${QURAN_TAFSEER_API}/tafseer/${tafsirId}/${suraNumber}/${ayahNumber}`,
+    ),
 
-  // Note: Using local serverless proxy to bypass CORS/HTTPS
   AYAH_RANGE_TAFSIR: (
     tafsirId: number,
     suraNumber: number,
     ayahFrom: number,
     ayahTo: number,
   ) =>
-    `/api/proxy?url=http://api.quran-tafseer.com/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
+    proxyUrl(
+      `${QURAN_TAFSEER_API}/tafseer/${tafsirId}/${suraNumber}/${ayahFrom}/${ayahTo}`,
+    ),
 
   // --- SEARCH ---
   SEARCH: (
     keyword: string,
     scope: string = "all",
     edition: string = "en.pickthall",
-  ) => `/search/${keyword}/${scope}/${edition}`,
+  ) => `${ALQURAN_API}/search/${keyword}/${scope}/${edition}`,
 
   // --- PAGE ---
   PAGE: (number: number, edition: string = "quran-uthmani") =>
-    `/page/${number}/${edition}`,
+    `${ALQURAN_API}/page/${number}/${edition}`,
 
   // --- MANZIL (7 total) ---
   MANZIL: (number: number, edition: string = "quran-uthmani") =>
-    `/manzil/${number}/${edition}`,
+    `${ALQURAN_API}/manzil/${number}/${edition}`,
 
   // --- RADIO ---
+  // MP3Quran needs proxy
   RADIO: (language: string = "eng") =>
-    `/api/proxy?url=https://www.mp3quran.net/api/v3/radios?language=${language}`,
+    proxyUrl(buildUrl(`${MP3QURAN_API}/radios`, { language })),
 
   // --- RUKU (556 total) ---
-  RUKUS: "/rukus", // All rukus references
+  RUKUS: `${ALQURAN_API}/rukus`,
   RUKU: (number: number, edition: string = "quran-uthmani") =>
-    `/ruku/${number}/${edition}`,
+    `${ALQURAN_API}/ruku/${number}/${edition}`,
 
   // --- HIZB QUARTER (240 total) ---
   HIZB_QUARTER: (number: number, edition: string = "quran-uthmani") =>
-    `/hizbQuarter/${number}/${edition}`,
+    `${ALQURAN_API}/hizbQuarter/${number}/${edition}`,
 
   // --- SAJDA (Prostrations) ---
-  SAJDA: (edition: string = "quran-uthmani") => `/sajda/${edition}`,
+  SAJDA: (edition: string = "quran-uthmani") =>
+    `${ALQURAN_API}/sajda/${edition}`,
 
   // --- MEDIA ---
-  // Note: Media URL conventions are often handled by CDN directly, but here are specific API helpers if needed
+  // CDN needs proxy
   AUDIO_URL: (editionId: string) =>
-    `/api/proxy?url=https://cdn.islamic.network/quran/audio/128/${editionId}`,
+    proxyUrl(`${ISLAMIC_NETWORK_CDN}/audio/128/${editionId}`),
   IMAGE_URL: (ayahId: number) =>
-    `/api/proxy?url=https://cdn.islamic.network/quran/images/${ayahId}.png`,
+    proxyUrl(`${ISLAMIC_NETWORK_CDN}/images/${ayahId}.png`),
+
+  // --- HADITH (Sunnah.com API) ---
+  // Sunnah API needs proxy
+  HADITH_COLLECTIONS: proxyUrl(`${SUNNAH_API}/collections`),
+  HADITH_COLLECTION_BOOKS: (collectionName: string) =>
+    proxyUrl(`${SUNNAH_API}/collections/${collectionName}/books`),
+  HADITHS: proxyUrl(`${SUNNAH_API}/hadiths`),
+  HADITHS_BY_BOOK: (collection: string, book: number) =>
+    proxyUrl(`${SUNNAH_API}/collections/${collection}/books/${book}/hadiths`),
 } as const;

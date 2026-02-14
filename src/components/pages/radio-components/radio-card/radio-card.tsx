@@ -1,13 +1,28 @@
 import { useAudio } from "@/hooks/useAudio";
-import { Play, Pause, Radio as RadioIcon } from "lucide-react";
+import { Play, Pause, Radio as RadioIcon, Bookmark } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 import type { RadioCardProps } from "./radio-card.types";
 import { useTranslation } from "react-i18next";
+import { IconButton } from "@/components/common/icon-button/icon-button";
+import {
+  useFavoriteRadiosQuery,
+  useAddFavoriteRadioMutation,
+  useRemoveFavoriteRadioMutation,
+} from "@/api/domains/user";
+import { useAuth } from "@/hooks";
+import { toast } from "react-toastify";
 
 export function RadioCard({ radio }: RadioCardProps) {
   const { t } = useTranslation();
   const { play, toggle, isPlaying, currentAudio } = useAudio();
+  const { user, isLoggedIn } = useAuth();
+
+  const { data: favoriteRadios } = useFavoriteRadiosQuery(user?.id);
+  const addFavoriteRadioMutation = useAddFavoriteRadioMutation(user?.id);
+  const removeFavoriteRadioMutation = useRemoveFavoriteRadioMutation(user?.id);
+
+  const isFavorite = favoriteRadios?.some((fav) => fav.radio_id === radio.id);
 
   const isCurrent = currentAudio === radio.url;
   const isCurrentlyPlaying = isCurrent && isPlaying;
@@ -18,6 +33,43 @@ export function RadioCard({ radio }: RadioCardProps) {
       toggle();
     } else {
       play(radio.url);
+    }
+  };
+
+  const handleBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      toast.warning(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await removeFavoriteRadioMutation.mutateAsync(radio.id);
+        toast.success(
+          t("favorites.radio_removed", {
+            defaultValue: "Radio removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteRadioMutation.mutateAsync({
+          radioId: radio.id,
+          radioName: radio.name,
+          radioUrl: radio.url,
+        });
+        toast.success(
+          t("favorites.radio_added", {
+            defaultValue: "Radio added to favorites",
+          }),
+        );
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite radio", error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
     }
   };
 
@@ -64,27 +116,48 @@ export function RadioCard({ radio }: RadioCardProps) {
         </div>
       </div>
 
-      {/* Visualizer bars */}
-      {isCurrentlyPlaying && (
-        <div className="flex items-end gap-0.5 h-5 ml-auto pl-2">
-          <span
-            className="w-1 bg-primary/60 rounded-t-sm animate-[pulse_0.6s_ease-in-out_infinite]"
-            style={{ height: "40%" }}
-          />
-          <span
-            className="w-1 bg-primary/80 rounded-t-sm animate-[pulse_0.8s_ease-in-out_infinite]"
-            style={{ height: "80%" }}
-          />
-          <span
-            className="w-1 bg-primary/60 rounded-t-sm animate-[pulse_1.1s_ease-in-out_infinite]"
-            style={{ height: "50%" }}
-          />
-          <span
-            className="w-1 bg-primary/40 rounded-t-sm animate-[pulse_0.9s_ease-in-out_infinite]"
-            style={{ height: "30%" }}
+      <div className="flex items-center gap-2">
+        {/* Visualizer bars */}
+        {isCurrentlyPlaying && (
+          <div className="flex items-end gap-0.5 h-5 ml-auto pl-2 mr-2">
+            <span
+              className="w-1 bg-primary/60 rounded-t-sm animate-[pulse_0.6s_ease-in-out_infinite]"
+              style={{ height: "40%" }}
+            />
+            <span
+              className="w-1 bg-primary/80 rounded-t-sm animate-[pulse_0.8s_ease-in-out_infinite]"
+              style={{ height: "80%" }}
+            />
+            <span
+              className="w-1 bg-primary/60 rounded-t-sm animate-[pulse_1.1s_ease-in-out_infinite]"
+              style={{ height: "50%" }}
+            />
+            <span
+              className="w-1 bg-primary/40 rounded-t-sm animate-[pulse_0.9s_ease-in-out_infinite]"
+              style={{ height: "30%" }}
+            />
+          </div>
+        )}
+
+        {/* Favorite Button */}
+        <div onClick={(e) => e.stopPropagation()}>
+          <IconButton
+            icon={
+              <Bookmark
+                className={cn(
+                  "w-5 h-5 transition-colors",
+                  isFavorite
+                    ? "fill-current text-primary"
+                    : "text-muted-foreground hover:text-primary",
+                )}
+              />
+            }
+            onClick={handleBookmarkClick}
+            size="sm"
+            variant="default"
           />
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -3,6 +3,8 @@ import type {
   FavoriteSurah,
   FavoriteAyah,
   FavoriteJuz,
+  FavoriteMushaf,
+  FavoriteRadio,
 } from "@/api";
 
 export interface ProfileFavoritesProps {
@@ -10,4 +12,6 @@ export interface ProfileFavoritesProps {
   favoriteSurahs: FavoriteSurah[] | undefined;
   favoriteAyahs: FavoriteAyah[] | undefined;
   favoriteJuzs: FavoriteJuz[] | undefined;
+  favoriteMushafs: FavoriteMushaf[] | undefined;
+  favoriteRadios: FavoriteRadio[] | undefined;
 }

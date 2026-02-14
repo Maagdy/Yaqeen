@@ -35,7 +35,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
 
   const handleBookmark = () => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
       return;

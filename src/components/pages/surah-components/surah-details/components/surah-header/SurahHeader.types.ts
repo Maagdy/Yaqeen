@@ -8,4 +8,5 @@ export interface SurahHeaderProps {
   fullSurahAudioUrl?: string;
   isFullSurahPlaying: boolean;
   onFullSurahClick: () => void;
+  isJuzPage?: boolean;
 }

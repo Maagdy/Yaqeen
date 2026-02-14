@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSearchQueries } from "../../api/domains/search";
 import { Loading } from "../../components/ui/loading";
 import { ErrorPage } from "../ErrorPage";
 import { quranSurahs } from "../../utils/constants";
@@ -11,6 +10,7 @@ import { Pagination } from "@mui/material";
 import { generateRoute } from "../../router/routes";
 import { useLanguage } from "@/hooks";
 import HomeSearchBar from "@/components/pages/home-components/home-search-bar/home-search-bar";
+import { useSearchQueries } from "@/api";
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -251,7 +251,7 @@ const SearchPage: React.FC = () => {
         </div>
       )}
 
-      {isLoading && <Loading />}
+      {isLoading && <Loading size="lg" />}
 
       {error ? (
         <ErrorPage

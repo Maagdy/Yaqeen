@@ -66,7 +66,7 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
                   <span className="inline-flex items-center justify-center relative mx-1 w-10 h-10 pt-1">
                     <svg
                       className="absolute inset-0 w-full h-full"
-                      viewBox="0 0 36 36"
+                      viewBox="0 0 35 35"
                     >
                       {/* Octagonal shape */}
                       <path

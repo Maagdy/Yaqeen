@@ -22,6 +22,12 @@ import {
   getFavoriteHadiths,
   addFavoriteHadith,
   removeFavoriteHadith,
+  getFavoriteMushafs,
+  addFavoriteMushaf,
+  removeFavoriteMushaf,
+  getFavoriteRadios,
+  addFavoriteRadio,
+  removeFavoriteRadio,
 } from "./user-queries";
 import type { Profile } from "./user.types";
 import { queryClient } from "@/contexts/queryClient";
@@ -437,6 +443,116 @@ export const useRemoveFavoriteHadithMutation = (userId: string | undefined) => {
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["favorite-hadiths", userId],
+      });
+    },
+  });
+};
+
+// --- Favorite Mushafs ---
+export const useFavoriteMushafsQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-mushafs", userId],
+    queryFn: () => (userId ? getFavoriteMushafs(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteMushafMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      mushafId,
+      mushafName,
+      mushafNameEnglish,
+    }: {
+      mushafId: number;
+      mushafName?: string;
+      mushafNameEnglish?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteMushaf(userId, mushafId, mushafName, mushafNameEnglish);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-mushafs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-mushafs", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteMushafMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: (mushafId: number) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteMushaf(userId, mushafId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-mushafs", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-mushafs", userId],
+      });
+    },
+  });
+};
+
+// --- Favorite Radios ---
+export const useFavoriteRadiosQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-radios", userId],
+    queryFn: () => (userId ? getFavoriteRadios(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteRadioMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      radioId,
+      radioName,
+      radioUrl,
+    }: {
+      radioId: number;
+      radioName?: string;
+      radioUrl?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteRadio(userId, radioId, radioName, radioUrl);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-radios", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-radios", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteRadioMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: (radioId: number) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteRadio(userId, radioId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-radios", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-radios", userId],
       });
     },
   });
