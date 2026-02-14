@@ -82,19 +82,9 @@ export const MushafCard: React.FC<MushafCardProps> = ({
         <IconButton
           icon={
             isFavorite ? (
-              <Bookmark
-                fontSize="small"
-                className={active ? "text-white" : "text-primary"}
-              />
+              <Bookmark fontSize="small" color="primary" />
             ) : (
-              <BookmarkBorder
-                fontSize="small"
-                className={
-                  active
-                    ? "text-white/70 hover:text-white"
-                    : "text-muted-foreground hover:text-primary"
-                }
-              />
+              <BookmarkBorder fontSize="small" />
             )
           }
           onClick={handleBookmarkClick}
