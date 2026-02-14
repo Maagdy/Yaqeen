@@ -146,6 +146,7 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
             <MushafCard
               key={m.id}
               name={m.name}
+              id={m.id}
               active={selectedMoshafIndex === index}
               onClick={() => onMoshafSelect(index)}
             />
