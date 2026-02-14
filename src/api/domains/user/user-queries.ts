@@ -10,6 +10,8 @@ import type {
   UserGoal,
   UserProgress,
   UserStreak,
+  FavoriteMushaf,
+  FavoriteRadio,
 } from "./user.types";
 
 // --- Profiles ---
@@ -409,6 +411,96 @@ export const removeFavoriteHadith = async (
     collection_name: collectionName,
     book_number: bookNumber,
     hadith_number: hadithNumber,
+  });
+  if (error) throw error;
+};
+
+// --- Favorite Mushafs ---
+export const getFavoriteMushafs = async (
+  userId: string,
+): Promise<FavoriteMushaf[]> => {
+  const { data, error } = await supabase
+    .from("favorite_mushafs")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteMushaf = async (
+  userId: string,
+  mushafId: number,
+  mushafName?: string,
+  mushafNameEnglish?: string,
+): Promise<FavoriteMushaf | null> => {
+  const { data, error } = await supabase
+    .from("favorite_mushafs")
+    .insert([
+      {
+        user_id: userId,
+        mushaf_id: mushafId,
+        mushaf_name: mushafName,
+        mushaf_name_english: mushafNameEnglish,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteMushaf = async (
+  userId: string,
+  mushafId: number,
+): Promise<void> => {
+  const { error } = await supabase.from("favorite_mushafs").delete().match({
+    user_id: userId,
+    mushaf_id: mushafId,
+  });
+  if (error) throw error;
+};
+
+// --- Favorite Radios ---
+export const getFavoriteRadios = async (
+  userId: string,
+): Promise<FavoriteRadio[]> => {
+  const { data, error } = await supabase
+    .from("favorite_radios")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteRadio = async (
+  userId: string,
+  radioId: number,
+  radioName?: string,
+  radioUrl?: string,
+): Promise<FavoriteRadio | null> => {
+  const { data, error } = await supabase
+    .from("favorite_radios")
+    .insert([
+      {
+        user_id: userId,
+        radio_id: radioId,
+        radio_name: radioName,
+        radio_url: radioUrl,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteRadio = async (
+  userId: string,
+  radioId: number,
+): Promise<void> => {
+  const { error } = await supabase.from("favorite_radios").delete().match({
+    user_id: userId,
+    radio_id: radioId,
   });
   if (error) throw error;
 };

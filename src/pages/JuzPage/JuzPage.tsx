@@ -41,7 +41,7 @@ const JuzPage: React.FC<JuzPageProps> = () => {
 
   const handleBookmarkClick = async () => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
       return;
@@ -140,7 +140,14 @@ const JuzPage: React.FC<JuzPageProps> = () => {
           const surah = juz.surahs[surahNumber];
           const ayahs = ayahsBySurah[surahNumber];
 
-          return <SurahDetails key={surahNumber} surah={surah} ayahs={ayahs} />;
+          return (
+            <SurahDetails
+              key={surahNumber}
+              surah={surah}
+              ayahs={ayahs}
+              isJuzPage
+            />
+          );
         })}
       </div>
     </div>

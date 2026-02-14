@@ -4,4 +4,5 @@ export interface SurahDetailsProps {
   surah: Surah | SurahData;
   ayahs: Ayah[];
   onAyahClick?: (ayah: Ayah) => void;
+  isJuzPage?: boolean;
 }

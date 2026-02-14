@@ -42,12 +42,11 @@ export async function getHadiths(
   params?: HadithParams,
 ): Promise<HadithListResponse> {
   try {
-    let url = "/api/proxy?url=https://api.sunnah.com/v1/hadiths";
-
-    // If we have collection and book, use the specific endpoint
-    if (params?.collection && params?.book) {
-      url = `/api/proxy?url=https://api.sunnah.com/v1/collections/${params.collection}/books/${params.book}/hadiths`;
-    }
+    // Use the new endpoint constants
+    const url =
+      params?.collection && params?.book
+        ? ENDPOINTS.HADITHS_BY_BOOK(params.collection, params.book)
+        : ENDPOINTS.HADITHS;
 
     const { data } = await axios.get<HadithListResponse>(url, {
       headers: {
@@ -57,8 +56,7 @@ export async function getHadiths(
       params: {
         page: params?.page,
         limit: params?.limit,
-        // Only include hadithNumber if we're NOT using the specific endpoint or if the specific endpoint supports it (filtering)
-        // For now, let's pass other params generally, but excludes collection/book which are in URL
+        // Only include these if not using the specific endpoint
         ...(!params?.collection || !params?.book
           ? {
               collection: params?.collection,
@@ -81,7 +79,7 @@ export async function getHadithCollections(
 ): Promise<HadithCollection[]> {
   try {
     const { data } = await axios.get<HadithCollectionResponse>(
-      "/api/proxy?url=https://api.sunnah.com/v1/collections",
+      ENDPOINTS.HADITH_COLLECTIONS,
       {
         headers: {
           Accept: "application/json",
@@ -107,7 +105,7 @@ export async function getCollectionBooks(
 ): Promise<HadithBook[]> {
   try {
     const { data } = await axios.get<HadithBookResponse>(
-      `/api/proxy?url=https://api.sunnah.com/v1/collections/${collectionName}/books`,
+      ENDPOINTS.HADITH_COLLECTION_BOOKS(collectionName),
       {
         headers: {
           Accept: "application/json",

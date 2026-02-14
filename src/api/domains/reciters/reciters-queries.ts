@@ -1,5 +1,5 @@
 import { client } from "../../client";
-import { ENDPOINTS, MP3QURAN_BASE_URL } from "../../endpoints";
+import { ENDPOINTS } from "../../endpoints";
 import type {
   GetRecitersParams,
   Reciter,
@@ -9,9 +9,8 @@ import type {
 export const getReciters = async (
   params?: GetRecitersParams,
 ): Promise<Reciter[]> => {
-  const data = await client.get<RecitersResponse>(
-    `${MP3QURAN_BASE_URL}${ENDPOINTS.RECITERS}`,
-    { params },
-  );
+  const data = await client.get<RecitersResponse>(ENDPOINTS.RECITERS, {
+    params,
+  });
   return data.reciters;
 };

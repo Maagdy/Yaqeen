@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import { Bookmark, BookmarkBorder, ContentCopy } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { IconButton, MushafCard } from "../../../common";
 import { useLanguage, useAuth } from "../../../../hooks";
@@ -61,7 +61,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
 
   const handleBookmarkToggle = async () => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",
         }),
@@ -119,8 +119,10 @@ export const AyahModal: React.FC<AyahModalProps> = ({
       onAyahChange(surah.ayahs[currentAyahIndex - 1]);
     }
   };
-  console.log("tafsirBooks", tafsirBooks);
-
+  const handleCopy = () => {
+    navigator.clipboard.writeText(ayah.text);
+    toast.success(t("common.copied", { defaultValue: "Copied to clipboard" }));
+  };
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-background border-primary/10">
@@ -128,19 +130,32 @@ export const AyahModal: React.FC<AyahModalProps> = ({
           <DialogTitle className="text-xl font-bold">
             {t("surah.ayah-details")}
           </DialogTitle>
-          <IconButton
-            icon={
-              isBookmarked ? (
-                <Bookmark fontSize="medium" className="text-primary" />
-              ) : (
-                <BookmarkBorder fontSize="medium" className="text-primary" />
-              )
-            }
-            onClick={handleBookmarkToggle}
-            size="sm"
-            className="hover:bg-primary/10"
-            label={t("common.bookmark")}
-          />
+          <div className="flex flex-row gap-2">
+            <IconButton
+              icon={
+                isBookmarked ? (
+                  <Bookmark fontSize="medium" color="primary" />
+                ) : (
+                  <BookmarkBorder fontSize="medium" />
+                )
+              }
+              onClick={handleBookmarkToggle}
+              size="sm"
+              label={t("common.bookmark")}
+            />
+
+            <IconButton
+              icon={
+                <ContentCopy
+                  fontSize="small"
+                  className="text-muted-foreground"
+                />
+              }
+              onClick={() => handleCopy()}
+              size="sm"
+              label={t("common.copy")}
+            />
+          </div>
         </DialogHeader>
 
         <div className="flex flex-col gap-6">
@@ -149,9 +164,9 @@ export const AyahModal: React.FC<AyahModalProps> = ({
             <IconButton
               icon={
                 isRtl ? (
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 mt-0.5" />
                 ) : (
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4 mt-0.5" />
                 )
               }
               onClick={handleNext}
@@ -168,9 +183,9 @@ export const AyahModal: React.FC<AyahModalProps> = ({
             <IconButton
               icon={
                 isRtl ? (
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4 mt-0.5" />
                 ) : (
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 mt-0.5" />
                 )
               }
               onClick={handlePrevious}
@@ -219,10 +234,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
 
           {/* Ayah Text */}
           <div className="text-center py-2">
-            <p
-              className="font-amiri flex justify-start px-2 leading-loose text-primary text-2xl md:text-4xl"
-              style={{ lineHeight: 2.5 }}
-            >
+            <p className="font-amiri flex justify-start px-2 leading-relaxed text-primary text-2xl md:text-4xl">
               {ayah.text}
             </p>
           </div>
@@ -232,6 +244,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
               {tafsirBooks.map((book) => (
                 <MushafCard
                   key={book.id}
+                  id={book.id}
                   name={book.name}
                   active={currentTafsirBook === book.id}
                   onClick={() => setCurrentTafsirBook(book.id)}

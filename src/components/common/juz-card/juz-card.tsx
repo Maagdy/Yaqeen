@@ -30,7 +30,7 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
   const handleBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
       return;
@@ -71,15 +71,12 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
               isFavorite ? (
                 <Bookmark fontSize="small" className="text-primary" />
               ) : (
-                <BookmarkBorder
-                  fontSize="small"
-                  className="text-muted-foreground hover:text-primary"
-                />
+                <BookmarkBorder fontSize="small" />
               )
             }
+            variant="ghost"
             onClick={handleBookmarkClick}
             size="sm"
-            className="ml-2"
           />
         </div>
 

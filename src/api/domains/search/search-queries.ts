@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ENDPOINTS, ALQURAN_BASE_URL } from "../../endpoints";
+import { ENDPOINTS } from "../../endpoints";
 import type { SearchResponse, SearchParams } from "./search.types";
 
 export const searchQuran = async ({
@@ -23,7 +23,7 @@ export const searchQuran = async ({
     searchEdition = edition || "en.pickthall";
   }
 
-  const url = `${ALQURAN_BASE_URL}${ENDPOINTS.SEARCH(keyword, String(scope), searchEdition)}`;
+  const url = ENDPOINTS.SEARCH(keyword, String(scope), searchEdition);
   try {
     const { data } = await axios.get<SearchResponse>(url);
     return data;

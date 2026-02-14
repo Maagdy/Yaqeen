@@ -123,8 +123,24 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           setSelectedDiscoverContent(null);
           setActiveDiscoverType(null);
         } else if (tafsirData) {
-          const surahTafsirSegments =
-            tafsirData.tafasir.soar[surahNumber.toString()];
+          console.log(tafsirData);
+
+          // Handle soar as either array or object
+          const soarData = tafsirData.tafasir.soar;
+          let surahTafsirSegments;
+
+          if (Array.isArray(soarData)) {
+            // If it's an array, filter by sura_id
+            surahTafsirSegments = soarData.filter(
+              (s) => s.sura_id === surahNumber,
+            );
+          } else {
+            // If it's an object/map, access by key
+            surahTafsirSegments = soarData[surahNumber.toString()] || [];
+          }
+
+          console.log(surahTafsirSegments);
+
           setSelectedDiscoverContent(
             <div className="space-y-4">
               <h1 className="text-2xl font-bold mb-4">

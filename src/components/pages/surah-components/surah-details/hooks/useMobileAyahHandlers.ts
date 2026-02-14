@@ -33,7 +33,7 @@ export const useMobileAyahHandlers = ({
 
   const handleBookmark = async (ayah: Ayah) => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",
         }),

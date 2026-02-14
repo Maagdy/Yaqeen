@@ -20,6 +20,7 @@ function App() {
         closeOnClick
         pauseOnHover
         draggable
+        className="z-9999!"
         theme={theme}
       />
       <Outlet />

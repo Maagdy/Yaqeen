@@ -51,7 +51,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
 
   const handleSurahBookmark = async () => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
       return;
@@ -94,7 +94,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
 
   // Audio player for full surah
   const { play, pause, isPlaying, currentAudio } = useAudio();
-  const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
+  const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
   const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.id)}.mp3`;
   const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
 
@@ -113,7 +113,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     ayahText: string,
   ) => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",
         }),

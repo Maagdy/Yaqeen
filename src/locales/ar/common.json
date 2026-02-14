@@ -131,7 +131,8 @@
     "go_to_ayah": "اقرأ الآية {{number}}",
     "tafsirs": "التفاسير",
     "reflections": "تدبر",
-    "benefits": "الفوائد"
+    "benefits": "الفوائد",
+    "surah_link_copied_to_clipboard": "تم نسخ رابط السورة إلى الحافظة"
   },
   "hadith": {
     "title": "مجموعات الحديث",

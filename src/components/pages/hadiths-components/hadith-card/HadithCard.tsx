@@ -51,7 +51,7 @@ export const HadithCard: React.FC<HadithCardProps> = ({
 
   const handleToggleFavorite = () => {
     if (!user || !isLoggedIn) {
-      toast.error(t("auth.login_required"));
+      toast.warning(t("auth.login_required"));
       return;
     }
 

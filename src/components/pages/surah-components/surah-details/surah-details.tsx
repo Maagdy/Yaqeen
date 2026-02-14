@@ -14,6 +14,7 @@ import { padSurahNumber } from "@/utils/surahUtils";
 export const SurahDetails: React.FC<SurahDetailsProps> = ({
   surah,
   ayahs,
+  isJuzPage = false,
   onAyahClick,
 }) => {
   const { t } = useTranslation();
@@ -30,7 +31,8 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
 
   // Default server for full surah audio
-  const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
+  // const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
+  const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
   const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.number)}.mp3`;
 
   // Set up navigation handlers when component mounts
@@ -119,6 +121,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
       <SurahHeader
         surah={surah}
         isRtl={isRtl}
+        isJuzPage={isJuzPage}
         language={language}
         fullSurahAudioUrl={fullSurahAudioUrl}
         isFullSurahPlaying={isFullSurahPlaying}

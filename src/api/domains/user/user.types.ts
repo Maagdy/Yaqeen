@@ -89,3 +89,21 @@ export interface FavoriteHadith {
   hadith_text?: string;
   created_at: string;
 }
+
+export interface FavoriteMushaf {
+  id: number;
+  user_id: string;
+  mushaf_id: number;
+  mushaf_name?: string | null;
+  mushaf_name_english?: string | null;
+  created_at: string;
+}
+
+export interface FavoriteRadio {
+  id: number;
+  user_id: string;
+  radio_id: number;
+  radio_name?: string | null;
+  radio_url?: string | null;
+  created_at: string;
+}

@@ -9,6 +9,8 @@ import {
   useFavoriteSurahsQuery,
   useFavoriteJuzsQuery,
   useFavoriteAyahsQuery,
+  useFavoriteMushafsQuery,
+  useFavoriteRadiosQuery,
 } from "@/api/domains/user";
 import { Loading } from "@/components/ui/loading";
 import {
@@ -30,6 +32,8 @@ function ProfilePage() {
   const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
   const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
   const { data: favoriteAyahs } = useFavoriteAyahsQuery(user?.id);
+  const { data: favoriteMushafs } = useFavoriteMushafsQuery(user?.id);
+  const { data: favoriteRadios } = useFavoriteRadiosQuery(user?.id);
 
   useEffect(() => {
     if (!loading && !isLoggedIn) {
@@ -77,6 +81,8 @@ function ProfilePage() {
               favoriteSurahs={favoriteSurahs}
               favoriteJuzs={favoriteJuzs}
               favoriteAyahs={favoriteAyahs}
+              favoriteMushafs={favoriteMushafs}
+              favoriteRadios={favoriteRadios}
             />
           </div>
 

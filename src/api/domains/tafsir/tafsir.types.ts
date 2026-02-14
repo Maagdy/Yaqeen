@@ -15,13 +15,15 @@ export interface TafsirSegment {
   sura_id: number;
 }
 
-// Map of suraId -> segments[]
-export type SoarMap = Record<string, TafsirSegment[]>;
+// Soar can be either an array or a map depending on the API response
+export type SoarData =
+  | TafsirSegment[] // Array format
+  | Record<string, TafsirSegment[]>; // Map format (suraId -> segments[])
 
 // Tafsir info
 export interface TafsirData {
   name: string;
-  soar: SoarMap;
+  soar: SoarData;
 }
 
 // Root API response

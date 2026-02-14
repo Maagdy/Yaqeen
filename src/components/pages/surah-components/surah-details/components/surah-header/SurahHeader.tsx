@@ -9,6 +9,9 @@ import {
 import { IconButton } from "../../../../../common/icon-button/icon-button";
 import { formatNumber } from "@/utils/numbers";
 import type { SurahHeaderProps } from "./SurahHeader.types";
+import { useNavigate } from "react-router-dom";
+import { generateRoute } from "@/router/routes";
+import { quranSurahs } from "@/utils/constants";
 
 import { useAuth } from "@/hooks";
 import {
@@ -17,6 +20,7 @@ import {
   useRemoveFavoriteSurahMutation,
 } from "@/api/domains/user";
 import { toast } from "react-toastify";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 export const SurahHeader: React.FC<SurahHeaderProps> = ({
   surah,
@@ -25,8 +29,10 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   fullSurahAudioUrl,
   isFullSurahPlaying,
   onFullSurahClick,
+  isJuzPage = false,
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user, isLoggedIn } = useAuth();
   const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
   const addFavoriteSurahMutation = useAddFavoriteSurahMutation(user?.id);
@@ -41,7 +47,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
 
   const handleBookmarkClick = async () => {
     if (!isLoggedIn) {
-      toast.error(
+      toast.warning(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
       return;
@@ -81,6 +87,21 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
       );
     }
   };
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success(
+        t("surah.surah_link_copied_to_clipboard", {
+          defaultValue: "Copied to clipboard",
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
+    }
+  };
 
   return (
     <div className="mb-6 pb-4 border-b-2 border-primary/20">
@@ -90,8 +111,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
           <IconButton
             icon={<Share fontSize="medium" />}
             onClick={() => {
-              // TODO: Implement share logic
-              console.log("Share clicked");
+              handleShare();
             }}
             className="text-primary/70 hover:text-primary"
             size="sm"
@@ -99,20 +119,12 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
           <IconButton
             icon={
               isFavorite ? (
-                <Bookmark fontSize="medium" className="text-primary" />
+                <Bookmark fontSize="medium" color="primary" />
               ) : (
-                <BookmarkBorder
-                  fontSize="medium"
-                  className="text-primary/70 hover:text-primary"
-                />
+                <BookmarkBorder fontSize="medium" />
               )
             }
             onClick={handleBookmarkClick}
-            className={
-              isFavorite
-                ? "text-primary hover:text-primary/80"
-                : "text-primary/70 hover:text-primary"
-            }
             size="sm"
           />
         </div>
@@ -138,7 +150,27 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
         </div>
 
         {/* Empty space for alignment */}
-        <div className="w-20"></div>
+        {!isJuzPage && (
+          <FormControl>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={surah.number}
+              className="text-primary"
+              onChange={(e) => {
+                navigate(generateRoute.surah(e.target.value));
+              }}
+            >
+              {quranSurahs.map((s) => (
+                <MenuItem value={s.number}>
+                  {formatNumber(s.number, language)}.{" "}
+                  {isRtl ? s.arabicName : s.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        {isJuzPage && <div className="w-20"></div>}
       </div>
 
       {/* Listen to Full Surah Button */}

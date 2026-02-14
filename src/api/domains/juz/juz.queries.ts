@@ -1,5 +1,5 @@
 import { client } from "../../client";
-import { API_BASE_URL, ENDPOINTS } from "../../endpoints";
+import { ENDPOINTS } from "../../endpoints";
 import type {
   AlQuranResponse,
   JuzData,
@@ -8,9 +8,7 @@ import type {
 } from "./juz.types";
 
 export const getJuzs = async (): Promise<JuzMeta[]> => {
-  const data = await client.get<AlQuranResponse<MetaResponse>>(
-    `${API_BASE_URL}${ENDPOINTS.META}`,
-  );
+  const data = await client.get<AlQuranResponse<MetaResponse>>(ENDPOINTS.META);
   return data.data.juzs.references;
 };
 
@@ -19,7 +17,7 @@ export const getJuz = async (
   edition: string = "quran-uthmani",
 ): Promise<JuzData> => {
   const data = await client.get<AlQuranResponse<JuzData>>(
-    `${API_BASE_URL}${ENDPOINTS.JUZ(juzNumber, edition)}`,
+    ENDPOINTS.JUZ(juzNumber, edition),
   );
   return data.data;
 };
