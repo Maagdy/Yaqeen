@@ -4,6 +4,8 @@ import type {
   FavoriteSurah,
   FavoriteAyah,
   FavoriteJuz,
+  FavoriteBook,
+  FavoriteHadith,
   Profile,
   UserGoal,
   UserProgress,
@@ -300,5 +302,113 @@ export const addUserGoal = async (
 
 export const deleteUserGoal = async (id: number): Promise<void> => {
   const { error } = await supabase.from("user_goals").delete().eq("id", id);
+  if (error) throw error;
+};
+
+// --- Favorite Books ---
+export const getFavoriteBooks = async (
+  userId: string,
+): Promise<FavoriteBook[]> => {
+  const { data, error } = await supabase
+    .from("favorite_books")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteBook = async (
+  userId: string,
+  collectionName: string,
+  bookNumber?: string,
+  bookName?: string,
+): Promise<FavoriteBook | null> => {
+  const { data, error } = await supabase
+    .from("favorite_books")
+    .insert([
+      {
+        user_id: userId,
+        collection_name: collectionName,
+        book_number: bookNumber,
+        book_name: bookName,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteBook = async (
+  userId: string,
+  collectionName: string,
+  bookNumber?: string,
+): Promise<void> => {
+  let query = supabase
+    .from("favorite_books")
+    .delete()
+    .eq("user_id", userId)
+    .eq("collection_name", collectionName);
+
+  if (bookNumber) {
+    query = query.eq("book_number", bookNumber);
+  } else {
+    query = query.is("book_number", null);
+  }
+
+  const { error } = await query;
+  if (error) throw error;
+};
+
+// --- Favorite Hadiths ---
+export const getFavoriteHadiths = async (
+  userId: string,
+): Promise<FavoriteHadith[]> => {
+  const { data, error } = await supabase
+    .from("favorite_hadiths")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteHadith = async (
+  userId: string,
+  collectionName: string,
+  bookNumber: string,
+  hadithNumber: string,
+  chapterId?: string,
+  hadithText?: string,
+): Promise<FavoriteHadith | null> => {
+  const { data, error } = await supabase
+    .from("favorite_hadiths")
+    .insert([
+      {
+        user_id: userId,
+        collection_name: collectionName,
+        book_number: bookNumber,
+        hadith_number: hadithNumber,
+        chapter_id: chapterId,
+        hadith_text: hadithText,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteHadith = async (
+  userId: string,
+  collectionName: string,
+  bookNumber: string,
+  hadithNumber: string,
+): Promise<void> => {
+  const { error } = await supabase.from("favorite_hadiths").delete().match({
+    user_id: userId,
+    collection_name: collectionName,
+    book_number: bookNumber,
+    hadith_number: hadithNumber,
+  });
   if (error) throw error;
 };

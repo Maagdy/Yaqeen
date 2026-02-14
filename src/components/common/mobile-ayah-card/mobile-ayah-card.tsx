@@ -16,7 +16,7 @@ import type { MobileAyahCardProps } from "./mobile-ayah-card.types";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "@/utils/numbers";
 import { useLanguage, useAuth } from "@/hooks";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
   ayah,
@@ -31,10 +31,10 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
-  const { user } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   const handleBookmark = () => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );
@@ -59,20 +59,22 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             {formatNumber(ayah.numberInSurah, language)}
           </span>
           <div className="flex items-center gap-1">
-            <IconButton
-              icon={
-                isPlaying ? (
-                  <Pause fontSize="small" className="text-primary" />
-                ) : (
-                  <PlayArrow fontSize="small" className="text-primary" />
-                )
-              }
-              onClick={onPlay}
-              size="sm"
-              variant="ghost"
-              className="hover:bg-primary/10"
-              label={t("common.play")}
-            />
+            {onPlay && (
+              <IconButton
+                icon={
+                  isPlaying ? (
+                    <Pause fontSize="small" className="text-primary" />
+                  ) : (
+                    <PlayArrow fontSize="small" className="text-primary" />
+                  )
+                }
+                onClick={onPlay}
+                size="sm"
+                variant="ghost"
+                className="hover:bg-primary/10"
+                label={t("common.play")}
+              />
+            )}
             <IconButton
               icon={
                 isBookmarked ? (
@@ -101,9 +103,6 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             onClick={() => {
               if (onCopy) {
                 onCopy();
-                toast.success(
-                  t("common.copied", { defaultValue: "Copied to clipboard" }),
-                );
               }
             }}
             size="sm"
@@ -116,9 +115,6 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             onClick={() => {
               if (onShare) {
                 onShare();
-                toast.success(
-                  t("common.shared", { defaultValue: "Shared successfully" }),
-                );
               }
             }}
             size="sm"
@@ -144,7 +140,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
         {/* Arabic Text Slot - Only show if language is Arabic (or if we had separate arabic text field) */}
         {isRtl && (
           <div className="w-full text-right" dir="rtl">
-            <p className="text-3xl font-amiri leading-[2.5] text-foreground">
+            <p className="text-3xl font-amiri leading-loose text-foreground">
               {ayah.text}
             </p>
           </div>

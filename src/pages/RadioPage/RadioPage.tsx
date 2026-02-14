@@ -43,7 +43,12 @@ function RadioPage() {
 
   if (isError) {
     return (
-      <ErrorPage message={t("radio.error")} showRetryButton onRetry={refetch} />
+      <ErrorPage
+        message={t("radio.error")}
+        showRetryButton
+        onRetry={() => refetch()}
+        showHomeButton
+      />
     );
   }
 

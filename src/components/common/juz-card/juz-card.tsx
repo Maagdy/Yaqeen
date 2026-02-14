@@ -12,14 +12,14 @@ import {
   useAddFavoriteJuzMutation,
   useRemoveFavoriteJuzMutation,
 } from "@/api/domains/user";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { IconButton } from "../icon-button";
 
 export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const navigation = useNavigate();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
   const addFavoriteJuzMutation = useAddFavoriteJuzMutation(user?.id);
@@ -29,7 +29,7 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
 
   const handleBookmarkClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", { defaultValue: "Please login to bookmark" }),
       );

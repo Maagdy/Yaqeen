@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import type { Ayah, Surah } from "@/api";
 import type { FavoriteAyah } from "@/api/domains/user";
 import {
@@ -12,6 +12,7 @@ interface UseMobileAyahHandlersProps {
   surah: Surah;
   favoriteAyahs: FavoriteAyah[];
   user: User | null;
+  isLoggedIn: boolean;
   onAyahClick: (ayah: Ayah) => void;
 }
 
@@ -19,6 +20,7 @@ export const useMobileAyahHandlers = ({
   surah,
   favoriteAyahs,
   user,
+  isLoggedIn,
   onAyahClick,
 }: UseMobileAyahHandlersProps) => {
   const { t } = useTranslation();
@@ -30,7 +32,7 @@ export const useMobileAyahHandlers = ({
   };
 
   const handleBookmark = async (ayah: Ayah) => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",

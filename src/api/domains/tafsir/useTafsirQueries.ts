@@ -4,8 +4,9 @@ import type {
   TafsirBook,
   TafsirResponse,
   HadithParams,
-  HadithResponse,
+  HadithListResponse,
   HadithCollection,
+  HadithBook,
 } from "./tafsir.types";
 import {
   getAyahTafsir,
@@ -13,6 +14,7 @@ import {
   getTafsirBooks,
   getHadiths,
   getHadithCollections,
+  getCollectionBooks,
 } from "./tafsir.queries";
 
 export const useTafsirBooks = () => {
@@ -50,7 +52,7 @@ export const useAyahTafsir = (
 };
 
 export const useHadiths = (params?: HadithParams) => {
-  return useQuery<HadithResponse>({
+  return useQuery<HadithListResponse>({
     queryKey: ["hadiths", params],
     queryFn: () => getHadiths(params),
     staleTime: 1000 * 60 * 60, // 1 hour
@@ -63,5 +65,14 @@ export const useHadithCollections = (exclusions?: string[]) => {
     queryKey: ["hadith-collections", exclusions],
     queryFn: () => getHadithCollections(exclusions),
     staleTime: 1000 * 60 * 60 * 24, // 24 hours - collections don't change often
+  });
+};
+
+export const useCollectionBooks = (collection?: string) => {
+  return useQuery<HadithBook[]>({
+    queryKey: ["collection-books", collection],
+    queryFn: () => getCollectionBooks(collection!),
+    staleTime: 1000 * 60 * 60 * 24,
+    enabled: Boolean(collection),
   });
 };

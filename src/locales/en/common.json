@@ -29,7 +29,11 @@
     "share": "Share",
     "more": "More",
     "copied": "Copied to clipboard",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "error_occurred": "An error occurred",
+    "next": "Next",
+    "previous": "Previous",
+    "page": "Page"
   },
   "home": {
     "Yaqeen-header": "Yaqeen",
@@ -127,8 +131,21 @@
     "go_to_ayah": "Read Ayah {{number}}",
     "tafsirs": "Tafsirs",
     "reflections": "Reflections",
-    "benefits": "Benefits",
-    "hadith": "Hadith"
+    "benefits": "Benefits"
+  },
+  "hadith": {
+    "title": "Hadith Collections",
+    "collection": "Collection",
+    "chapters": "Chapters",
+    "loading": "Loading Hadith Collections...",
+    "error_loading": "Error loading Hadith Collections",
+    "error_loading_page": "Error loading Hadiths. Please try again.",
+    "no_collections": "No hadith collections found",
+    "view_collection": "View Collection",
+    "book": "Book",
+    "hadith": "Hadith",
+    "hadiths_count": "{{formattedCount}} Hadiths",
+    "no_hadiths": "No hadiths found in this book."
   },
   "audio": {
     "playing": "Playing",
@@ -142,7 +159,8 @@
     "quran": "Quran",
     "reciters": "Reciters",
     "radio": "Radio",
-    "search": "Search"
+    "search": "Search",
+    "hadiths": "Hadiths"
   },
   "search": {
     "title": "Search Results",
@@ -185,7 +203,7 @@
     "error_user_exists": "User already registered",
     "error_email_not_confirmed": "Email not confirmed. Please check your inbox.",
     "error_generic": "An error occurred during authentication",
-    "login_required": "Please login to bookmark ayahs"
+    "login_required": "Please login"
   },
 
   "favorites": {
@@ -223,6 +241,7 @@
     "showing_count": "Showing {{formattedCount}} stations",
     "live": "Live"
   },
+
   "footer": {
     "navigate": "Navigate",
     "network": "Network",

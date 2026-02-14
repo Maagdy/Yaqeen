@@ -6,7 +6,8 @@ import { useState } from "react";
 import { formatNumber } from "@/utils/numbers";
 import { padSurahNumber } from "@/utils/surahUtils";
 import {
-  BookmarkAdd,
+  Bookmark,
+  BookmarkBorder,
   Share,
   PlayCircleFilledRounded,
   PauseCircleFilledRounded,
@@ -18,8 +19,11 @@ import {
   useFavoriteAyahsQuery,
   useAddFavoriteAyahMutation,
   useRemoveFavoriteAyahMutation,
+  useFavoriteSurahsQuery,
+  useAddFavoriteSurahMutation,
+  useRemoveFavoriteSurahMutation,
 } from "@/api/domains/user";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import type { Ayah } from "@/api";
 
 export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
@@ -27,7 +31,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -35,6 +39,53 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
   const addFavoriteAyah = useAddFavoriteAyahMutation(user?.id);
   const removeFavoriteAyah = useRemoveFavoriteAyahMutation(user?.id);
+
+  // Favorite Surah functionality
+  const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
+  const addFavoriteSurahMutation = useAddFavoriteSurahMutation(user?.id);
+  const removeFavoriteSurahMutation = useRemoveFavoriteSurahMutation(user?.id);
+
+  const isFavoriteSurah = favoriteSurahs?.some(
+    (fav) => fav.surah_number === surah.id,
+  );
+
+  const handleSurahBookmark = async () => {
+    if (!isLoggedIn) {
+      toast.error(
+        t("auth.login_required", { defaultValue: "Please login to bookmark" }),
+      );
+      return;
+    }
+
+    try {
+      if (isFavoriteSurah) {
+        await removeFavoriteSurahMutation.mutateAsync({
+          surahNumber: surah.id,
+          reciterId: undefined, // Generic surah favorite
+        });
+        toast.success(
+          t("favorites.surah_removed", {
+            defaultValue: "Surah removed from favorites",
+          }),
+        );
+      } else {
+        await addFavoriteSurahMutation.mutateAsync({
+          surahNumber: surah.id,
+          reciterId: undefined, // Generic surah favorite
+        });
+        toast.success(
+          t("favorites.surah_added", {
+            defaultValue: "Surah added to favorites",
+          }),
+        );
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite surah", error);
+      toast.error(
+        t("common.error_occurred", { defaultValue: "An error occurred" }),
+      );
+    }
+  };
 
   // Lookup extra info from constants
   const surahInfo = quranSurahs.find((s) => s.number === surah.id);
@@ -57,17 +108,11 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     }
   };
 
-  // Mobile card event handlers
-  const handleMobileAyahPlay = () => {
-    // TODO: Implement audio for mushaf when available
-    console.log("Play ayah in mushaf - not yet implemented");
-  };
-
   const handleMobileAyahBookmark = async (
     ayahNumber: number,
     ayahText: string,
   ) => {
-    if (!user) {
+    if (!isLoggedIn) {
       toast.error(
         t("auth.login_required", {
           defaultValue: "Please login to bookmark ayahs",
@@ -185,10 +230,10 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
       <div className="mb-6 pb-4 border-b-2 border-primary/20">
         <div className="flex items-start justify-between">
           {/* Empty space for alignment */}
-          <div className="w-20"></div>
+          <div className={`w-20 ${isRtl ? "order-3" : "order-1"}`}></div>
 
           {/* Surah Name and Verse Count - Centered */}
-          <div className="flex-1 text-center">
+          <div className="flex-1 text-center order-2">
             <h2
               className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
                 isRtl ? "font-amiri" : ""
@@ -202,7 +247,9 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2">
+          <div
+            className={`flex items-center gap-2 ${isRtl ? "order-1" : "order-3"}`}
+          >
             <IconButton
               icon={<Share fontSize="medium" />}
               onClick={() => {
@@ -213,12 +260,22 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
               size="sm"
             />
             <IconButton
-              icon={<BookmarkAdd fontSize="medium" />}
-              onClick={() => {
-                // TODO: Implement bookmark logic
-                console.log("Bookmark clicked");
-              }}
-              className="text-primary/70 hover:text-primary"
+              icon={
+                isFavoriteSurah ? (
+                  <Bookmark fontSize="medium" className="text-primary" />
+                ) : (
+                  <BookmarkBorder
+                    fontSize="medium"
+                    className="text-primary/70"
+                  />
+                )
+              }
+              onClick={handleSurahBookmark}
+              className={
+                isFavoriteSurah
+                  ? "text-primary hover:text-primary/80"
+                  : "text-primary/70 hover:text-primary"
+              }
               size="sm"
             />
           </div>
@@ -256,8 +313,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
               key={ayah.number}
               ayah={convertToAyah(ayah)}
               surah={getSurahForMobileCard()}
-              isPlaying={false}
-              onPlay={handleMobileAyahPlay}
               onBookmark={() =>
                 handleMobileAyahBookmark(ayah.number, ayah.text)
               }

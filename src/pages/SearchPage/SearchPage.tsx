@@ -127,7 +127,7 @@ const SearchPage: React.FC = () => {
     };
   }, [rawKeyword]);
 
-  const { data, isLoading, error } = useSearchQueries(
+  const { data, isLoading, error, refetch } = useSearchQueries(
     {
       keyword: parsedQuery.keyword,
       scope: parsedQuery.scope,
@@ -257,6 +257,9 @@ const SearchPage: React.FC = () => {
         <ErrorPage
           title={t("error.title")}
           message={t("search.error", { keyword: rawKeyword })}
+          showRetryButton
+          onRetry={() => refetch()}
+          showHomeButton
         />
       ) : (
         <>

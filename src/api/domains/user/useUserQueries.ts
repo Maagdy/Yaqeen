@@ -16,6 +16,12 @@ import {
   getFavoriteJuzs,
   addFavoriteJuz,
   removeFavoriteJuz,
+  getFavoriteBooks,
+  addFavoriteBook,
+  removeFavoriteBook,
+  getFavoriteHadiths,
+  addFavoriteHadith,
+  removeFavoriteHadith,
 } from "./user-queries";
 import type { Profile } from "./user.types";
 import { queryClient } from "@/contexts/queryClient";
@@ -291,6 +297,146 @@ export const useRemoveFavoriteJuzMutation = (userId: string | undefined) => {
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["favorite-juzs", userId],
+      });
+    },
+  });
+};
+
+// --- Favorite Books ---
+export const useFavoriteBooksQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-books", userId],
+    queryFn: () => (userId ? getFavoriteBooks(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteBookMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      collectionName,
+      bookNumber,
+      bookName,
+    }: {
+      collectionName: string;
+      bookNumber?: string;
+      bookName?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteBook(userId, collectionName, bookNumber, bookName);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-books", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-books", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteBookMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      collectionName,
+      bookNumber,
+    }: {
+      collectionName: string;
+      bookNumber?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteBook(userId, collectionName, bookNumber);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-books", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-books", userId],
+      });
+    },
+  });
+};
+
+// --- Favorite Hadiths ---
+export const useFavoriteHadithsQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-hadiths", userId],
+    queryFn: () => (userId ? getFavoriteHadiths(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteHadithMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      collectionName,
+      bookNumber,
+      hadithNumber,
+      chapterId,
+      hadithText,
+    }: {
+      collectionName: string;
+      bookNumber: string;
+      hadithNumber: string;
+      chapterId?: string;
+      hadithText?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteHadith(
+        userId,
+        collectionName,
+        bookNumber,
+        hadithNumber,
+        chapterId,
+        hadithText,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-hadiths", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-hadiths", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteHadithMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      collectionName,
+      bookNumber,
+      hadithNumber,
+    }: {
+      collectionName: string;
+      bookNumber: string;
+      hadithNumber: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteHadith(
+        userId,
+        collectionName,
+        bookNumber,
+        hadithNumber,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-hadiths", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-hadiths", userId],
       });
     },
   });

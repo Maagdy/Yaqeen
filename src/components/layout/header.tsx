@@ -47,6 +47,7 @@ export function Header() {
     { icon: <MenuBook />, label: t("navigation.quran"), href: "/quran" },
     { icon: <Mic />, label: t("navigation.reciters"), href: "/reciters" },
     { icon: <Radio />, label: t("navigation.radio"), href: "/radio" },
+    { icon: <MenuBook />, label: t("navigation.hadiths"), href: "/hadiths" },
   ];
 
   useEffect(() => {

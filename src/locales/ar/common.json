@@ -29,7 +29,11 @@
     "share": "مشاركة",
     "more": "المزيد",
     "copied": "تم النسخ",
-    "error": "حدث خطأ"
+    "error": "حدث خطأ",
+    "error_occurred": "حدث خطأ",
+    "next": "التالي",
+    "previous": "السابق",
+    "page": "الصفحة"
   },
   "home": {
     "Yaqeen-header": "يقينك",
@@ -93,6 +97,7 @@
     "play": "تشغيل السورة",
     "pause": "إيقاف مؤقت",
     "listen_full": "استمع للسورة كاملة",
+    "pause_full": "إيقاف السورة كاملة",
     "error_id_required": "معرف السورة مطلوب",
     "error_invalid_surah": "رقم السورة غير صحيح",
     "acheive-quran-goals": "حقق أهدافك القرآنية",
@@ -126,12 +131,26 @@
     "go_to_ayah": "اقرأ الآية {{number}}",
     "tafsirs": "التفاسير",
     "reflections": "تدبر",
-    "benefits": "الفوائد",
-    "hadith": "الحديث"
+    "benefits": "الفوائد"
+  },
+  "hadith": {
+    "title": "مجموعات الحديث",
+    "collection": "مجموعة",
+    "chapters": "الأبواب",
+    "loading": "جاري تحميل مجموعات الحديث...",
+    "error_loading": "خطأ في تحميل مجموعات الحديث",
+    "error_loading_page": "خطأ في تحميل الأحاديث. يرجى المحاولة مرة أخرى.",
+    "no_collections": "لم يتم العثور على مجموعات حديث",
+    "view_collection": "عرض المجموعة",
+    "book": "كتاب",
+    "hadith": "حديث",
+    "hadiths_count": "{{formattedCount}} حديث",
+    "no_hadiths": "لا يوجد أحاديث في هذا الكتاب."
   },
   "audio": {
     "playing": "جاري التشغيل",
     "paused": "متوقف مؤقتاً",
+    "pause": "إيقاف مؤقت",
     "ayah_of": "آية {{current}} من {{total}}",
     "click_to_play": "انقر لتشغيل هذه الآية",
     "close": "إغلاق المشغل"
@@ -140,7 +159,8 @@
     "quran": "القرآن",
     "reciters": "القراء",
     "radio": "الراديو",
-    "search": "بحث"
+    "search": "بحث",
+    "hadiths": "الأحاديث"
   },
   "search": {
     "title": "نتائج البحث",
@@ -183,7 +203,7 @@
     "error_user_exists": "المستخدم مسجل بالفعل",
     "error_email_not_confirmed": "البريد الإلكتروني غير مؤكد. يرجى التحقق من صندوق الوارد.",
     "error_generic": "حدث خطأ أثناء المصادقة",
-    "login_required": "يرجى تسجيل الدخول لحفظ الآيات"
+    "login_required": "يرجى تسجيل الدخول"
   },
 
   "favorites": {
@@ -221,6 +241,7 @@
     "showing_count": "عرض {{formattedCount}} محطة",
     "live": "مباشر"
   },
+
   "footer": {
     "navigate": "التنقل",
     "network": "الشبكة",

@@ -118,7 +118,17 @@ const ReciterDetailsPage: React.FC<ReciterDetailsPageProps> = () => {
   }
 
   if (!reciter || isError) {
-    return <ErrorPage message={t("reciter-details.error_loading_page")} />;
+    return (
+      <ErrorPage
+        message={t("reciter-details.error_loading_page")}
+        showBackButton
+        showHomeButton
+        showRetryButton
+        onRetry={() => {
+          refetch();
+        }}
+      />
+    );
   }
 
   const handleDownload = async (surahNumber: number) => {

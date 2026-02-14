@@ -27,8 +27,8 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
       {ayahs.map((ayah) => {
         const isAyahPlaying =
           isPlaying &&
-          ayah.surah.number === currentSurahNumber &&
-          currentAudio === ayah.audio;
+          ayah?.surah?.number === currentSurahNumber &&
+          currentAudio === ayah?.audio;
 
         return (
           <div
@@ -79,7 +79,7 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
                         }
                       />
                     </svg>
-                    <span className="relative z-10 text-base font-bold text-text-primary">
+                    <span className="relative z-10 text-base -mt-1 font-bold text-text-primary">
                       {formatNumber(ayah.numberInSurah, language)}
                     </span>
                   </span>
