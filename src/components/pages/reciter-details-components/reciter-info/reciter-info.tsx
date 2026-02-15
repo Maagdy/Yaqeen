@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { getReciters } from "@/api";
 import { useLanguage } from "@/hooks";
 import { useState } from "react";
-import { toMp3QuranLanguage } from "@/api/utils";
 
 export const ReciterInfo: React.FC<ReciterInfoProps> = ({
   reciter,
@@ -62,7 +61,7 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
           try {
             const arData = await getReciters({
               reciter: reciter.id,
-              language: toMp3QuranLanguage("ar"),
+              language: "ar",
             });
             if (arData?.[0]) nameAr = arData[0].name;
           } catch (error) {
@@ -72,7 +71,7 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
           try {
             const enData = await getReciters({
               reciter: reciter.id,
-              language: toMp3QuranLanguage("en"),
+              language: "en",
             });
             if (enData?.[0]) nameEn = enData[0].name;
           } catch (error) {

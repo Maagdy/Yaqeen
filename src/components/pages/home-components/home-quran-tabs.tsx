@@ -14,14 +14,26 @@ import {
   type Surah,
 } from "../../../api";
 import { Loading } from "@/components/ui";
+import { ErrorPage } from "@/pages";
 
 export default function HomeQuranTabs() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("surah");
   const navigate = useNavigate();
-  const { data: chaptersResponse, isLoading: isLoadingChapters } =
-    useChaptersQuery();
-  const { data: juzsResponse, isLoading: isLoadingJuzs } = useJuzsQuery();
+  const {
+    data: chaptersResponse,
+    isLoading: isLoadingChapters,
+    isError: isChaptersError,
+    error: chaptersError,
+    refetch: refetchChapters,
+  } = useChaptersQuery();
+  const {
+    data: juzsResponse,
+    isLoading: isLoadingJuzs,
+    isError: isJuzsError,
+    error: juzsError,
+    refetch: refetchJuzs,
+  } = useJuzsQuery();
 
   const chapters = chaptersResponse;
   const juzs = juzsResponse;
@@ -73,6 +85,17 @@ export default function HomeQuranTabs() {
   const onReadSurah = (chapterNumber: number) => {
     navigate(generateRoute.surah(chapterNumber));
   };
+  const isError = activeTab === "juz" ? isJuzsError : isChaptersError;
+  const error = activeTab === "juz" ? juzsError : chaptersError;
+  if (isError || error) {
+    return (
+      <ErrorPage
+        message={t("common.error")}
+        showRetryButton
+        onRetry={isJuzsError ? refetchJuzs : refetchChapters}
+      />
+    );
+  }
   return (
     <div
       id="quran-tabs"

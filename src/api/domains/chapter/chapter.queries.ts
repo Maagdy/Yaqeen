@@ -10,9 +10,9 @@ import { mapMp3QuranSurahToSurah as mapSurah } from "./chapter.types";
 
 export const getChapters = async (): Promise<Surah[]> => {
   // Fetch both English and Arabic versions from mp3quran API
-  const [englishData, arabicData] = await Promise.all([
-    client.get<Mp3QuranSurahResponse>(ENDPOINTS.MP3QURAN_SUWAR("eng")),
+  const [arabicData, englishData] = await Promise.all([
     client.get<Mp3QuranSurahResponse>(ENDPOINTS.MP3QURAN_SUWAR("ar")),
+    client.get<Mp3QuranSurahResponse>(ENDPOINTS.MP3QURAN_SUWAR("eng")),
   ]);
 
   // Merge Arabic names into English data
