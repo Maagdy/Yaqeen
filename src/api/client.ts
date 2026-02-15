@@ -4,6 +4,10 @@ import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 export const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
+    // Add Sunnah API key if available (for proxied Sunnah.com requests)
+    ...(import.meta.env.VITE_SUNNAH_API_KEY && {
+      "X-API-Key": import.meta.env.VITE_SUNNAH_API_KEY,
+    }),
   },
 });
 
