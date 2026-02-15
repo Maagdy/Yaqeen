@@ -53,7 +53,7 @@ export function RadioControls({
           <input
             type="text"
             className="w-full pl-10 pr-10 py-2.5 bg-background border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-sm"
-            placeholder={t("reciters.search_placeholder")}
+            placeholder={t("radio.search_placeholder")}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
           />

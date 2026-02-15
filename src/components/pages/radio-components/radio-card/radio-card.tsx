@@ -10,13 +10,15 @@ import {
   useAddFavoriteRadioMutation,
   useRemoveFavoriteRadioMutation,
 } from "@/api/domains/user";
-import { useAuth } from "@/hooks";
+import { useAuth, useLanguage } from "@/hooks";
 import { toast } from "react-toastify";
+import { getRadios } from "@/api";
 
 export function RadioCard({ radio }: RadioCardProps) {
   const { t } = useTranslation();
   const { play, toggle, isPlaying, currentAudio } = useAudio();
   const { user, isLoggedIn } = useAuth();
+  const { language } = useLanguage();
 
   const { data: favoriteRadios } = useFavoriteRadiosQuery(user?.id);
   const addFavoriteRadioMutation = useAddFavoriteRadioMutation(user?.id);
@@ -54,10 +56,35 @@ export function RadioCard({ radio }: RadioCardProps) {
           }),
         );
       } else {
+        let nameAr = radio.name;
+        let nameEn = radio.name; // Default to current name if we can't find English
+
+        // If current language is English, try to get Arabic name
+        if (language === "en") {
+          try {
+            const arRadios = await getRadios("ar");
+            const arRadio = arRadios.find((r) => r.id === radio.id);
+            if (arRadio) nameAr = arRadio.name;
+          } catch (error) {
+            console.error("Failed to fetch Arabic radio name", error);
+          }
+        }
+        // If current language is Arabic, try to get English name
+        else {
+          try {
+            const enRadios = await getRadios("eng");
+            const enRadio = enRadios.find((r) => r.id === radio.id);
+            if (enRadio) nameEn = enRadio.name;
+          } catch (error) {
+            console.error("Failed to fetch English radio name", error);
+          }
+        }
+
         await addFavoriteRadioMutation.mutateAsync({
           radioId: radio.id,
-          radioName: radio.name,
+          radioName: nameAr,
           radioUrl: radio.url,
+          radioNameEnglish: nameEn,
         });
         toast.success(
           t("favorites.radio_added", {

@@ -477,6 +477,7 @@ export const addFavoriteRadio = async (
   radioId: number,
   radioName?: string,
   radioUrl?: string,
+  radioNameEnglish?: string,
 ): Promise<FavoriteRadio | null> => {
   const { data, error } = await supabase
     .from("favorite_radios")
@@ -485,6 +486,7 @@ export const addFavoriteRadio = async (
         user_id: userId,
         radio_id: radioId,
         radio_name: radioName,
+        radio_name_english: radioNameEnglish,
         radio_url: radioUrl,
       },
     ])
