@@ -9,8 +9,9 @@ import type {
 export const getReciters = async (
   params?: GetRecitersParams,
 ): Promise<Reciter[]> => {
-  const data = await client.get<RecitersResponse>(ENDPOINTS.RECITERS, {
-    params,
+  const { language, ...otherParams } = params || {};
+  const data = await client.get<RecitersResponse>(ENDPOINTS.RECITERS(language), {
+    params: otherParams,
   });
   return data.reciters;
 };
