@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   AyahTafsir,
   TafsirBook,
@@ -30,9 +30,30 @@ export const useSurahTafsir = (
   suraId: number,
   language?: string,
 ) => {
+  const queryClient = useQueryClient();
+
   return useQuery<TafsirResponse>({
     queryKey: ["surah-tafsir", tafsirId, suraId, language],
-    queryFn: () => getSurahTafsir(tafsirId, suraId, language),
+    queryFn: async () => {
+      // Determine the current and opposite language
+      const currentLang = language || "ar";
+      const otherLang = currentLang === "ar" ? "en" : "ar";
+
+      // Fetch both languages in parallel
+      const [currentData, otherData] = await Promise.all([
+        getSurahTafsir(tafsirId, suraId, currentLang),
+        getSurahTafsir(tafsirId, suraId, otherLang),
+      ]);
+
+      // Cache the other language for instant switching
+      queryClient.setQueryData<TafsirResponse>(
+        ["surah-tafsir", tafsirId, suraId, otherLang],
+        otherData
+      );
+
+      // Return the requested language (preserves existing behavior)
+      return currentData;
+    },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     enabled: Boolean(tafsirId) && Boolean(suraId),
   });

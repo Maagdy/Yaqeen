@@ -10,7 +10,7 @@ const ISLAMIC_NETWORK_CDN = "https://cdn.islamic.network/quran";
 
 // Legacy exports (deprecated - use ENDPOINTS instead)
 export const MP3QURAN_BASE_URL = proxyUrl(MP3QURAN_API);
-export const ALQURAN_BASE_URL = ALQURAN_API; // AlQuran Cloud supports CORS - no proxy needed
+export const ALQURAN_BASE_URL = proxyUrl(ALQURAN_API); // Proxy needed for CORS
 export const API_BASE_URL = ALQURAN_BASE_URL;
 
 export const ENDPOINTS = {
@@ -22,45 +22,46 @@ export const ENDPOINTS = {
     proxyUrl(buildUrl(`${MP3QURAN_API}/reciters`, params)),
 
   // --- METADATA & EDITIONS ---
-  // AlQuran Cloud supports CORS - direct calls
-  META: `${ALQURAN_API}/meta`,
-  EDITIONS: `${ALQURAN_API}/edition`,
+  // AlQuran Cloud needs proxy for CORS
+  META: proxyUrl(`${ALQURAN_API}/meta`),
+  EDITIONS: proxyUrl(`${ALQURAN_API}/edition`),
   EDITION_BY_LANGUAGE: (language: string) =>
-    `${ALQURAN_API}/edition/language/${language}`,
-  EDITION_BY_TYPE: (type: string) => `${ALQURAN_API}/edition/type/${type}`,
+    proxyUrl(`${ALQURAN_API}/edition/language/${language}`),
+  EDITION_BY_TYPE: (type: string) =>
+    proxyUrl(`${ALQURAN_API}/edition/type/${type}`),
   EDITION_BY_FORMAT: (format: string) =>
-    `${ALQURAN_API}/edition/format/${format}`,
+    proxyUrl(`${ALQURAN_API}/edition/format/${format}`),
 
   // --- COMPLETE QURAN ---
   QURAN: (edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/quran/${edition}`,
+    proxyUrl(`${ALQURAN_API}/quran/${edition}`),
 
   // --- SURAHS ---
-  SURAHS: `${ALQURAN_API}/surah`,
+  SURAHS: proxyUrl(`${ALQURAN_API}/surah`),
   SURAH: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/surah/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/surah/${number}/${edition}`),
   SURAH_WITH_OFFSET: (
     number: number,
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => buildUrl(`${ALQURAN_API}/surah/${number}/${edition}`, { offset, limit }),
+  ) => proxyUrl(buildUrl(`${ALQURAN_API}/surah/${number}/${edition}`, { offset, limit })),
 
   // --- JUZ ---
   JUZ: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/juz/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/juz/${number}/${edition}`),
   JUZ_WITH_OFFSET: (
     number: number,
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => buildUrl(`${ALQURAN_API}/juz/${number}/${edition}`, { offset, limit }),
+  ) => proxyUrl(buildUrl(`${ALQURAN_API}/juz/${number}/${edition}`, { offset, limit })),
 
   // --- AYAH (Verse) ---
   AYAH: (reference: number | string, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/ayah/${reference}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/ayah/${reference}/${edition}`),
   AYAH_MANY_EDITIONS: (reference: number | string, editions: string[]) =>
-    `${ALQURAN_API}/ayah/${reference}/editions/${editions.join(",")}`,
+    proxyUrl(`${ALQURAN_API}/ayah/${reference}/editions/${editions.join(",")}`),
 
   // --- MUSHAFS ---
   // Quranpedia needs proxy
@@ -106,15 +107,15 @@ export const ENDPOINTS = {
     keyword: string,
     scope: string = "all",
     edition: string = "en.pickthall",
-  ) => `${ALQURAN_API}/search/${keyword}/${scope}/${edition}`,
+  ) => proxyUrl(`${ALQURAN_API}/search/${keyword}/${scope}/${edition}`),
 
   // --- PAGE ---
   PAGE: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/page/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/page/${number}/${edition}`),
 
   // --- MANZIL (7 total) ---
   MANZIL: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/manzil/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/manzil/${number}/${edition}`),
 
   // --- RADIO ---
   // MP3Quran needs proxy
@@ -122,17 +123,17 @@ export const ENDPOINTS = {
     proxyUrl(buildUrl(`${MP3QURAN_API}/radios`, { language })),
 
   // --- RUKU (556 total) ---
-  RUKUS: `${ALQURAN_API}/rukus`,
+  RUKUS: proxyUrl(`${ALQURAN_API}/rukus`),
   RUKU: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/ruku/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/ruku/${number}/${edition}`),
 
   // --- HIZB QUARTER (240 total) ---
   HIZB_QUARTER: (number: number, edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/hizbQuarter/${number}/${edition}`,
+    proxyUrl(`${ALQURAN_API}/hizbQuarter/${number}/${edition}`),
 
   // --- SAJDA (Prostrations) ---
   SAJDA: (edition: string = "quran-uthmani") =>
-    `${ALQURAN_API}/sajda/${edition}`,
+    proxyUrl(`${ALQURAN_API}/sajda/${edition}`),
 
   // --- MEDIA ---
   // CDN needs proxy

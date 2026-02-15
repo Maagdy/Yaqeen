@@ -19,10 +19,15 @@ import {
   ProfileFavorites,
   ProfileStats,
 } from "@/components/pages";
+import { SEO, SEO_CONFIG } from "@/components/seo";
+import { useLanguage } from "@/hooks";
 
 function ProfilePage() {
   const { user, session, loading, isLoggedIn } = useAuth();
+  const { language } = useLanguage();
   const navigate = useNavigate();
+
+  const seoConfig = SEO_CONFIG.profile[language as "en" | "ar"];
 
   const { data: profile, isLoading: isLoadingProfile } = useProfileQuery(
     user?.id,
@@ -56,8 +61,10 @@ function ProfilePage() {
       : user.email?.[0].toUpperCase() || "U";
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <>
+      <SEO {...seoConfig} />
+      <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto space-y-8">
         {/* Header Section */}
         <ProfileHeader
           displayName={displayName}
@@ -92,7 +99,8 @@ function ProfilePage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

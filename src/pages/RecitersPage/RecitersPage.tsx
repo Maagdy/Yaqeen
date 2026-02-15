@@ -12,6 +12,7 @@ import { Loading } from "../../components/ui";
 import type { RecitersPageProps } from "./RecitersPage.types";
 import { useNavigate } from "react-router-dom";
 import { generateRoute } from "../../router/routes";
+import { SEO, SEO_CONFIG } from "@/components/seo";
 
 const RecitersPage: React.FC<RecitersPageProps> = () => {
   const { language } = useLanguage();
@@ -20,6 +21,8 @@ const RecitersPage: React.FC<RecitersPageProps> = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortAscending, setSortAscending] = useState(true);
+
+  const seoConfig = SEO_CONFIG.reciters[language as "en" | "ar"];
 
   const handleReciterClick = (reciterId: number) => {
     navigate(generateRoute.reciterDetails(reciterId));
@@ -86,8 +89,10 @@ const RecitersPage: React.FC<RecitersPageProps> = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <ReciterControls
+    <>
+      <SEO {...seoConfig} />
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <ReciterControls
         totalCount={reciters.length}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -102,7 +107,8 @@ const RecitersPage: React.FC<RecitersPageProps> = () => {
         reciters={filteredAndSortedReciters}
         onReciterClick={handleReciterClick}
       />
-    </div>
+      </div>
+    </>
   );
 };
 

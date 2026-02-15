@@ -101,6 +101,7 @@ export function Header() {
               }}
               onClick={() => {
                 navigation("/profile");
+                setDrawerOpen(false);
               }}
             />
           </Box>
@@ -240,7 +241,7 @@ export function Header() {
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <img src={Logo} className="w-10 h-10" alt="Logo" />
+              <img src={Logo} className="w-10 h-10" alt="Logo" loading="lazy" />
               <h2 className="font-bold text-primary text-lg">
                 {t("app.title")}
               </h2>
@@ -280,7 +281,10 @@ export function Header() {
             {user ? (
               <>
                 <button
-                  onClick={() => navigation("/profile")}
+                  onClick={() => {
+                    navigation("/profile");
+                    setDrawerOpen(false);
+                  }}
                   className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium rounded-lg bg-background text-text-primary border border-border hover:bg-border transition-all"
                   aria-label="Profile"
                 >

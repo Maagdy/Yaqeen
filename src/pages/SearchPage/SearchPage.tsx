@@ -11,16 +11,19 @@ import { generateRoute } from "../../router/routes";
 import { useLanguage } from "@/hooks";
 import HomeSearchBar from "@/components/pages/home-components/home-search-bar/home-search-bar";
 import { useSearchQueries } from "@/api";
+import { SEO, SEO_CONFIG } from "@/components/seo";
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const rawKeyword = searchParams.get("q") || "";
-  const { isRtl } = useLanguage();
+  const { isRtl, language } = useLanguage();
   const { t } = useTranslation();
   const navigate = useNavigate();
   // Page is now derived from URL, defaulting to 1
   const page = parseInt(searchParams.get("page") || "1", 10);
   const ITEMS_PER_PAGE = 20;
+
+  const seoConfig = SEO_CONFIG.search[language as "en" | "ar"];
 
   // Local state for the search bar input to allow editing without triggering search immediately
   const [searchInput, setSearchInput] = useState(rawKeyword);
@@ -165,18 +168,21 @@ const SearchPage: React.FC = () => {
   if (!rawKeyword && !searchInput) {
     // Show just the search bar if nothing is searched yet
     return (
-      <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold mb-8 text-primary">
-          {t("search.title")}
-        </h1>
-        <HomeSearchBar
-          value={searchInput}
-          onChange={setSearchInput}
-          onSearch={handleSearch}
-          placeholder={t("search.placeholder")}
-          className="w-full max-w-2xl"
-        />
-      </div>
+      <>
+        <SEO {...seoConfig} />
+        <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold mb-8 text-primary">
+            {t("search.title")}
+          </h1>
+          <HomeSearchBar
+            value={searchInput}
+            onChange={setSearchInput}
+            onSearch={handleSearch}
+            placeholder={t("search.placeholder")}
+            className="w-full max-w-2xl"
+          />
+        </div>
+      </>
     );
   }
 
@@ -187,8 +193,13 @@ const SearchPage: React.FC = () => {
   // `useSearchQueries` enabled flag handles validation.
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)]">
-      <div className="mb-8">
+    <>
+      <SEO
+        {...seoConfig}
+        title={rawKeyword ? `Search for "${rawKeyword}" - ${seoConfig.title}` : seoConfig.title}
+      />
+      <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-6rem)]">
+        <div className="mb-8">
         <HomeSearchBar
           value={searchInput}
           onChange={setSearchInput}
@@ -324,7 +335,8 @@ const SearchPage: React.FC = () => {
           )}
         </>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

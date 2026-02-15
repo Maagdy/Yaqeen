@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap");
 @import "tailwindcss";
 #root {
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
 @theme {

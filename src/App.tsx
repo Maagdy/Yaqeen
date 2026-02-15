@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Header } from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import { ToastContainer } from "react-toastify";
@@ -10,22 +11,24 @@ function App() {
   const { theme } = useTheme();
 
   return (
-    <div>
-      <Header />
-      <ToastContainer
-        position={language === "ar" ? "bottom-right" : "bottom-left"}
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        className="z-9999!"
-        theme={theme}
-      />
-      <Outlet />
-      <Footer />
-    </div>
+    <HelmetProvider>
+      <div>
+        <Header />
+        <ToastContainer
+          position={language === "ar" ? "bottom-right" : "bottom-left"}
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+          className="z-9999!"
+          theme={theme}
+        />
+        <Outlet />
+        <Footer />
+      </div>
+    </HelmetProvider>
   );
 }
 

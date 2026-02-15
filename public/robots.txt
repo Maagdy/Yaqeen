@@ -1,0 +1,12 @@
+# Robots.txt for Yaqeen Islamic Website
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Disallow private/auth pages
+Disallow: /auth
+Disallow: /profile
+
+# Sitemap
+Sitemap: https://yaqeen-islamic.vercel.app/sitemap.xml

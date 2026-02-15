@@ -16,6 +16,7 @@ export const AuthBanner = () => {
       >
         <img
           src={Moshaf}
+          loading="lazy"
           alt="Quran Mushaf"
           className="w-full h-auto object-contain drop-shadow-2xl opacity-90"
         />
