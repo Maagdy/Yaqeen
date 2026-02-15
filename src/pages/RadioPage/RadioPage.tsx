@@ -8,14 +8,12 @@ import { Loading } from "@/components/ui";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
-
 import { useLanguage } from "@/hooks";
 
 function RadioPage() {
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const apiLanguage = language === "en" ? "eng" : "ar";
-  const { data: radios, isLoading, isError, refetch } = useRadios(apiLanguage);
+  const { data: radios, isLoading, isError, refetch } = useRadios(language);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortAscending, setSortAscending] = useState(false); // Default: Newest first
 
