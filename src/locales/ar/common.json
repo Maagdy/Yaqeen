@@ -204,7 +204,9 @@
     "error_user_exists": "المستخدم مسجل بالفعل",
     "error_email_not_confirmed": "البريد الإلكتروني غير مؤكد. يرجى التحقق من صندوق الوارد.",
     "error_generic": "حدث خطأ أثناء المصادقة",
-    "login_required": "يرجى تسجيل الدخول"
+    "error_google_login": "فشل تسجيل الدخول باستخدام Google",
+    "login_required": "يرجى تسجيل الدخول",
+    "or_continue_with": "أو تابع مع"
   },
 
   "favorites": {
@@ -216,6 +218,8 @@
     "juz_removed": "تمت إزالة الجزء من المفضلة",
     "mushaf_added": "تمت إضافة المصحف إلى المفضلة",
     "mushaf_removed": "تمت إزالة المصحف من المفضلة",
+    "radio_added": "تمت إضافة الإذاعة إلى المفضلة",
+    "radio_removed": "تمت إزالة الإذاعة من المفضلة",
     "favorite_mushafs": "المصاحف المفضلة",
     "favorite_radios": "الإذاعات المفضلة"
   },

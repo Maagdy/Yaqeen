@@ -63,12 +63,23 @@ export function Footer() {
               <ul className="space-y-3">
                 {nav.array.map((link) => (
                   <li key={link.text}>
-                    <Link
-                      to={link.href}
-                      className="text-text-secondary hover:text-primary transition-colors text-sm"
-                    >
-                      {link.text}
-                    </Link>
+                    {(link as any).external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-text-secondary hover:text-primary transition-colors text-sm"
+                      >
+                        {link.text}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className="text-text-secondary hover:text-primary transition-colors text-sm"
+                      >
+                        {link.text}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -81,22 +92,26 @@ export function Footer() {
       <div className="flex w-[90%] max-w-7xl flex-col sm:flex-row justify-between sm:gap-x-4 items-center pt-8 mt-8 border-t border-border">
         <div className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-2 mb-4 sm:mb-0">
           <a
-            href="#"
+            href="/sitemap.xml"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
           >
             {t("footer.sitemap")}
           </a>
-          <a
-            href="#"
+          <Link
+            to="/about"
             className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
           >
-            {t("footer.privacy")}
-          </a>
+            About
+          </Link>
           <a
-            href="#"
+            href="https://github.com/anthropics/claude-code"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
           >
-            {t("footer.terms")}
+            Feedback
           </a>
         </div>
 

@@ -204,7 +204,9 @@
     "error_user_exists": "User already registered",
     "error_email_not_confirmed": "Email not confirmed. Please check your inbox.",
     "error_generic": "An error occurred during authentication",
-    "login_required": "Please login"
+    "error_google_login": "Failed to sign in with Google",
+    "login_required": "Please login",
+    "or_continue_with": "Or continue with"
   },
 
   "favorites": {
@@ -216,6 +218,8 @@
     "juz_removed": "Juz removed from favorites",
     "mushaf_added": "Mushaf added to favorites",
     "mushaf_removed": "Mushaf removed from favorites",
+    "radio_added": "Radio added to favorites",
+    "radio_removed": "Radio removed from favorites",
     "favorite_mushafs": "Favorite Mushafs",
     "favorite_radios": "Favorite Radios"
   },

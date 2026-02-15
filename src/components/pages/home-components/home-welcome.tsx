@@ -48,6 +48,7 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
           <img
             src={Moshaf}
             alt="Moshaf"
+            loading="lazy"
             className="w-full max-w-md lg:max-w-full h-auto object-contain"
           />
         </div>

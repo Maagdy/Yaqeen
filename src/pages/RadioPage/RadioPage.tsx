@@ -9,6 +9,7 @@ import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/hooks";
+import { SEO, SEO_CONFIG } from "@/components/seo";
 
 function RadioPage() {
   const { t } = useTranslation();
@@ -16,6 +17,8 @@ function RadioPage() {
   const { data: radios, isLoading, isError, refetch } = useRadios(language);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortAscending, setSortAscending] = useState(false); // Default: Newest first
+
+  const seoConfig = SEO_CONFIG.radio[language as "en" | "ar"];
 
   const filteredAndSortedRadios = useMemo(() => {
     if (!radios) return [];
@@ -55,8 +58,10 @@ function RadioPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <RadioControls
+    <>
+      <SEO {...seoConfig} />
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <RadioControls
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         sortAscending={sortAscending}
@@ -71,7 +76,8 @@ function RadioPage() {
           <RadioCard key={radio.id} radio={radio} />
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

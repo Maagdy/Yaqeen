@@ -2,13 +2,18 @@ import { useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
 import { AuthForm, AuthBanner } from "@/components/pages/auth-components";
+import { SEO, SEO_CONFIG } from "@/components/seo";
 
 export const AuthPage = () => {
-  const { isRtl } = useLanguage();
+  const { isRtl, language } = useLanguage();
   const navigate = useNavigate();
 
+  const seoConfig = SEO_CONFIG.auth[language as "en" | "ar"];
+
   return (
-    <div className="min-h-screen flex w-full bg-background relative overflow-hidden">
+    <>
+      <SEO {...seoConfig} />
+      <div className="min-h-screen flex w-full bg-background relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]"></div>
 
@@ -31,6 +36,7 @@ export const AuthPage = () => {
 
       {/* Auth Banner Section */}
       <AuthBanner />
-    </div>
+      </div>
+    </>
   );
 };

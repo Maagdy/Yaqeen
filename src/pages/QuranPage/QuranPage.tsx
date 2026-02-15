@@ -5,11 +5,16 @@ import ErrorPage from "../ErrorPage/ErrorPage";
 import { FullMushafCard } from "@/components/common";
 import { useNavigate } from "react-router-dom";
 import { generateRoute } from "@/router/routes";
+import { SEO, SEO_CONFIG } from "@/components/seo";
+import { useLanguage } from "@/hooks";
 
 function QuranPage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const { data: mushafs, isLoading, isError, error, refetch } = useAllMushafs();
+
+  const seoConfig = SEO_CONFIG.quran[language as "en" | "ar"];
 
   if (isError) {
     return (
@@ -31,7 +36,9 @@ function QuranPage() {
     navigate(generateRoute.mushafDetails(mushafId));
   };
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <SEO {...seoConfig} />
+      <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-2">
@@ -63,7 +70,8 @@ function QuranPage() {
           </p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 

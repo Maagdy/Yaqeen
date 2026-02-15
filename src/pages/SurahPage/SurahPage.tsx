@@ -19,6 +19,7 @@ import { useSurahTafsir } from "@/api/domains/tafsir";
 import { TafsirCard } from "../../components/pages/surah-components/tafsir-card";
 import { useAudio } from "../../hooks";
 import { SurahDetails } from "@/components/pages";
+import { SEO } from "@/components/seo";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,6 +48,34 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   });
 
   const { data: tafsirData } = useSurahTafsir(1, surahNumber, language);
+
+  // Get Surah metadata for SEO
+  const surahInfo = quranSurahs.find((s) => s.number === surahNumber);
+  const surahSEO = surahInfo
+    ? {
+        title:
+          language === "ar"
+            ? `سورة ${surahInfo.arabicName} - ${surahInfo.name}`
+            : `Surah ${surahInfo.name}`,
+        description:
+          language === "ar"
+            ? `اقرأ واستمع إلى سورة ${surahInfo.arabicName} (${surahInfo.name}) - ${surahInfo.verses} آية. اقرأ القرآن الكريم مع التفسير والترجمة.`
+            : `Read and listen to Surah ${surahInfo.name} (${surahInfo.arabicName}) - ${surahInfo.verses} verses. Read the Holy Quran with translation and tafsir.`,
+        keywords: [
+          `Surah ${surahInfo.name}`,
+          surahInfo.arabicName,
+          `Surah ${surahNumber}`,
+          `${surahInfo.verses} verses`,
+          "Quran",
+          "القرآن",
+        ],
+        url: `/surah/${surahNumber}`,
+      }
+    : {
+        title: "Surah - Yaqeen Islamic",
+        description: "Read and listen to the Holy Quran",
+        url: `/surah/${surahNumber}`,
+      };
 
   const { play, toggle, currentAudio } = useAudio();
 
@@ -265,6 +294,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   };
   return (
     <>
+      <SEO {...surahSEO} />
       <div className="max-w-4xl mx-auto px-4">
         <SurahDetails
           surah={surah}

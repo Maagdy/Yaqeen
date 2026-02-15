@@ -1,35 +1,28 @@
 export const navigationLinks = [
-  { text: "Home", href: "#" },
-  { text: "Quran Radio", href: "#" },
-  { text: "Reciters", href: "#" },
-  { text: "About Us", href: "#" },
-  { text: "Donate", href: "#" },
-  { text: "Mobile Apps", href: "#" },
-  { text: "Developers", href: "#" },
-  { text: "Product Updates", href: "#" },
-  { text: "Feedback", href: "#" },
-  { text: "Help", href: "#" },
+  { text: "Home", href: "/" },
+  { text: "Quran", href: "/quran" },
+  { text: "Reciters", href: "/reciters" },
+  { text: "Radio", href: "/radio" },
+  { text: "Hadiths", href: "/hadiths" },
+  { text: "Search", href: "/search" },
 ];
 
 export const networkLinks = [
-  { text: "QuranicAudio.com", href: "#" },
-  { text: "Salah.com", href: "#" },
-  { text: "Sunnah.com", href: "#" },
-  { text: "Legacy.Quran.com", href: "#" },
-  { text: "Previous.Quran.com", href: "#" },
-  { text: "Corpus.Quran.com", href: "#" },
-  { text: "QuranReflect.com", href: "#" },
-  { text: "Tarteel.ai", href: "#" },
+  { text: "QuranicAudio.com", href: "https://quranicaudio.com", external: true },
+  { text: "Salah.com", href: "https://salah.com", external: true },
+  { text: "Sunnah.com", href: "https://sunnah.com", external: true },
+  { text: "Quran.com", href: "https://quran.com", external: true },
+  { text: "Tarteel.ai", href: "https://tarteel.ai", external: true },
 ];
 
 export const popularLinks = [
-  { text: "Ayatul Kursi", href: "#" },
-  { text: "Yaseen", href: "#" },
-  { text: "Al Mulk", href: "#" },
-  { text: "Ar-Rahman", href: "#" },
-  { text: "Al Waqi'ah", href: "#" },
-  { text: "Al Kahf", href: "#" },
-  { text: "Al Muzzammil", href: "#" },
+  { text: "Ayatul Kursi (2:255)", href: "/surah/2" }, // Al-Baqarah, verse 255
+  { text: "Surah Yaseen", href: "/surah/36" },
+  { text: "Surah Al-Mulk", href: "/surah/67" },
+  { text: "Surah Ar-Rahman", href: "/surah/55" },
+  { text: "Surah Al-Waqi'ah", href: "/surah/56" },
+  { text: "Surah Al-Kahf", href: "/surah/18" },
+  { text: "Surah Al-Muzzammil", href: "/surah/73" },
 ];
 
 export const juzData = [

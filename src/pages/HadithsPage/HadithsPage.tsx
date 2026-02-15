@@ -4,11 +4,14 @@ import { Loading } from "@/components/ui";
 import { useNavigate } from "react-router-dom";
 import { generateRoute } from "@/router/routes";
 import { useTranslation } from "react-i18next";
+import { SEO, SEO_CONFIG } from "@/components/seo";
+import { useLanguage } from "@/hooks";
 
 import { ErrorPage } from "@/pages/ErrorPage";
 
 function HadithsPage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const {
     data: collections,
     isLoading,
@@ -17,6 +20,8 @@ function HadithsPage() {
     refetch,
   } = useHadithCollections();
   const navigate = useNavigate();
+
+  const seoConfig = SEO_CONFIG.hadiths[language as "en" | "ar"];
 
   if (isLoading) {
     return (
@@ -40,8 +45,10 @@ function HadithsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/70 mb-8 text-center">
+    <>
+      <SEO {...seoConfig} />
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/70 mb-8 text-center">
         {t("hadith.title")}
       </h1>
 
@@ -56,7 +63,8 @@ function HadithsPage() {
           />
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
