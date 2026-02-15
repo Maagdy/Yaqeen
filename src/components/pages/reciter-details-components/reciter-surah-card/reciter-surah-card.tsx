@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { getReciters } from "@/api";
+import { toMp3QuranLanguage } from "@/api/utils";
 
 export const ReciterSurahCard = ({
   number,
@@ -68,7 +69,7 @@ export const ReciterSurahCard = ({
           try {
             const arData = await getReciters({
               reciter: reciter.id,
-              language: "ar",
+              language: toMp3QuranLanguage("ar"),
             });
             if (arData?.[0]) nameAr = arData[0].name;
           } catch (error) {
@@ -81,7 +82,7 @@ export const ReciterSurahCard = ({
           try {
             const enData = await getReciters({
               reciter: reciter.id,
-              language: "eng",
+              language: toMp3QuranLanguage("en"),
             });
             if (enData?.[0]) nameEn = enData[0].name;
           } catch (error) {

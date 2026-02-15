@@ -18,7 +18,10 @@ export const ENDPOINTS = {
   // MP3Quran needs proxy due to CORS
   MP3QURAN_SUWAR: (language: string = "eng") =>
     proxyUrl(buildUrl(`${MP3QURAN_API}/suwar`, { language })),
-  RECITERS: proxyUrl(`${MP3QURAN_API}/reciters`),
+  RECITERS: (language?: string) =>
+    proxyUrl(
+      buildUrl(`${MP3QURAN_API}/reciters`, language ? { language } : {}),
+    ),
 
   // --- METADATA & EDITIONS ---
   // AlQuran Cloud supports CORS - direct calls
