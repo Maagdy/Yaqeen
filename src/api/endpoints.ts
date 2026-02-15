@@ -18,10 +18,8 @@ export const ENDPOINTS = {
   // MP3Quran needs proxy due to CORS
   MP3QURAN_SUWAR: (language: string = "eng") =>
     proxyUrl(buildUrl(`${MP3QURAN_API}/suwar`, { language })),
-  RECITERS: (language?: string) =>
-    proxyUrl(
-      buildUrl(`${MP3QURAN_API}/reciters`, language ? { language } : {}),
-    ),
+  RECITERS: (params?: Record<string, string | number | undefined>) =>
+    proxyUrl(buildUrl(`${MP3QURAN_API}/reciters`, params)),
 
   // --- METADATA & EDITIONS ---
   // AlQuran Cloud supports CORS - direct calls
@@ -148,7 +146,17 @@ export const ENDPOINTS = {
   HADITH_COLLECTIONS: proxyUrl(`${SUNNAH_API}/collections`),
   HADITH_COLLECTION_BOOKS: (collectionName: string) =>
     proxyUrl(`${SUNNAH_API}/collections/${collectionName}/books`),
-  HADITHS: proxyUrl(`${SUNNAH_API}/hadiths`),
-  HADITHS_BY_BOOK: (collection: string, book: number) =>
-    proxyUrl(`${SUNNAH_API}/collections/${collection}/books/${book}/hadiths`),
+  HADITHS: (params?: Record<string, string | number | undefined>) =>
+    proxyUrl(buildUrl(`${SUNNAH_API}/hadiths`, params)),
+  HADITHS_BY_BOOK: (
+    collection: string,
+    book: number,
+    params?: Record<string, string | number | undefined>,
+  ) =>
+    proxyUrl(
+      buildUrl(
+        `${SUNNAH_API}/collections/${collection}/books/${book}/hadiths`,
+        params,
+      ),
+    ),
 } as const;

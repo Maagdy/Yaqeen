@@ -25,4 +25,5 @@ export interface GetRecitersParams {
   rewaya?: number;
   sura?: number;
   reciter?: number;
+  [key: string]: string | number | undefined;
 }

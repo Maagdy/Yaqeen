@@ -13,7 +13,6 @@ import {
 import { useAuth, useLanguage } from "@/hooks";
 import { toast } from "react-toastify";
 import { getRadios } from "@/api";
-import { toMp3QuranLanguage } from "@/api/utils";
 
 export function RadioCard({ radio }: RadioCardProps) {
   const { t } = useTranslation();
@@ -63,7 +62,7 @@ export function RadioCard({ radio }: RadioCardProps) {
         // If current language is English, try to get Arabic name
         if (language === "en") {
           try {
-            const arRadios = await getRadios(toMp3QuranLanguage("ar"));
+            const arRadios = await getRadios("ar");
             const arRadio = arRadios.find((r) => r.id === radio.id);
             if (arRadio) nameAr = arRadio.name;
           } catch (error) {
@@ -73,7 +72,7 @@ export function RadioCard({ radio }: RadioCardProps) {
         // If current language is Arabic, try to get English name
         else {
           try {
-            const enRadios = await getRadios(toMp3QuranLanguage("en"));
+            const enRadios = await getRadios("en");
             const enRadio = enRadios.find((r) => r.id === radio.id);
             if (enRadio) nameEn = enRadio.name;
           } catch (error) {

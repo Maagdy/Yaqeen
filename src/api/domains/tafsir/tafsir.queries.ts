@@ -43,27 +43,28 @@ export async function getHadiths(
 ): Promise<HadithListResponse> {
   try {
     // Use the new endpoint constants
+    const queryParams: Record<string, string | number | undefined> = {
+      page: params?.page,
+      limit: params?.limit,
+      // Only include these if not using the specific endpoint
+      ...(!params?.collection || !params?.book
+        ? {
+            collection: params?.collection,
+            book: params?.book,
+            hadithNumber: params?.hadithNumber,
+          }
+        : {}),
+    };
+
     const url =
       params?.collection && params?.book
-        ? ENDPOINTS.HADITHS_BY_BOOK(params.collection, params.book)
-        : ENDPOINTS.HADITHS;
+        ? ENDPOINTS.HADITHS_BY_BOOK(params.collection, params.book, queryParams)
+        : ENDPOINTS.HADITHS(queryParams);
 
     const { data } = await axios.get<HadithListResponse>(url, {
       headers: {
         Accept: "application/json",
         "X-API-Key": API_KEY,
-      },
-      params: {
-        page: params?.page,
-        limit: params?.limit,
-        // Only include these if not using the specific endpoint
-        ...(!params?.collection || !params?.book
-          ? {
-              collection: params?.collection,
-              book: params?.book,
-              hadithNumber: params?.hadithNumber,
-            }
-          : {}),
       },
     });
 

@@ -35,14 +35,3 @@ export const buildUrl = (
 
   return queryString ? `${baseUrl}?${queryString}` : baseUrl;
 };
-
-/**
- * Maps app language codes to MP3Quran API language codes.
- * App uses "en" and "ar", but MP3Quran API expects "eng" and "ar".
- *
- * @param language - App language code ("en" | "ar")
- * @returns MP3Quran API language code ("eng" | "ar")
- */
-export const toMp3QuranLanguage = (language: string): string => {
-  return language === "en" ? "eng" : "ar";
-};
