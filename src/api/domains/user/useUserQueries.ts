@@ -518,13 +518,21 @@ export const useAddFavoriteRadioMutation = (userId: string | undefined) => {
       radioId,
       radioName,
       radioUrl,
+      radioNameEnglish,
     }: {
       radioId: number;
       radioName?: string;
       radioUrl?: string;
+      radioNameEnglish?: string;
     }) => {
       if (!userId) throw new Error("User must be logged in");
-      return addFavoriteRadio(userId, radioId, radioName, radioUrl);
+      return addFavoriteRadio(
+        userId,
+        radioId,
+        radioName,
+        radioUrl,
+        radioNameEnglish,
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

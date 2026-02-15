@@ -213,7 +213,11 @@
     "surah_added": "Surah added to favorites",
     "surah_removed": "Surah removed from favorites",
     "juz_added": "Juz added to favorites",
-    "juz_removed": "Juz removed from favorites"
+    "juz_removed": "Juz removed from favorites",
+    "mushaf_added": "Mushaf added to favorites",
+    "mushaf_removed": "Mushaf removed from favorites",
+    "favorite_mushafs": "Favorite Mushafs",
+    "favorite_radios": "Favorite Radios"
   },
 
   "error": {
@@ -240,7 +244,8 @@
     "error": "Failed to load radio stations",
     "browse": "Browse {{count}} radio stations",
     "showing_count": "Showing {{formattedCount}} stations",
-    "live": "Live"
+    "live": "Live",
+    "search_placeholder": "Search radio stations..."
   },
 
   "footer": {

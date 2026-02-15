@@ -104,6 +104,7 @@ export interface FavoriteRadio {
   user_id: string;
   radio_id: number;
   radio_name?: string | null;
+  radio_name_english?: string | null;
   radio_url?: string | null;
   created_at: string;
 }

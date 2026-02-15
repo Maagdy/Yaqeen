@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Person } from "@mui/icons-material";
+import { Person, Radio, MenuBook } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ProfileFavoritesProps } from "./profile-favorites.types";
 import { quranSurahs } from "@/utils/constants";
@@ -162,8 +162,8 @@ export const ProfileFavorites: React.FC<ProfileFavoritesProps> = ({
                     navigate(`/quran/${fav.mushaf_id}`);
                   }}
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
-                    📖
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <MenuBook />
                   </div>
                   <div className="flex flex-col overflow-hidden">
                     <span className="font-medium text-text-primary truncate">
@@ -197,8 +197,8 @@ export const ProfileFavorites: React.FC<ProfileFavoritesProps> = ({
                     navigate(`/radio`);
                   }}
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
-                    📻
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <Radio />
                   </div>
                   <div className="flex flex-col overflow-hidden">
                     <span className="font-medium text-text-primary truncate">
