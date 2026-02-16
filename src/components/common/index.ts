@@ -9,3 +9,5 @@ export * from "./mushaf-surah";
 export * from "./mobile-ayah-card";
 export * from "./scroll-to-top";
 export * from "./ramadan-side-badge";
+export * from "./qibla-compass";
+export * from "./reading-progress-indicator";

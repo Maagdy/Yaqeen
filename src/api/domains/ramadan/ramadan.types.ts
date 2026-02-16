@@ -123,6 +123,9 @@ export interface DailyProgressData {
   prayer_time?: string;
   on_time?: boolean;
   reflection_written?: boolean;
+  reading_time_seconds?: number; // Time spent reading
+  ayahs_read?: number; // Total ayahs read
+  average_reading_speed?: number; // Pages per minute
   [key: string]: unknown;
 }
 
@@ -165,6 +168,7 @@ export interface UserRamadanProfile {
   selected_difficulty: ChallengeDifficulty | null;
   daily_goal_minutes: number | null;
   daily_goal_pages: number | null;
+  pages_read_today?: number; // Today's page count for progress indicator
   last_activity_date: string | null;
   ramadan_streak: number;
   created_at: string;

@@ -20,6 +20,8 @@ import { TafsirCard } from "../../components/pages/surah-components/tafsir-card"
 import { useAudio } from "../../hooks";
 import { SurahDetails } from "@/components/pages";
 import { SEO } from "@/components/seo";
+import { useReadingTracker } from "@/hooks/useReadingTracker";
+import { ReadingProgressIndicator } from "@/components/common";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -78,6 +80,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
       };
 
   const { play, toggle, currentAudio } = useAudio();
+
+  // Track pages read when user leaves this surah
+  useReadingTracker(surah?.ayahs || [], !!surah);
 
   useEffect(() => {
     return () => {
@@ -282,6 +287,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
     <>
       <SEO {...surahSEO} />
       <div className="max-w-4xl mx-auto px-4">
+        <ReadingProgressIndicator />
         <SurahDetails
           surah={surah}
           ayahs={surah.ayahs}

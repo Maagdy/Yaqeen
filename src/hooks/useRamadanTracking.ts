@@ -10,7 +10,7 @@ import { queryClient } from "@/contexts/queryClient";
 
 export const useRamadanTracking = () => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const trackActivity = useCallback(
     async (
@@ -25,7 +25,10 @@ export const useRamadanTracking = () => {
       }
 
       try {
-        const dailyProgressResult = await updateDailyProgress(user.id, progress);
+        const dailyProgressResult = await updateDailyProgress(
+          user.id,
+          progress,
+        );
 
         const completedChallenges =
           await RamadanChallengeService.trackUserActivity({
@@ -88,9 +91,7 @@ export const useRamadanTracking = () => {
       } catch (error) {
         if (showNotifications) {
           toast.error(
-            error instanceof Error
-              ? error.message
-              : t("ramadan.trackingError"),
+            error instanceof Error ? error.message : t("ramadan.trackingError"),
           );
         }
         throw error;
@@ -114,11 +115,41 @@ export const useRamadanTracking = () => {
   );
 
   const trackCombined = useCallback(
-    async (pages: number, minutes: number, showNotifications: boolean = true) => {
+    async (
+      pages: number,
+      minutes: number,
+      showNotifications: boolean = true,
+    ) => {
       return trackActivity(
         {
           pages_read: pages,
           minutes_listened: minutes,
+        },
+        showNotifications,
+      );
+    },
+    [trackActivity],
+  );
+
+  /**
+   * Track reading with analytics (time, speed, ayah count)
+   */
+  const trackReadingWithAnalytics = useCallback(
+    async (
+      pages: number,
+      analytics: {
+        reading_time_seconds?: number;
+        ayahs_read?: number;
+        average_reading_speed?: number;
+      },
+      showNotifications: boolean = true,
+    ) => {
+      return trackActivity(
+        {
+          pages_read: pages,
+          reading_time_seconds: analytics.reading_time_seconds,
+          ayahs_read: analytics.ayahs_read,
+          average_reading_speed: analytics.average_reading_speed,
         },
         showNotifications,
       );
@@ -131,6 +162,7 @@ export const useRamadanTracking = () => {
     trackPagesRead,
     trackMinutesListened,
     trackCombined,
-    isLoggedIn: !!user,
+    trackReadingWithAnalytics,
+    isLoggedIn: isLoggedIn || !!user,
   };
 };

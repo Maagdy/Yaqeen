@@ -129,22 +129,22 @@ export const RamadanDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold text-textPrimary">
+        <div className="mb-6 sm:mb-8 text-center px-4">
+          <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold text-textPrimary">
             🌙 {t("ramadan.title")}
           </h1>
-          <p className="text-lg text-textSecondary">
+          <p className="text-sm sm:text-base md:text-lg text-textSecondary max-w-2xl mx-auto">
             {t("ramadan.subtitle")}
           </p>
-          <div className="mt-4 inline-block rounded-lg bg-primary/10 px-6 py-2">
-            <p className="text-sm font-semibold text-primary">
+          <div className="mt-4 inline-block rounded-lg bg-primary/10 px-4 sm:px-6 py-2">
+            <p className="text-xs sm:text-sm font-semibold text-primary">
               {ramadanStatus.message} • {currentRamadanYear}
             </p>
           </div>
         </div>
 
         {user && (
-          <div className="mb-8 grid gap-6 md:grid-cols-2">
+          <div className="mb-6 sm:mb-8 grid gap-4 sm:gap-6 lg:grid-cols-2">
             <UserStatsCard
               profile={userProfile}
               userChallenges={userChallenges}
@@ -153,9 +153,9 @@ export const RamadanDashboard = () => {
           </div>
         )}
 
-        <div className="mb-6 rounded-xl border border-border bg-surface p-6 shadow-sm">
-          <div className="mb-4">
-            <h3 className="mb-3 text-lg font-semibold text-textPrimary">
+        <div className="mb-6 rounded-xl border border-border bg-surface p-4 sm:p-6 shadow-sm">
+          <div className="mb-4 sm:mb-6">
+            <h3 className="mb-3 text-base sm:text-lg font-semibold text-textPrimary">
               {t("ramadan.filters.category")}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -163,7 +163,7 @@ export const RamadanDashboard = () => {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                  className={`rounded-lg px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold transition-all ${
                     selectedCategory === category
                       ? "bg-primary text-white shadow-md"
                       : "border border-border bg-background text-textSecondary hover:border-primary hover:text-primary"
@@ -176,7 +176,7 @@ export const RamadanDashboard = () => {
           </div>
 
           <div>
-            <h3 className="mb-3 text-lg font-semibold text-textPrimary">
+            <h3 className="mb-3 text-base sm:text-lg font-semibold text-textPrimary">
               {t("ramadan.filters.difficulty")}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -184,7 +184,7 @@ export const RamadanDashboard = () => {
                 <button
                   key={difficulty}
                   onClick={() => setSelectedDifficulty(difficulty)}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                  className={`rounded-lg px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold transition-all ${
                     selectedDifficulty === difficulty
                       ? "bg-primary text-white shadow-md"
                       : "border border-border bg-background text-textSecondary hover:border-primary hover:text-primary"

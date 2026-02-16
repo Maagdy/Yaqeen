@@ -328,6 +328,10 @@
     "activity": "Activity",
     "current_streak": "Current Streak",
     "total_pages_read": "Total Pages Read",
+    "total_listening": "Total Listening Time",
+    "reading_speed": "Average Reading Speed",
+    "pages_per_min": "pages/min",
+    "total_reading_time": "Total Reading Time",
     "favorite_reciters": "Favorite Reciters",
     "favorite_surahs": "Favorite Surahs",
     "favorite_juzs": "Favorite Juzs",
@@ -394,6 +398,22 @@
       "turkey": "Turkey",
       "uk": "United Kingdom",
       "usa": "United States"
+    },
+    "qibla": {
+      "title": "Qibla Direction",
+      "subtitle": "Find the direction to the Holy Kaaba",
+      "getting_location": "Getting your location...",
+      "location_error": "Unable to get your location",
+      "permission_denied": "Location permission denied. Please enable location access in your browser settings.",
+      "position_unavailable": "Location information is unavailable",
+      "timeout": "Location request timed out",
+      "geolocation_not_supported": "Geolocation is not supported by your browser",
+      "compass_permission_denied": "Compass permission denied. Please enable motion sensors in your browser settings.",
+      "compass_not_supported": "Device compass is not supported",
+      "retry": "Try Again",
+      "direction": "Qibla Direction",
+      "distance": "Distance to Kaaba",
+      "instruction": "Point your device north and the arrow will show the Qibla direction"
     }
   },
   "azkar": {
@@ -539,7 +559,18 @@
     "noChallenges": "No challenges match your filters",
     "enroll": "Join Challenge",
     "enrolled": "Enrolled",
-    "progress": "Progress",
+    "progress": {
+      "todayReading": "Today's Reading",
+      "pages": "pages",
+      "start": "Start reading to track your progress! 📖",
+      "keepGoing": "Great start! Keep going! 💪",
+      "almostHalfway": "You're doing amazing! ⭐",
+      "almostThere": "Almost there! You've got this! 🔥",
+      "goalComplete": "Goal complete! MashaAllah! 🎉",
+      "challengesDone": "Completed",
+      "dayStreak": "Day Streak",
+      "xp": "XP"
+    },
     "loginRequired": "Please login to join challenges",
     "enrollSuccess": "Successfully enrolled in challenge!",
     "enrollError": "Failed to enroll in challenge",
@@ -608,8 +639,7 @@
     },
     "sideBadge": {
       "ramadan": "Ramadan",
-      "ramadanMubarak": "Ramadan Mubarak",
-      "ramadanKareem": "رمضان كريم",
+      "ramadanKareem": "Ramadan Kareem",
       "daysRemaining": "Days Until End",
       "daysRemainingAr": "أيام حتى النهاية",
       "challenges": "Ramadan Challenges",

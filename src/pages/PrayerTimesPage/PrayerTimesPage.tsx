@@ -13,6 +13,7 @@ import { LocationSelector } from "@/components/pages/paryer-times-components/loc
 import { PrayerTimeCard } from "@/components/pages/paryer-times-components/prayer-time-card";
 import { getPrayerIcon } from "@/utils/getPrayerIcon";
 import { ErrorPage } from "../ErrorPage";
+import { QiblaCompass } from "@/components/common";
 
 const MAIN_PRAYERS = [
   "Fajr",
@@ -250,6 +251,11 @@ export const PrayerTimesPage: React.FC = () => {
                     </span>
                   </span>
                 </div>
+              </div>
+
+              {/* Qibla Compass Section */}
+              <div className="mt-8">
+                <QiblaCompass />
               </div>
             </>
           )}

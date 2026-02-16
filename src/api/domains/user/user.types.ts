@@ -50,6 +50,9 @@ export interface UserProgress {
   date: string;
   minutes_listened: number;
   pages_read: number;
+  reading_time_seconds?: number; // Time spent reading (analytics)
+  ayahs_read?: number; // Total ayahs read (analytics)
+  average_reading_speed?: number; // Pages per minute (analytics)
   updated_at: string;
 }
 

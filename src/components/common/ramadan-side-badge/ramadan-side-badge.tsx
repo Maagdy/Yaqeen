@@ -165,10 +165,10 @@ export const RamadanSideBadge = () => {
               >
                 {isRTL
                   ? t("ramadan.sideBadge.ramadanKareem")
-                  : t("ramadan.sideBadge.ramadanMubarak")}
+                  : t("ramadan.sideBadge.ramadanKareem")}
               </p>
               <p className="text-white/50 text-[10px] tracking-widest uppercase mt-0.5">
-                {isRTL ? "Ramadan Mubarak" : "رمضان كريم"}
+                {isRTL ? "Ramadan Kareem" : "رمضان كريم"}
               </p>
             </div>
 
@@ -219,8 +219,8 @@ export const RamadanSideBadge = () => {
 
             <button
               onClick={() => {
-                navigate("/ramadan");
                 setExpanded(false);
+                setTimeout(() => navigate("/ramadan"), 300);
               }}
               className="
                 w-full py-2.5 rounded-xl
