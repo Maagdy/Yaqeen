@@ -5,6 +5,7 @@ import Footer from "./components/layout/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLanguage, useTheme } from "./hooks";
+import { ScrollToTop, RamadanSideBadge } from "./components/common";
 
 function App() {
   const { language } = useLanguage();
@@ -13,6 +14,8 @@ function App() {
   return (
     <HelmetProvider>
       <div>
+        <ScrollToTop />
+        <RamadanSideBadge />
         <Header />
         <ToastContainer
           position={language === "ar" ? "bottom-right" : "bottom-left"}

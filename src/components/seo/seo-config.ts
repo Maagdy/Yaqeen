@@ -37,6 +37,36 @@ export const SEO_CONFIG: Record<string, SEOPageConfig> = {
       url: "/",
     },
   },
+  about: {
+    en: {
+      title: "About Us - Our Mission & Vision",
+      description:
+        "Learn about Yaqeen, a Sadaqah Jariyah dedicated to making Islamic knowledge accessible to everyone. Discover our mission, values, and commitment to authentic Islamic content.",
+      keywords: [
+        "About Yaqeen",
+        "Islamic website",
+        "Sadaqah Jariyah",
+        "Islamic mission",
+        "Quran platform",
+        "Islamic values",
+      ],
+      url: "/about",
+    },
+    ar: {
+      title: "من نحن - مهمتنا ورؤيتنا",
+      description:
+        "تعرف على يقين، صدقة جارية مكرسة لجعل المعرفة الإسلامية متاحة للجميع. اكتشف مهمتنا وقيمنا والتزامنا بالمحتوى الإسلامي الأصيل.",
+      keywords: [
+        "عن يقين",
+        "موقع إسلامي",
+        "صدقة جارية",
+        "المهمة الإسلامية",
+        "منصة القرآن",
+        "القيم الإسلامية",
+      ],
+      url: "/about",
+    },
+  },
   quran: {
     en: {
       title: "Quran - Browse Mushafs & Editions",
@@ -193,6 +223,38 @@ export const SEO_CONFIG: Record<string, SEOPageConfig> = {
       noindex: true,
     },
   },
+  azkar: {
+    en: {
+      title: "Azkar & Duas - Islamic Supplications",
+      description:
+        "Authentic Islamic supplications and duas from Quran and Sunnah. Morning and evening azkar, prayers for forgiveness, protection, and daily remembrances.",
+      keywords: [
+        "azkar",
+        "duas",
+        "Islamic supplications",
+        "morning azkar",
+        "evening azkar",
+        "dua",
+        "dhikr",
+        "Islamic prayers",
+      ],
+      url: "/azkar",
+    },
+    ar: {
+      title: "أذكار وأدعية - الأذكار الإسلامية",
+      description:
+        "أدعية وأذكار إسلامية صحيحة من القرآن والسنة. أذكار الصباح والمساء، أدعية الاستغفار، الحماية، والأذكار اليومية.",
+      keywords: [
+        "أذكار",
+        "أدعية",
+        "ذكر",
+        "أذكار الصباح",
+        "أذكار المساء",
+        "دعاء",
+      ],
+      url: "/azkar",
+    },
+  },
 };
 
 // Structured data for the website
@@ -223,6 +285,5 @@ export const getOrganizationStructuredData = () => ({
   url: import.meta.env.VITE_SITE_URL || "https://yaqeen-islamic.vercel.app",
   logo: `${import.meta.env.VITE_SITE_URL || "https://yaqeen-islamic.vercel.app"}/logo.png`,
   sameAs: [
-    // Add social media links here when available
   ],
 });

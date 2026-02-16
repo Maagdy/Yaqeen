@@ -49,7 +49,6 @@ function MushafSurahPage() {
     );
   }
 
-  // Handle error state
   if (surahError || !surah) {
     return (
       <ErrorPage

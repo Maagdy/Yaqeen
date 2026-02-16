@@ -24,7 +24,6 @@ export const discoverItems: DiscoverItem[] = [
   },
 ] as const;
 
-// surah-constants.ts
 export const getDiscoverItems = (handlers: {
   onTafsirClick: () => void;
   onTadaborClick: () => void;

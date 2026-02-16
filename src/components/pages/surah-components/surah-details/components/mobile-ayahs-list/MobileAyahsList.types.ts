@@ -12,4 +12,5 @@ export interface MobileAyahsListProps {
   onCopy: (ayah: Ayah) => void;
   onTafsirClick: (ayah: Ayah) => void;
   isBookmarked: (ayah: Ayah) => boolean;
+  isBookmarkLoading?: () => boolean;
 }

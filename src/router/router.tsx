@@ -15,6 +15,11 @@ import SearchPage from "@/pages/SearchPage/SearchPage";
 import ProfilePage from "@/pages/ProfilePage/ProfilePage";
 import HadithsPage from "@/pages/HadithsPage/HadithsPage";
 import HadithDetailsPage from "@/pages/HadithDetailsPage/HadithDetailsPage";
+import FavoritesPage from "@/pages/FavoritesPage/FavoritesPage";
+import PrayerTimesPage from "@/pages/PrayerTimesPage/PrayerTimesPage";
+import AzkarPage from "@/pages/AzkarPage/AzkarPage";
+import AboutPage from "@/pages/AboutPage/AboutPage";
+import { RamadanPage } from "@/pages/RamadanPage";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +30,7 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: ROUTES.SURAH, element: <SurahPage /> },
       { path: ROUTES.JUZ, element: <JuzPage /> },
-      { path: ROUTES.ABOUT, element: <div className="bg-red-400">About</div> },
+      { path: ROUTES.ABOUT, element: <AboutPage /> },
       { path: ROUTES.RECITERS, element: <RecitersPage /> },
       { path: ROUTES.RECITER_DETAILS, element: <ReciterDetailsPage /> },
       { path: ROUTES.QURAN, element: <QuranPage /> },
@@ -37,6 +42,13 @@ export const router = createBrowserRouter([
       { path: ROUTES.PROFILE, element: <ProfilePage /> },
       { path: ROUTES.HADITHS, element: <HadithsPage /> },
       { path: ROUTES.HADITH_DETAILS, element: <HadithDetailsPage /> },
+      {
+        path: ROUTES.FAVORITES,
+        element: <FavoritesPage />,
+      },
+      { path: ROUTES.PRAYER_TIMES, element: <PrayerTimesPage /> },
+      { path: ROUTES.AZKAR, element: <AzkarPage /> },
+      { path: ROUTES.RAMADAN, element: <RamadanPage /> },
     ],
   },
 ]);

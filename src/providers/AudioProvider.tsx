@@ -1,6 +1,5 @@
-// src/contexts/AudioContext.tsx
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import type { AudioContextType } from "../contexts/audio-context.types";
+import type { AudioContextType, PlaybackType } from "../contexts/audio-context.types";
 import { AudioContext } from "../contexts/audio-context";
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -10,14 +9,14 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentAudio, setCurrentAudio] = useState<string | null>(null);
   const [currentSurahNumber, setCurrentSurahNumber] = useState<number | null>(
     null,
-  ); // Changed
+  );
+  const [playbackType, setPlaybackType] = useState<PlaybackType>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolumeState] = useState(1);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
     audioRef.current = audio;
@@ -46,7 +45,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("error", handleError);
 
-    // Cleanup
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -57,21 +55,20 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const play = useCallback(
-    (audioUrl: string, surahNumber?: number) => {
+    (audioUrl: string, surahNumber?: number, type: PlaybackType = 'surah') => {
       if (!audioRef.current) return;
 
-      // If same audio, just resume
       if (currentAudio === audioUrl) {
         audioRef.current.play();
         setIsPlaying(true);
         return;
       }
 
-      // Load new audio
       audioRef.current.src = audioUrl;
       audioRef.current.volume = volume;
       setCurrentAudio(audioUrl);
-      setCurrentSurahNumber(surahNumber ?? null); // Changed
+      setCurrentSurahNumber(surahNumber ?? null);
+      setPlaybackType(type);
 
       audioRef.current
         .play()
@@ -95,9 +92,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isPlaying) {
       pause();
     } else if (currentAudio) {
-      play(currentAudio, currentSurahNumber ?? undefined); // Changed
+      play(currentAudio, currentSurahNumber ?? undefined, playbackType ?? 'surah');
     }
-  }, [isPlaying, currentAudio, currentSurahNumber, play, pause]);
+  }, [isPlaying, currentAudio, currentSurahNumber, playbackType, play, pause]);
 
   const seek = useCallback((time: number) => {
     if (audioRef.current) {
@@ -121,14 +118,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     setIsPlaying(false);
     setCurrentAudio(null);
-    setCurrentSurahNumber(null); // Changed
+    setCurrentSurahNumber(null);
+    setPlaybackType(null);
     setProgress(0);
   }, []);
 
   const value: AudioContextType = {
     isPlaying,
     currentAudio,
-    currentSurahNumber, // Changed
+    currentSurahNumber,
+    playbackType,
     progress,
     duration,
     volume,

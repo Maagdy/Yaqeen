@@ -12,6 +12,7 @@ import type {
   UserStreak,
   FavoriteMushaf,
   FavoriteRadio,
+  FavoriteDua,
 } from "./user.types";
 
 // --- Profiles ---
@@ -503,6 +504,56 @@ export const removeFavoriteRadio = async (
   const { error } = await supabase.from("favorite_radios").delete().match({
     user_id: userId,
     radio_id: radioId,
+  });
+  if (error) throw error;
+};
+
+// --- Favorite Duas ---
+export const getFavoriteDuas = async (
+  userId: string,
+): Promise<FavoriteDua[]> => {
+  const { data, error } = await supabase
+    .from("favorite_duas")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
+};
+
+export const addFavoriteDua = async (
+  userId: string,
+  duaId: number,
+  duaCategory: string,
+  duaTextArabic?: string,
+  duaTextEnglish?: string,
+  duaReference?: string,
+): Promise<FavoriteDua | null> => {
+  const { data, error } = await supabase
+    .from("favorite_duas")
+    .insert([
+      {
+        user_id: userId,
+        dua_id: duaId,
+        dua_category: duaCategory,
+        dua_text_arabic: duaTextArabic,
+        dua_text_english: duaTextEnglish,
+        dua_reference: duaReference,
+      },
+    ])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const removeFavoriteDua = async (
+  userId: string,
+  duaId: number,
+): Promise<void> => {
+  const { error } = await supabase.from("favorite_duas").delete().match({
+    user_id: userId,
+    dua_id: duaId,
   });
   if (error) throw error;
 };

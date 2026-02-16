@@ -8,6 +8,7 @@
   "common": {
     "loading": "Loading...",
     "close": "Close",
+    "login_required": "Please login to continue",
     "surah": "Surah",
     "date": "Date",
     "save": "Save",
@@ -161,7 +162,12 @@
     "reciters": "Reciters",
     "radio": "Radio",
     "search": "Search",
-    "hadiths": "Hadiths"
+    "hadiths": "Hadiths",
+    "azkar": "Azkar & Duas",
+    "favorites": "Favorites",
+    "prayer_times": "Prayer Times",
+    "about": "About Us",
+    "ramadan": "Ramadan Challenges"
   },
   "search": {
     "title": "Search Results",
@@ -221,7 +227,9 @@
     "radio_added": "Radio added to favorites",
     "radio_removed": "Radio removed from favorites",
     "favorite_mushafs": "Favorite Mushafs",
-    "favorite_radios": "Favorite Radios"
+    "favorite_radios": "Favorite Radios",
+    "favorite_hadiths": "Favorite Hadiths",
+    "favorite_duas": "Favorite Duas"
   },
 
   "error": {
@@ -257,11 +265,33 @@
     "network": "Network",
     "popular-links": "Popular Links",
     "subtitle": "Read, study, and learn The Noble Quran.",
-    "description": "Yaqeen.com is a Sadaqah Jariyah. We hope to make it easy for everyone to read, study, and learn The Noble Quran. The Noble Quran has many names including Al-Quran Al-Kareem, Al-Ketab, Al-Furqan, Al-Maw'itha, Al-Thikr, and Al-Noor.",
+    "description": "Yaqeen.site is a Sadaqah Jariyah. We hope to make it easy for everyone to read, study, and learn The Noble Quran. The Noble Quran has many names including Al-Quran Al-Kareem, Al-Ketab, Al-Furqan, Al-Maw'itha, Al-Thikr, and Al-Noor.",
     "sitemap": "Sitemap",
+    "about": "About",
+    "feedback": "Feedback",
     "privacy": "Privacy",
     "terms": "Terms and Conditions",
-    "copyright": "© {{year}} Yaqeen.com. All Rights Reserved"
+    "copyright": "© {{year}} Yaqeen.site. All Rights Reserved",
+    "links": {
+      "home": "Home",
+      "quran": "Quran",
+      "reciters": "Reciters",
+      "radio": "Radio",
+      "hadiths": "Hadiths",
+      "search": "Search",
+      "quranic_audio": "QuranicAudio.com",
+      "salah": "Salah.com",
+      "sunnah": "Sunnah.com",
+      "quran_com": "Quran.com",
+      "tarteel": "Tarteel.ai",
+      "ayatul_kursi": "Ayatul Kursi (2:255)",
+      "surah_yaseen": "Surah Yaseen",
+      "surah_mulk": "Surah Al-Mulk",
+      "surah_rahman": "Surah Ar-Rahman",
+      "surah_waqiah": "Surah Al-Waqi'ah",
+      "surah_kahf": "Surah Al-Kahf",
+      "surah_muzzammil": "Surah Al-Muzzammil"
+    }
   },
   "quran": {
     "title": "Quran Mushafs",
@@ -309,5 +339,287 @@
   "validation": {
     "first_name_short": "First name is too short",
     "last_name_short": "Last name is too short"
+  },
+  "prayer_times": {
+    "page_title": "Prayer Times",
+    "page_description": "Find accurate prayer times for your location",
+    "title": "Prayer Times",
+    "subtitle": "Accurate prayer times for your location",
+    "select_location": "Select Location",
+    "use_location": "Use My Location",
+    "current_location": "Current Location",
+    "your_location": "Your Location",
+    "gregorian_date": "Gregorian Date",
+    "hijri_date": "Hijri Date",
+    "calculation_method": "Calculation Method",
+    "next": "Next",
+    "prayers": {
+      "fajr": "Fajr",
+      "sunrise": "Sunrise",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha"
+    },
+    "cities": {
+      "cairo": "Cairo",
+      "mecca": "Mecca",
+      "medina": "Medina",
+      "riyadh": "Riyadh",
+      "dubai": "Dubai",
+      "kuwait_city": "Kuwait City",
+      "amman": "Amman",
+      "beirut": "Beirut",
+      "damascus": "Damascus",
+      "baghdad": "Baghdad",
+      "doha": "Doha",
+      "manama": "Manama",
+      "muscat": "Muscat",
+      "istanbul": "Istanbul",
+      "london": "London",
+      "new_york": "New York"
+    },
+    "countries": {
+      "egypt": "Egypt",
+      "saudi_arabia": "Saudi Arabia",
+      "uae": "United Arab Emirates",
+      "kuwait": "Kuwait",
+      "jordan": "Jordan",
+      "lebanon": "Lebanon",
+      "syria": "Syria",
+      "iraq": "Iraq",
+      "qatar": "Qatar",
+      "bahrain": "Bahrain",
+      "oman": "Oman",
+      "turkey": "Turkey",
+      "uk": "United Kingdom",
+      "usa": "United States"
+    }
+  },
+  "azkar": {
+    "page_title": "Azkar & Duas",
+    "page_description": "Authentic Islamic supplications and remembrances from Quran and Sunnah",
+    "title": "Azkar & Duas",
+    "subtitle": "Authentic supplications from Quran and Sunnah",
+    "all_categories": "All Categories",
+    "showing_count": "Showing {{count}} duas",
+    "no_duas": "No duas found",
+    "show_more": "Show More",
+    "show_less": "Show Less",
+    "copied_dua": "Dua copied to clipboard",
+    "categories": {
+      "morning_evening": "Morning & Evening",
+      "prayer": "Prayer",
+      "forgiveness": "Forgiveness",
+      "anxiety": "Anxiety & Distress",
+      "protection": "Protection",
+      "gratitude": "Gratitude",
+      "knowledge": "Knowledge",
+      "family": "Family & Parents",
+      "rizq": "Provision & Wealth",
+      "daily": "Daily Routines",
+      "sleep": "Sleep",
+      "guidance": "Guidance",
+      "hereafter": "Hereafter"
+    }
+  },
+  "about": {
+    "badge": "About Yaqeen",
+    "hero": {
+      "title": "Connecting Hearts to the Quran",
+      "description": "A comprehensive Islamic platform dedicated to making the Quran, Hadith, and Islamic knowledge accessible to everyone, everywhere.",
+      "established": "Established",
+      "type": "Type",
+      "sadaqah": "Sadaqah Jariyah"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "intro": "Yaqeen is a Sadaqah Jariyah (ongoing charity) created with the sole purpose of making Islamic knowledge accessible, authentic, and easy to use for Muslims around the world.",
+      "goal": "We strive to provide a comprehensive platform where anyone can read, listen to, and learn from the Quran and authentic Hadith collections, completely free of charge and without advertisements.",
+      "quote": "\"The best of you are those who learn the Quran and teach it.\" - Prophet Muhammad ﷺ",
+      "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful"
+    },
+    "features": {
+      "title": "What We Offer",
+      "subtitle": "Comprehensive Islamic resources at your fingertips",
+      "quran": {
+        "title": "Quran Reading",
+        "description": "Read the Holy Quran with multiple translations, tafsir, and beautiful Arabic text."
+      },
+      "reciters": {
+        "title": "Audio Recitations",
+        "description": "Listen to renowned Qaris from around the world with various recitation styles."
+      },
+      "hadiths": {
+        "title": "Hadith Collections",
+        "description": "Access authentic Hadith collections including Sahih Bukhari and Muslim."
+      },
+      "azkar": {
+        "title": "Azkar & Duas",
+        "description": "Daily supplications and remembrances from the Quran and Sunnah."
+      },
+      "prayer": {
+        "title": "Prayer Times",
+        "description": "Accurate prayer times for your location with multiple calculation methods."
+      },
+      "radio": {
+        "title": "Islamic Radio",
+        "description": "24/7 live Quran recitations and Islamic lectures from global stations."
+      },
+      "search": {
+        "title": "Advanced Search",
+        "description": "Search across the Quran with powerful filtering and language support."
+      },
+      "favorites": {
+        "title": "Personal Library",
+        "description": "Save your favorite verses, surahs, and hadiths for easy access."
+      }
+    },
+    "values": {
+      "title": "Our Core Values",
+      "subtitle": "The principles that guide everything we do",
+      "authenticity": {
+        "title": "Authenticity",
+        "description": "All content is verified from authentic Islamic sources with proper references and scholarly verification."
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Free for everyone, everywhere. No subscriptions, no paywalls, no barriers to Islamic knowledge."
+      },
+      "multilingual": {
+        "title": "Multilingual",
+        "description": "Supporting Arabic and English with plans to add more languages, making Islam accessible globally."
+      },
+      "free": {
+        "title": "Forever Free",
+        "description": "Completely free with no advertisements. Sustained through voluntary contributions and prayers."
+      }
+    },
+    "stats": {
+      "title": "By the Numbers",
+      "subtitle": "The wealth of knowledge at your fingertips",
+      "surahs": "Surahs",
+      "ayahs": "Ayahs",
+      "duas": "Authentic Duas",
+      "reciters": "Reciters",
+      "description": "Every verse, every word, carefully preserved and presented to help you deepen your connection with Allah's eternal message."
+    },
+    "vision": {
+      "title": "Our Vision for the Future",
+      "subtitle": "Continuously improving to serve you better",
+      "innovation": {
+        "title": "Continuous Innovation",
+        "description": "Adding new features, improving user experience, and leveraging technology to make learning easier."
+      },
+      "education": {
+        "title": "Educational Content",
+        "description": "Expanding our library with tafsir, Islamic courses, and educational resources for all ages."
+      },
+      "community": {
+        "title": "Global Community",
+        "description": "Building a worldwide community of learners united in their love for the Quran and Islamic knowledge."
+      }
+    },
+    "cta": {
+      "title": "Start Your Journey Today",
+      "description": "Join thousands of Muslims worldwide in deepening their understanding of Islam through authentic sources.",
+      "explore_quran": "Explore the Quran",
+      "join_community": "Join Our Community",
+      "support_text": "May Allah accept this effort as a continuous charity for all who contribute, use, and benefit from this platform.",
+      "open_source": "Open Source",
+      "no_ads": "No Advertisements",
+      "free_forever": "Free Forever"
+    }
+  },
+  "ramadan": {
+    "title": "Ramadan Challenges",
+    "subtitle": "Transform your Ramadan with meaningful challenges and track your spiritual journey",
+    "yourProgress": "Your Progress",
+    "availableChallenges": "Available Challenges",
+    "noChallenges": "No challenges match your filters",
+    "enroll": "Join Challenge",
+    "enrolled": "Enrolled",
+    "progress": "Progress",
+    "loginRequired": "Please login to join challenges",
+    "enrollSuccess": "Successfully enrolled in challenge!",
+    "enrollError": "Failed to enroll in challenge",
+    "loadingChallenges": "Loading challenges...",
+    "errorTitle": "Failed to Load Challenges",
+    "errorMessage": "We couldn't load the Ramadan challenges. Please try again.",
+    "challengeCompleted": "Challenge Completed",
+    "awarded": "awarded",
+    "badgeEarned": "Badge Earned",
+    "levelUp": "Level Up",
+    "level": "Level",
+    "progressUpdated": "Progress updated successfully!",
+    "trackingError": "Failed to update progress",
+    "dailyTarget": "Daily Target",
+    "daysCompleted": "Days Completed",
+    "totalProgress": "Total Progress",
+    "currentStreak": "Current Streak",
+    "longestStreak": "Longest Streak",
+    "days": "days",
+    "viewDetails": "View Details",
+    "startChallenge": "Start Challenge",
+    "continueChallenge": "Continue Challenge",
+    "challengeDetails": "Challenge Details",
+    "category": {
+      "all": "All Categories",
+      "quran": "Quran",
+      "prayer": "Prayer",
+      "listening": "Listening",
+      "reflection": "Reflection",
+      "community": "Community",
+      "charity": "Charity"
+    },
+    "difficulty": {
+      "all": "All Levels",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "filters": {
+      "category": "Filter by Category",
+      "difficulty": "Filter by Difficulty"
+    },
+    "stats": {
+      "level": "Level",
+      "totalXP": "Total XP",
+      "streak": "Streak",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "untilNextLevel": "until next level"
+    },
+    "badges": {
+      "title": "Your Badges",
+      "noBadges": "No badges earned yet",
+      "completeChallenges": "Complete challenges to earn badges!",
+      "earnedOn": "Earned on",
+      "totalBadges": "Total Badges"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "global": "Global",
+      "friends": "Friends",
+      "country": "Country",
+      "noData": "No leaderboard data available yet",
+      "you": "You",
+      "challengesCompleted": "challenges completed"
+    },
+    "sideBadge": {
+      "ramadan": "Ramadan",
+      "ramadanMubarak": "Ramadan Mubarak",
+      "ramadanKareem": "رمضان كريم",
+      "daysRemaining": "Days Until End",
+      "daysRemainingAr": "أيام حتى النهاية",
+      "challenges": "Ramadan Challenges",
+      "challengesAr": "تحديات رمضان",
+      "dailyChallenges": "Daily challenges await you",
+      "startChallenges": "Start Challenges",
+      "dismiss": "Dismiss",
+      "toggle": "Toggle Ramadan badge",
+      "daysUntil": "Days Until Ramadan",
+      "ramadanEnded": "Ramadan has ended"
+    }
   }
 }

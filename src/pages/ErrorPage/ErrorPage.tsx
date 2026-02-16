@@ -27,10 +27,8 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
   const { t } = useTranslation();
   const routeError = useRouteError();
 
-  // Use prop error or route error
   const error = propError ?? routeError;
 
-  // Get error details
   const getErrorDetails = () => {
     if (isRouteErrorResponse(error)) {
       return {
@@ -61,7 +59,6 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
     status,
   } = getErrorDetails();
 
-  // Determine error icon based on status
   const getErrorIcon = () => {
     if (status === 404) {
       return (
@@ -80,7 +77,6 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="text-center max-w-2xl w-full">
-        {/* Error Icon */}
         <div className="mb-6">
           <div
             className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${iconBgColor}`}
@@ -89,24 +85,20 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
           </div>
         </div>
 
-        {/* Status Code (if available) */}
         {status && (
           <div className="text-6xl font-bold text-text-primary/20 mb-2">
             {status}
           </div>
         )}
 
-        {/* Title */}
         <h1 className="text-3xl font-bold text-text-primary mb-3">
           {errorTitle}
         </h1>
 
-        {/* Message */}
         <p className="text-text-secondary mb-8 leading-relaxed">
           {errorMessage}
         </p>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           {showBackButton && (
             <IconButton
@@ -142,7 +134,6 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
           )}
         </div>
 
-        {/* Debug Info (Development Only) */}
         {import.meta.env.DEV && error instanceof Error && (
           <details className="mt-8 text-left">
             <summary className="cursor-pointer text-sm text-text-secondary hover:text-text-primary">

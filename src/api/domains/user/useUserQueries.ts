@@ -28,6 +28,9 @@ import {
   getFavoriteRadios,
   addFavoriteRadio,
   removeFavoriteRadio,
+  getFavoriteDuas,
+  addFavoriteDua,
+  removeFavoriteDua,
 } from "./user-queries";
 import type { Profile } from "./user.types";
 import { queryClient } from "@/contexts/queryClient";
@@ -561,6 +564,72 @@ export const useRemoveFavoriteRadioMutation = (userId: string | undefined) => {
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["favorite-radios", userId],
+      });
+    },
+  });
+};
+
+// --- Favorite Duas ---
+export const useFavoriteDuasQuery = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ["favorite-duas", userId],
+    queryFn: () => (userId ? getFavoriteDuas(userId) : []),
+    enabled: !!userId,
+  });
+};
+
+export const useAddFavoriteDuaMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: ({
+      duaId,
+      duaCategory,
+      duaTextArabic,
+      duaTextEnglish,
+      duaReference,
+    }: {
+      duaId: number;
+      duaCategory: string;
+      duaTextArabic?: string;
+      duaTextEnglish?: string;
+      duaReference?: string;
+    }) => {
+      if (!userId) throw new Error("User must be logged in");
+      return addFavoriteDua(
+        userId,
+        duaId,
+        duaCategory,
+        duaTextArabic,
+        duaTextEnglish,
+        duaReference,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-duas", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-duas", userId],
+      });
+    },
+  });
+};
+
+export const useRemoveFavoriteDuaMutation = (userId: string | undefined) => {
+  return useMutation({
+    mutationFn: (duaId: number) => {
+      if (!userId) throw new Error("User must be logged in");
+      return removeFavoriteDua(userId, duaId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-duas", userId],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["favorite-duas", userId],
       });
     },
   });

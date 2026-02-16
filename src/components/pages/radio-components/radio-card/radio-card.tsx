@@ -34,7 +34,7 @@ export function RadioCard({ radio }: RadioCardProps) {
     if (isCurrent) {
       toggle();
     } else {
-      play(radio.url);
+      play(radio.url, undefined, 'radio');
     }
   };
 

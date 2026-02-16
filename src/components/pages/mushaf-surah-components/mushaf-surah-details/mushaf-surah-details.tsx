@@ -35,12 +35,10 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Favorite ayahs functionality
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
   const addFavoriteAyah = useAddFavoriteAyahMutation(user?.id);
   const removeFavoriteAyah = useRemoveFavoriteAyahMutation(user?.id);
 
-  // Favorite Surah functionality
   const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
   const addFavoriteSurahMutation = useAddFavoriteSurahMutation(user?.id);
   const removeFavoriteSurahMutation = useRemoveFavoriteSurahMutation(user?.id);
@@ -61,7 +59,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
       if (isFavoriteSurah) {
         await removeFavoriteSurahMutation.mutateAsync({
           surahNumber: surah.id,
-          reciterId: undefined, // Generic surah favorite
+          reciterId: undefined,
         });
         toast.success(
           t("favorites.surah_removed", {
@@ -71,7 +69,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
       } else {
         await addFavoriteSurahMutation.mutateAsync({
           surahNumber: surah.id,
-          reciterId: undefined, // Generic surah favorite
+          reciterId: undefined,
         });
         toast.success(
           t("favorites.surah_added", {
@@ -87,12 +85,9 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     }
   };
 
-  // Lookup extra info from constants
   const surahInfo = quranSurahs.find((s) => s.number === surah.id);
   const englishName = surahInfo?.name || "";
-  // Note: Revelation type is not available in current constants
 
-  // Audio player for full surah
   const { play, pause, isPlaying, currentAudio } = useAudio();
   const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
   const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.id)}.mp3`;
@@ -103,7 +98,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
       if (isPlaying && currentAudio === fullSurahAudioUrl) {
         pause();
       } else {
-        play(fullSurahAudioUrl, surah.id);
+        play(fullSurahAudioUrl, surah.id, 'surah');
       }
     }
   };
@@ -151,7 +146,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
@@ -169,11 +164,9 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
           text: shareText,
         });
       } catch (error) {
-        // User cancelled or error occurred
-        console.log(error);
+        console.error(error);
       }
     } else {
-      // Fallback: copy to clipboard
       await navigator.clipboard.writeText(shareText);
       toast.success(
         t("common.copied", { defaultValue: "Copied to clipboard" }),
@@ -188,7 +181,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         t("common.copied", { defaultValue: "Copied to clipboard" }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
@@ -200,7 +193,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     );
   };
 
-  // Helper to create surah object for mobile card
   const getSurahForMobileCard = () => ({
     name: surah.name,
     number: surah.id,
@@ -210,7 +202,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     revelationType: "Meccan",
   });
 
-  // Convert MushafAyah to Ayah type for mobile card
   const convertToAyah = (mushafAyah: (typeof surah.ayahs)[0]): Ayah => ({
     number: mushafAyah.id,
     text: mushafAyah.text,
@@ -226,13 +217,10 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
 
   return (
     <div className="mb-12 mt-2">
-      {/* Surah Header - Centered */}
       <div className="mb-6 pb-4 border-b-2 border-primary/20">
         <div className="flex items-start justify-between">
-          {/* Empty space for alignment */}
           <div className={`w-20 ${isRtl ? "order-3" : "order-1"}`}></div>
 
-          {/* Surah Name and Verse Count - Centered */}
           <div className="flex-1 text-center order-2">
             <h2
               className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
@@ -246,15 +234,13 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             </p>
           </div>
 
-          {/* Action Buttons */}
           <div
             className={`flex items-center gap-2 ${isRtl ? "order-1" : "order-3"}`}
           >
             <IconButton
               icon={<Share fontSize="medium" />}
               onClick={() => {
-                // TODO: Implement share logic
-                console.log("Share clicked");
+                // Share clicked
               }}
               className="text-primary/70 hover:text-primary"
               size="sm"
@@ -281,7 +267,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
           </div>
         </div>
 
-        {/* Listen to Full Surah Button */}
         {fullSurahAudioUrl && (
           <div className="mt-4 text-center">
             <IconButton
@@ -305,7 +290,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         )}
       </div>
 
-      {/* Ayahs - Mobile: Card View, Desktop: Centered View */}
       {isMobile ? (
         <div className="space-y-4">
           {surah.ayahs.map((ayah) => (
@@ -318,7 +302,9 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
               }
               onShare={() => handleMobileAyahShare(ayah.number, ayah.text)}
               onCopy={() => handleMobileAyahCopy(ayah.text)}
-              onTafsirClick={() => console.log("Tafsir - not yet implemented")}
+              onTafsirClick={() => {
+                // Tafsir - not yet implemented
+              }}
               isBookmarked={isAyahBookmarked(ayah.number)}
             />
           ))}
@@ -340,10 +326,8 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
                     onMouseLeave={() => setHoveredAyah(null)}
                     className="relative"
                   >
-                    {/* Hover Actions (Optional - currently just placeholder without audio) */}
                     {hoveredAyah === ayah.number && (
                       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
-                        {/* You can add actions here if needed like bookmarking in future */}
                       </div>
                     )}
 
@@ -351,14 +335,12 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
                       {ayah.text}
                     </span>
 
-                    {/* Ayah Number Badge - Arabic Glyph Style */}
                     <span className="inline-flex items-center justify-center relative">
                       <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
                         <svg
                           className="absolute inset-0 w-full h-full"
                           viewBox="0 0 36 36"
                         >
-                          {/* Octagonal shape */}
                           <path
                             d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
                             fill="currentColor"
@@ -380,7 +362,6 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         </div>
       )}
 
-      {/* End of Surah Marker */}
       <div className="mt-8 flex items-center justify-center gap-3">
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-primary/30 to-transparent" />
         <span className="text-sm font-medium text-primary/70 px-4">

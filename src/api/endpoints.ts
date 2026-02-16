@@ -7,6 +7,7 @@ const QURANPEDIA_API = "https://api.quranpedia.net/v1";
 const QURAN_TAFSEER_API = "http://api.quran-tafseer.com";
 const SUNNAH_API = "https://api.sunnah.com/v1";
 const ISLAMIC_NETWORK_CDN = "https://cdn.islamic.network/quran";
+const ALADHAN_API = "https://api.aladhan.com/v1";
 
 // Legacy exports (deprecated - use ENDPOINTS instead)
 export const MP3QURAN_BASE_URL = proxyUrl(MP3QURAN_API);
@@ -45,7 +46,10 @@ export const ENDPOINTS = {
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => proxyUrl(buildUrl(`${ALQURAN_API}/surah/${number}/${edition}`, { offset, limit })),
+  ) =>
+    proxyUrl(
+      buildUrl(`${ALQURAN_API}/surah/${number}/${edition}`, { offset, limit }),
+    ),
 
   // --- JUZ ---
   JUZ: (number: number, edition: string = "quran-uthmani") =>
@@ -55,7 +59,10 @@ export const ENDPOINTS = {
     offset: number,
     limit: number,
     edition: string = "quran-uthmani",
-  ) => proxyUrl(buildUrl(`${ALQURAN_API}/juz/${number}/${edition}`, { offset, limit })),
+  ) =>
+    proxyUrl(
+      buildUrl(`${ALQURAN_API}/juz/${number}/${edition}`, { offset, limit }),
+    ),
 
   // --- AYAH (Verse) ---
   AYAH: (reference: number | string, edition: string = "quran-uthmani") =>
@@ -160,4 +167,42 @@ export const ENDPOINTS = {
         params,
       ),
     ),
+
+  // --- PRAYER TIMES (Aladhan API) ---
+  PRAYER_TIMES: (params: {
+    city: string;
+    country: string;
+    date?: string;
+    method?: number;
+  }) => {
+    const date =
+      params.date ||
+      new Date().toLocaleDateString("en-GB").split("/").reverse().join("-");
+    return proxyUrl(
+      buildUrl(`${ALADHAN_API}/timingsByCity/${date}`, {
+        city: params.city,
+        country: params.country,
+        method: params.method || 5,
+      }),
+    );
+  },
+
+  PRAYER_TIMES_CALENDAR: (params: {
+    latitude: number;
+    longitude: number;
+    month?: number;
+    year?: number;
+    method?: number;
+  }) => {
+    const now = new Date();
+    const year = params.year || now.getFullYear();
+    const month = params.month || now.getMonth() + 1;
+    return proxyUrl(
+      buildUrl(`${ALADHAN_API}/calendar/${year}/${month}`, {
+        latitude: params.latitude,
+        longitude: params.longitude,
+        method: params.method || 5,
+      }),
+    );
+  },
 } as const;

@@ -10,4 +10,5 @@ export interface MobileAyahCardProps {
   onCopy?: () => void;
   onTafsirClick?: () => void;
   isBookmarked?: boolean;
+  isBookmarkLoading?: boolean;
 }

@@ -89,7 +89,6 @@ const JuzPage: React.FC<JuzPageProps> = () => {
     );
   }
 
-  // Group ayahs by surah
   const ayahsBySurah: Record<number, Ayah[]> = {};
   juz.ayahs.forEach((ayah) => {
     const surahNumber = ayah.surah.number;
@@ -99,14 +98,12 @@ const JuzPage: React.FC<JuzPageProps> = () => {
     ayahsBySurah[surahNumber].push(ayah);
   });
 
-  // Get sorted surah numbers
   const surahNumbers = Object.keys(ayahsBySurah)
     .map(Number)
     .sort((a, b) => a - b);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border py-6">
         <div className="max-w-4xl mx-auto px-4 flex items-center justify-center gap-3 relative">
           <h1 className="text-3xl font-bold text-text-primary text-center">
@@ -134,7 +131,6 @@ const JuzPage: React.FC<JuzPageProps> = () => {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         {surahNumbers.map((surahNumber) => {
           const surah = juz.surahs[surahNumber];

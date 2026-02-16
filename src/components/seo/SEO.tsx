@@ -27,14 +27,12 @@ export const SEO: React.FC<SEOProps> = ({
   const { language } = useLanguage();
   const isRTL = language === "ar";
 
-  // Default site info
   const siteName = "Yaqeen Islamic";
   const siteUrl = import.meta.env.VITE_SITE_URL || "https://yaqeen-islamic.vercel.app";
   const fullTitle = `${title} | ${siteName}`;
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const fullImage = image.startsWith("http") ? image : `${siteUrl}${image}`;
 
-  // Default keywords
   const defaultKeywords = [
     "Quran",
     "Islam",
@@ -52,24 +50,20 @@ export const SEO: React.FC<SEOProps> = ({
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
       <html lang={language} dir={isRTL ? "rtl" : "ltr"} />
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={allKeywords.join(", ")} />
 
-      {/* Canonical URL */}
       {canonical && <link rel="canonical" href={canonical} />}
       {!canonical && <link rel="canonical" href={fullUrl} />}
 
-      {/* Robots */}
       {noindex ? (
         <meta name="robots" content="noindex, nofollow" />
       ) : (
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
       )}
 
-      {/* Open Graph (Facebook) */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
@@ -79,7 +73,6 @@ export const SEO: React.FC<SEOProps> = ({
       <meta property="og:locale" content={language === "ar" ? "ar_AR" : "en_US"} />
       <meta property="og:locale:alternate" content={language === "ar" ? "en_US" : "ar_AR"} />
 
-      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
@@ -87,7 +80,6 @@ export const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:site" content="@YaqeenIslamic" />
       <meta name="twitter:creator" content="@YaqeenIslamic" />
 
-      {/* Additional Meta Tags */}
       <meta name="author" content="Yaqeen Islamic" />
       <meta name="publisher" content="Yaqeen Islamic" />
       <meta name="application-name" content={siteName} />
@@ -95,7 +87,6 @@ export const SEO: React.FC<SEOProps> = ({
       <meta name="theme-color" content="#10b981" />
       <meta name="msapplication-TileColor" content="#10b981" />
 
-      {/* Structured Data (JSON-LD) */}
       {structuredData && (
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}

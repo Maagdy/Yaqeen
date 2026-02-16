@@ -1,0 +1,1 @@
+export { RamadanPage } from "./RamadanPage";

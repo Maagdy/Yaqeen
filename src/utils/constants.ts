@@ -1,28 +1,28 @@
 export const navigationLinks = [
-  { text: "Home", href: "/" },
-  { text: "Quran", href: "/quran" },
-  { text: "Reciters", href: "/reciters" },
-  { text: "Radio", href: "/radio" },
-  { text: "Hadiths", href: "/hadiths" },
-  { text: "Search", href: "/search" },
+  { text: "footer.links.home", href: "/" },
+  { text: "footer.links.quran", href: "/quran" },
+  { text: "footer.links.reciters", href: "/reciters" },
+  { text: "footer.links.radio", href: "/radio" },
+  { text: "footer.links.hadiths", href: "/hadiths" },
+  { text: "footer.links.search", href: "/search" },
 ];
 
 export const networkLinks = [
-  { text: "QuranicAudio.com", href: "https://quranicaudio.com", external: true },
-  { text: "Salah.com", href: "https://salah.com", external: true },
-  { text: "Sunnah.com", href: "https://sunnah.com", external: true },
-  { text: "Quran.com", href: "https://quran.com", external: true },
-  { text: "Tarteel.ai", href: "https://tarteel.ai", external: true },
+  { text: "footer.links.quranic_audio", href: "https://quranicaudio.com", external: true },
+  { text: "footer.links.salah", href: "https://salah.com", external: true },
+  { text: "footer.links.sunnah", href: "https://sunnah.com", external: true },
+  { text: "footer.links.quran_com", href: "https://quran.com", external: true },
+  { text: "footer.links.tarteel", href: "https://tarteel.ai", external: true },
 ];
 
 export const popularLinks = [
-  { text: "Ayatul Kursi (2:255)", href: "/surah/2" }, // Al-Baqarah, verse 255
-  { text: "Surah Yaseen", href: "/surah/36" },
-  { text: "Surah Al-Mulk", href: "/surah/67" },
-  { text: "Surah Ar-Rahman", href: "/surah/55" },
-  { text: "Surah Al-Waqi'ah", href: "/surah/56" },
-  { text: "Surah Al-Kahf", href: "/surah/18" },
-  { text: "Surah Al-Muzzammil", href: "/surah/73" },
+  { text: "footer.links.ayatul_kursi", href: "/surah/2" },
+  { text: "footer.links.surah_yaseen", href: "/surah/36" },
+  { text: "footer.links.surah_mulk", href: "/surah/67" },
+  { text: "footer.links.surah_rahman", href: "/surah/55" },
+  { text: "footer.links.surah_waqiah", href: "/surah/56" },
+  { text: "footer.links.surah_kahf", href: "/surah/18" },
+  { text: "footer.links.surah_muzzammil", href: "/surah/73" },
 ];
 
 export const juzData = [

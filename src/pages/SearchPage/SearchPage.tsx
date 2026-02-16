@@ -19,16 +19,13 @@ const SearchPage: React.FC = () => {
   const { isRtl, language } = useLanguage();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  // Page is now derived from URL, defaulting to 1
   const page = parseInt(searchParams.get("page") || "1", 10);
   const ITEMS_PER_PAGE = 20;
 
   const seoConfig = SEO_CONFIG.search[language as "en" | "ar"];
 
-  // Local state for the search bar input to allow editing without triggering search immediately
   const [searchInput, setSearchInput] = useState(rawKeyword);
 
-  // Sync local state with URL param when it changes
   useEffect(() => {
     setSearchInput(rawKeyword);
   }, [rawKeyword]);
@@ -37,13 +34,12 @@ const SearchPage: React.FC = () => {
     if (term.trim()) {
       setSearchParams((prev) => {
         prev.set("q", term);
-        prev.set("page", "1"); // Reset to first page on new search
+        prev.set("page", "1");
         return prev;
       });
     }
   };
 
-  // Smart Query Parsing
   const parsedQuery = useMemo(() => {
     let keyword = rawKeyword.trim();
     let scope: string | number = "all";
@@ -52,7 +48,6 @@ const SearchPage: React.FC = () => {
 
     if (!keyword) return { keyword, scope, edition, detectedSurah };
 
-    // 1. Ayah Reference Detection (e.g., "2:255" or "2 255")
     const referencePattern = /^(\d+)[:\s](\d+)$/;
     const referenceMatch = keyword.match(referencePattern);
 
@@ -68,8 +63,6 @@ const SearchPage: React.FC = () => {
       };
     }
 
-    // 2. Language Detection
-    // Moved core API language logic to search-queries.ts, but we keep some UI-specific detections (like Surah names) here.
     const arabicPattern = /[\u0600-\u06FF]/;
     const isArabic = arabicPattern.test(keyword);
 
@@ -77,16 +70,12 @@ const SearchPage: React.FC = () => {
       edition = "quran-simple";
     }
 
-    // 3. Surah Detection
-    // We check if the keyword contains any Surah name
     const normalizedKeyword = keyword.toLowerCase();
 
     const matchedSurah = quranSurahs.find((s) => {
-      // Check English Name match (e.g. "Baqarah", "The Cow") - simplistic check
       const englishMatch =
         s.name.toLowerCase().includes(normalizedKeyword) ||
         normalizedKeyword.includes(s.name.toLowerCase());
-      // Check Arabic Name match
       const arabicMatch =
         s.arabicName.includes(keyword) || keyword.includes(s.arabicName);
 
@@ -94,7 +83,6 @@ const SearchPage: React.FC = () => {
     });
 
     if (matchedSurah) {
-      // ... (existing logic)
       let remaining = keyword;
       if (remaining.toLowerCase().includes(matchedSurah.name.toLowerCase())) {
         remaining = remaining
@@ -104,18 +92,14 @@ const SearchPage: React.FC = () => {
         remaining = remaining.replace(matchedSurah.arabicName, "").trim();
       }
 
-      // Remove common prepositions if they exist (in, from, fi, min) - simplistic
       remaining = remaining.replace(/\b(in|from|fi|min|في|من)\b/gi, "").trim();
 
       if (remaining.length > 2) {
-        // "Mercy in Baqarah" -> Search "Mercy" in Surah 2
         scope = matchedSurah.number;
         keyword = remaining;
         detectedSurah = matchedSurah;
       } else if (remaining.length === 0 || remaining.length < 3) {
-        // "Al Baqarah" -> User probably wants the Surah itself.
         detectedSurah = matchedSurah;
-        // Search just Surah
         keyword = "";
       }
     }
@@ -139,13 +123,11 @@ const SearchPage: React.FC = () => {
     !!parsedQuery.keyword,
   );
 
-  // Pagination Logic
   const matches = useMemo(() => data?.data.matches || [], [data]);
   const totalMatches = matches.length;
   const totalPages = Math.ceil(totalMatches / ITEMS_PER_PAGE);
 
   const displayedMatches = useMemo(() => {
-    // If it's a reference search, show all (usually 1)
     if (parsedQuery.isReference) return matches;
 
     const start = (page - 1) * ITEMS_PER_PAGE;
@@ -157,7 +139,6 @@ const SearchPage: React.FC = () => {
     _event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    // Update URL with new page
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;
@@ -166,7 +147,6 @@ const SearchPage: React.FC = () => {
   };
 
   if (!rawKeyword && !searchInput) {
-    // Show just the search bar if nothing is searched yet
     return (
       <>
         <SEO {...seoConfig} />
@@ -186,12 +166,6 @@ const SearchPage: React.FC = () => {
     );
   }
 
-  // If we detected a Surah but the remaining keyword was too short, checking if we should just redirect or show a big card?
-  // Let's show a big card at the top.
-
-  // Also handling the case where API returns error because keyword is effectively empty/invalid after stripping?
-  // `useSearchQueries` enabled flag handles validation.
-
   return (
     <>
       <SEO
@@ -209,7 +183,6 @@ const SearchPage: React.FC = () => {
         />
       </div>
 
-      {/* Surah Navigation Card */}
       {parsedQuery.detectedSurah && (
         <div className="mb-8 p-6 bg-primary/5 border border-primary/20 rounded-2xl flex items-center justify-between shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center gap-4">
@@ -247,12 +220,7 @@ const SearchPage: React.FC = () => {
               const route = generateRoute.surah(
                 parsedQuery.detectedSurah!.number,
               );
-              // navigate to hash or query param if supported, assuming standard anchor for now
-              // or just go to surah page top if generic
               if (parsedQuery.isReference) {
-                // Logic to open specific Ayah. Assuming AyahModal or anchor might be implemented later.
-                // For now, navigation to the Surah is the safe baseline.
-                // Ideally: route + `?ayah=${parsedQuery.ayahNumber}`
                 navigate(`${route}?ayah=${parsedQuery.ayahNumber}`);
               } else {
                 navigate(route);
@@ -319,7 +287,6 @@ const SearchPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-8" dir="ltr">
               <Pagination

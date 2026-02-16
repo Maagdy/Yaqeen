@@ -22,7 +22,6 @@ const ReciterDetailsPage: React.FC<ReciterDetailsPageProps> = () => {
     reciter: Number(reciterId),
     language,
   });
-  console.log(data);
   const { t } = useTranslation();
   const { play, pause, isPlaying, currentSurahNumber } = useAudio();
   const { setNavigationHandlers, clearNavigationHandlers } =
@@ -48,7 +47,7 @@ const ReciterDetailsPage: React.FC<ReciterDetailsPageProps> = () => {
       if (isPlaying && currentSurahNumber === surahNumber) {
         pause();
       } else {
-        play(audioUrl, surahNumber);
+        play(audioUrl, surahNumber, 'surah');
       }
     },
     [selectedMoshaf, isPlaying, currentSurahNumber, pause, play],

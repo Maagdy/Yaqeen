@@ -13,7 +13,11 @@ export const ROUTES = {
   SEARCH: "/search",
   PROFILE: "/profile",
   HADITHS: "/hadiths",
+  FAVORITES: "/favorites",
   HADITH_DETAILS: "/hadiths/:collectionName",
+  PRAYER_TIMES: "/prayer-times",
+  AZKAR: "/azkar",
+  RAMADAN: "/ramadan",
 } as const;
 
 export const generateRoute = {

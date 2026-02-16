@@ -44,13 +44,11 @@ export default function HomeQuranTabs() {
     { key: "revelation", label: t("home.tabs.revelation") },
   ];
 
-  // Group surahs by Juz using the accurate juzData
   const getSurahsByJuz = () => {
     if (!chapters) return {};
 
     const surahsByJuz: Record<number, Surah[]> = {};
 
-    // Use the juzData to get the correct surah numbers for each Juz
     juzData.forEach((juz) => {
       const surahNumbers = new Set(juz.surahs.map((s) => s.number));
 
@@ -65,7 +63,6 @@ export default function HomeQuranTabs() {
   const getData = () => {
     if (activeTab === "surah") return chapters || [];
     if (activeTab === "revelation") {
-      // Sort by revelation order
       return [...(chapters || [])].sort((a, b) => {
         const orderA = revelationOrder[Number(a.number)] || 999;
         const orderB = revelationOrder[Number(b.number)] || 999;
@@ -101,7 +98,6 @@ export default function HomeQuranTabs() {
       id="quran-tabs"
       className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 mt-8 mb-16"
     >
-      {/* Tabs Header */}
       <div className={`flex justify-start mb-8`}>
         <div className="inline-flex bg-background border border-border rounded-xl p-1 relative gap-1">
           {tabs.map((tab) => (
@@ -127,7 +123,6 @@ export default function HomeQuranTabs() {
         </div>
       </div>
 
-      {/* Tabs Content */}
       <div className="relative min-h-50">
         <AnimatePresence mode="wait">
           <motion.div
@@ -141,12 +136,10 @@ export default function HomeQuranTabs() {
             {isLoading ? (
               <Loading size="lg" message={t("common.loading")} />
             ) : activeTab === "juz" ? (
-              // Juz View - Masonry Layout
               <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-                {(currentData as JuzMeta[]).map((item, index) => {
+                {(currentData as JuzMeta[]).map((_item, index) => {
                   const juzNumber = index + 1;
                   const surahsInJuz = surahsByJuz[juzNumber] || [];
-                  console.log(item);
 
                   return (
                     <JuzCard
@@ -159,7 +152,6 @@ export default function HomeQuranTabs() {
                 })}
               </div>
             ) : (
-              // Surah/Revelation View
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {(currentData as Surah[]).map((chapter) => (
                   <SurahCard

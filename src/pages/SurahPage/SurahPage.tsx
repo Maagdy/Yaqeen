@@ -107,8 +107,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
       </div>
     );
   }
-  // "loading": "Loading Surah {{surahName}}...",
-  // "error-loading": "Error loading Surah {{surahName}}",
   if (isError || !surah) {
     return (
       <ErrorPage
@@ -147,28 +145,20 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const DiscoverContent = () => {
     const discoverItems = getDiscoverItems({
       onTafsirClick: () => {
-        // Toggle: if tafsir is already showing, hide it
         if (activeDiscoverType === "tafsir") {
           setSelectedDiscoverContent(null);
           setActiveDiscoverType(null);
         } else if (tafsirData) {
-          console.log(tafsirData);
-
-          // Handle soar as either array or object
           const soarData = tafsirData.tafasir.soar;
           let surahTafsirSegments;
 
           if (Array.isArray(soarData)) {
-            // If it's an array, filter by sura_id
             surahTafsirSegments = soarData.filter(
               (s) => s.sura_id === surahNumber,
             );
           } else {
-            // If it's an object/map, access by key
             surahTafsirSegments = soarData[surahNumber.toString()] || [];
           }
-
-          console.log(surahTafsirSegments);
 
           setSelectedDiscoverContent(
             <div className="space-y-4">
@@ -184,11 +174,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
                       isPlaying={currentAudio === segment.url}
                       onToggle={() => {
                         if (currentAudio === segment.url) {
-                          // If this segment is playing, toggle (pause/play)
                           toggle();
                         } else {
-                          // If a different segment or nothing is playing, play this one
-                          play(segment.url, surahNumber);
+                          play(segment.url, surahNumber, 'surah');
                         }
                       }}
                     />
@@ -205,7 +193,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
         }
       },
       onTadaborClick: () => {
-        // Toggle: if tadabor is already showing, hide it
         if (activeDiscoverType === "tadabor") {
           setSelectedDiscoverContent(null);
           setActiveDiscoverType(null);
@@ -215,7 +202,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
         }
       },
       onLessonsClick: () => {
-        // Toggle: if lessons is already showing, hide it
         if (activeDiscoverType === "lessons") {
           setSelectedDiscoverContent(null);
           setActiveDiscoverType(null);
@@ -327,7 +313,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
               iconPosition="right"
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: "smooth" });
-                // navigate("/quran");
               }}
             />
           }

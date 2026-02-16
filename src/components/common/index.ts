@@ -7,3 +7,5 @@ export * from "./mushaf-card";
 export * from "./full-mushaf-card";
 export * from "./mushaf-surah";
 export * from "./mobile-ayah-card";
+export * from "./scroll-to-top";
+export * from "./ramadan-side-badge";

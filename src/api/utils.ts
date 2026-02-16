@@ -2,14 +2,24 @@
  * Wraps a URL to be proxied through our serverless proxy function.
  * This ensures proper URL encoding and prevents query parameter conflicts.
  *
+ * In development mode, Aladhan API is accessed directly since it supports CORS.
+ *
  * @param url - The full URL to proxy (including any query parameters)
- * @returns The proxied URL path
+ * @returns The proxied URL path or direct URL in development for Aladhan API
  *
  * @example
  * proxyUrl('https://api.example.com/data?key=value')
  * // Returns: '/api/proxy?url=https%3A%2F%2Fapi.example.com%2Fdata%3Fkey%3Dvalue'
  */
 export const proxyUrl = (url: string): string => {
+  // In development, use Aladhan API directly (it supports CORS)
+  if (
+    import.meta.env.DEV &&
+    url.includes("api.aladhan.com")
+  ) {
+    return url;
+  }
+
   return `/api/proxy?url=${encodeURIComponent(url)}`;
 };
 

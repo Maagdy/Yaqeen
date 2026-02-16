@@ -11,7 +11,6 @@ const SurahSection: React.FC<SurahSectionProps> = ({
     <div
       className={`w-full max-w-4xl mx-auto border border-border shadow-sm hover:shadow-md transition-all duration-300 rounded-xl sm:rounded-2xl bg-background ${className}`}
     >
-      {/* Header */}
       <div className="flex items-center justify-between gap-4 p-4 sm:p-6 border-b border-border/50">
         <div className="flex flex-col gap-1">
           {title && (
@@ -30,7 +29,6 @@ const SurahSection: React.FC<SurahSectionProps> = ({
         {headerAction && <div className="shrink-0">{headerAction}</div>}
       </div>
 
-      {/* Body */}
       {children && <div className="p-4 sm:p-6">{children}</div>}
     </div>
   );
