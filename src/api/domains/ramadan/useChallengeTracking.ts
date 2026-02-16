@@ -34,7 +34,7 @@ export const useChallengeTracking = () => {
 
       return result;
     },
-    [user?.id],
+    [user],
   );
 
   return {

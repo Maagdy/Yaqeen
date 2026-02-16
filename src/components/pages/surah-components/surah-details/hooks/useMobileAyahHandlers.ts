@@ -73,7 +73,7 @@ export const useMobileAyahHandlers = ({
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
   };
@@ -87,7 +87,7 @@ export const useMobileAyahHandlers = ({
           text: shareText,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       await navigator.clipboard.writeText(shareText);
@@ -104,7 +104,7 @@ export const useMobileAyahHandlers = ({
         t("common.copied", { defaultValue: "Copied to clipboard" }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
   };

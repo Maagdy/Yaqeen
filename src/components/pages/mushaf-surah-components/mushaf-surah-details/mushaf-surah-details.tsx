@@ -146,7 +146,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
@@ -164,7 +164,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
           text: shareText,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       await navigator.clipboard.writeText(shareText);
@@ -181,7 +181,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         t("common.copied", { defaultValue: "Copied to clipboard" }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
@@ -240,7 +240,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             <IconButton
               icon={<Share fontSize="medium" />}
               onClick={() => {
-                console.log("Share clicked");
+                // Share clicked
               }}
               className="text-primary/70 hover:text-primary"
               size="sm"
@@ -302,7 +302,9 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
               }
               onShare={() => handleMobileAyahShare(ayah.number, ayah.text)}
               onCopy={() => handleMobileAyahCopy(ayah.text)}
-              onTafsirClick={() => console.log("Tafsir - not yet implemented")}
+              onTafsirClick={() => {
+                // Tafsir - not yet implemented
+              }}
               isBookmarked={isAyahBookmarked(ayah.number)}
             />
           ))}

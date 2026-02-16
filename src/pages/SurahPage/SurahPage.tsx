@@ -149,8 +149,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           setSelectedDiscoverContent(null);
           setActiveDiscoverType(null);
         } else if (tafsirData) {
-          console.log(tafsirData);
-
           const soarData = tafsirData.tafasir.soar;
           let surahTafsirSegments;
 
@@ -161,8 +159,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
           } else {
             surahTafsirSegments = soarData[surahNumber.toString()] || [];
           }
-
-          console.log(surahTafsirSegments);
 
           setSelectedDiscoverContent(
             <div className="space-y-4">

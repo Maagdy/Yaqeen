@@ -15,7 +15,7 @@ import {
   createOrUpdateUserRamadanProfile,
 } from "./ramadan-queries";
 import type {
-  UserRamadanChallenge,
+  UserChallengeWithDetails,
   ChallengeConfig,
   ChallengeProgress,
 } from "./ramadan.types";
@@ -63,6 +63,7 @@ export const trackReadingProgress = async (
         date: today,
         completed,
         progress_data: { pages_read: pagesRead },
+        completed_at: completed ? new Date().toISOString() : null,
       });
 
       // Update overall progress
@@ -166,6 +167,7 @@ export const trackListeningProgress = async (
         date: today,
         completed,
         progress_data: { minutes_listened: minutesListened },
+        completed_at: completed ? new Date().toISOString() : null,
       });
 
       if (completed) {
@@ -200,7 +202,7 @@ export const trackListeningProgress = async (
  */
 const completeChallenge = async (
   userId: string,
-  userChallenge: UserRamadanChallenge,
+  userChallenge: UserChallengeWithDetails,
   ramadanYear: number,
 ): Promise<void> => {
   const xpReward = userChallenge.challenge.xp_reward;
@@ -217,9 +219,8 @@ const completeChallenge = async (
         userChallenge.challenge_id,
         ramadanYear,
       );
-    } catch (error) {
+    } catch {
       // Badge might already be earned, ignore error
-      console.log("Badge already earned or error:", error);
     }
   }
 
@@ -321,9 +322,8 @@ const checkStreakBadges = async (
       if (badge) {
         try {
           await awardBadge(userId, badge.id, undefined, ramadanYear);
-        } catch (error) {
+        } catch {
           // Badge already earned, ignore
-          console.log("Badge already earned:", badgeKey);
         }
       }
     }
@@ -356,8 +356,8 @@ export const checkFirstChallengeBadge = async (
     if (badge) {
       try {
         await awardBadge(userId, badge.id, undefined, ramadanYear);
-      } catch (error) {
-        console.log("Badge already earned");
+      } catch {
+        // Badge already earned
       }
     }
   }
@@ -373,8 +373,8 @@ export const checkFirstChallengeBadge = async (
     if (badge) {
       try {
         await awardBadge(userId, badge.id, undefined, ramadanYear);
-      } catch (error) {
-        console.log("Badge already earned");
+      } catch {
+        // Badge already earned
       }
     }
   }

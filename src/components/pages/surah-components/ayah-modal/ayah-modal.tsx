@@ -97,7 +97,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
   };

@@ -137,10 +137,9 @@ export default function HomeQuranTabs() {
               <Loading size="lg" message={t("common.loading")} />
             ) : activeTab === "juz" ? (
               <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-                {(currentData as JuzMeta[]).map((item, index) => {
+                {(currentData as JuzMeta[]).map((_item, index) => {
                   const juzNumber = index + 1;
                   const surahsInJuz = surahsByJuz[juzNumber] || [];
-                  console.log(item);
 
                   return (
                     <JuzCard

@@ -96,7 +96,7 @@ export const useRamadanTracking = () => {
         throw error;
       }
     },
-    [user?.id, t],
+    [user, t],
   );
 
   const trackPagesRead = useCallback(

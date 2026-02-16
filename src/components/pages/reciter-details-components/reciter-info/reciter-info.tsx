@@ -103,7 +103,7 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
       await navigator.clipboard.writeText(window.location.href);
       toast.success(t("reciter-details.link_copied"));
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(t("reciter-details.link_copy_failed"));
     }
   };

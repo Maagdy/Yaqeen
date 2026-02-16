@@ -44,7 +44,7 @@ const calculateLevel = (xp: number): number => {
 export const trackUserActivity = async (
   activity: UserActivity,
 ): Promise<ChallengeCompletionResult[]> => {
-  const { userId, pagesRead = 0, minutesListened = 0, reflectionWritten = false, surahsCompleted = [] } = activity;
+  const { userId, pagesRead = 0, minutesListened = 0, reflectionWritten = false } = activity;
 
   const ramadanYear = getCurrentRamadanYear();
   const ramadanDay = getCurrentRamadanDay();
@@ -74,7 +74,7 @@ export const trackUserActivity = async (
       const progress = userChallenge.progress as ChallengeProgress;
 
       let updated = false;
-      let newProgress = { ...progress };
+      const newProgress = { ...progress };
       let newStatus: ChallengeStatus = "in_progress";
 
       if (challenge.challenge_type === "daily") {
@@ -166,8 +166,8 @@ export const trackUserActivity = async (
         );
 
         if (updated) {
-          const nightsCompleted = newProgress.nights_completed?.length || 0;
-          const totalNights = config.nights?.length || 10;
+          const nightsCompleted = (newProgress.nights_completed as number[] | undefined)?.length || 0;
+          const totalNights = (config.nights as number[] | undefined)?.length || 10;
 
           if (nightsCompleted >= totalNights) {
             newStatus = "completed";
@@ -258,7 +258,7 @@ const processDailyChallenge = async (
 };
 
 const processProgressiveChallenge = async (
-  userChallenge: UserRamadanChallenge,
+  _userChallenge: UserRamadanChallenge,
   challenge: RamadanChallenge,
   config: ChallengeConfig,
   progress: ChallengeProgress,
@@ -299,7 +299,7 @@ const processProgressiveChallenge = async (
 const processMilestoneChallenge = async (
   userId: string,
   userChallenge: UserRamadanChallenge,
-  challenge: RamadanChallenge,
+  _challenge: RamadanChallenge,
   config: ChallengeConfig,
   progress: ChallengeProgress,
   ramadanYear: number,
@@ -357,7 +357,7 @@ const processMilestoneChallenge = async (
 const processSpecialChallenge = async (
   userId: string,
   userChallenge: UserRamadanChallenge,
-  challenge: RamadanChallenge,
+  _challenge: RamadanChallenge,
   config: ChallengeConfig,
   progress: ChallengeProgress,
   ramadanYear: number,
@@ -382,10 +382,10 @@ const processSpecialChallenge = async (
       { onConflict: "user_id,challenge_id,date" },
     );
 
-    const nightsCompleted = progress.nights_completed || [];
+    const nightsCompleted = (progress.nights_completed as number[] | undefined) || [];
     if (!nightsCompleted.includes(ramadanDay)) {
-      progress.nights_completed = [...nightsCompleted, ramadanDay];
-      progress.current = progress.nights_completed.length;
+      progress.nights_completed = [...nightsCompleted, ramadanDay] as never;
+      progress.current = (progress.nights_completed as number[]).length;
       progress.target = specialNights.length;
       return true;
     }
@@ -399,7 +399,7 @@ const completeChallenge = async (
   userChallenge: UserRamadanChallenge,
   ramadanYear: number,
 ): Promise<ChallengeCompletionResult> => {
-  const challenge = userChallenge.challenge as unknown as RamadanChallenge;
+  const challenge = (userChallenge as UserRamadanChallenge & { challenge: RamadanChallenge }).challenge;
   const xpReward = challenge.xp_reward;
 
   const { data: currentProfile } = await supabase
@@ -448,8 +448,8 @@ const completeChallenge = async (
       });
 
       badgeName = badge?.title_en;
-    } catch (error) {
-      console.log("Badge error (likely duplicate):", error);
+    } catch {
+      // Badge error (likely duplicate)
     }
   }
 
@@ -498,8 +498,8 @@ const checkMilestoneBadges = async (
             badge_id: badge.id,
             ramadan_year: ramadanYear,
           });
-        } catch (error) {
-          console.log("Badge already awarded:", badgeKey);
+        } catch {
+          // Badge already awarded
         }
       }
     }
@@ -582,8 +582,8 @@ const checkStreakBadges = async (
             badge_id: badge.id,
             ramadan_year: ramadanYear,
           });
-        } catch (error) {
-          console.log("Streak badge already awarded:", badgeKey);
+        } catch {
+          // Streak badge already awarded
         }
       }
     }
