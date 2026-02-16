@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { AudioContextType, PlaybackType } from "../contexts/audio-context.types";
 import { AudioContext } from "../contexts/audio-context";
+import { useRamadanTracking } from '@/hooks/useRamadanTracking';
+import { shouldTrackListening, secondsToMinutes } from '@/utils/quran-tracking-utils';
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -14,8 +16,12 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolumeState] = useState(1);
+  const [listenedAudioTracked, setListenedAudioTracked] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Ramadan challenge tracking
+  const { trackMinutesListened, isLoggedIn } = useRamadanTracking();
 
   useEffect(() => {
     const audio = new Audio();
@@ -30,9 +36,26 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
       setDuration(audio.duration);
     };
 
-    const handleEnded = () => {
+    const handleEnded = async () => {
       setIsPlaying(false);
       setProgress(0);
+
+      // Only track if not already tracked via pause
+      if (!listenedAudioTracked && isLoggedIn && audioRef.current) {
+        const duration = audioRef.current.duration;
+
+        if (shouldTrackListening(playbackType) && duration > 0) {
+          const minutes = secondsToMinutes(duration);
+          if (minutes > 0) {
+            try {
+              await trackMinutesListened(minutes, false);
+              setListenedAudioTracked(true);
+            } catch (error) {
+              console.error('[Audio Tracker] Failed to track listening:', error);
+            }
+          }
+        }
+      }
     };
 
     const handleError = () => {
@@ -54,6 +77,27 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
+  // Helper function to track partial listening (>80% completion)
+  const trackPartialListening = async () => {
+    if (isLoggedIn && audioRef.current && !listenedAudioTracked) {
+      const currentTime = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+
+      // Track if user listened to >80% of audio
+      if (duration > 0 && currentTime / duration > 0.8) {
+        const minutes = secondsToMinutes(currentTime);
+        if (minutes > 0 && shouldTrackListening(playbackType)) {
+          try {
+            await trackMinutesListened(minutes, false);
+            setListenedAudioTracked(true); // Prevent double-tracking
+          } catch (error) {
+            console.error('[Audio Tracker] Failed to track partial listening:', error);
+          }
+        }
+      }
+    }
+  };
+
   const play = useCallback(
     (audioUrl: string, surahNumber?: number, type: PlaybackType = 'surah') => {
       if (!audioRef.current) return;
@@ -69,6 +113,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
       setCurrentAudio(audioUrl);
       setCurrentSurahNumber(surahNumber ?? null);
       setPlaybackType(type);
+      setListenedAudioTracked(false); // Reset tracking flag for new audio
 
       audioRef.current
         .play()
@@ -86,6 +131,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
       audioRef.current.pause();
       setIsPlaying(false);
     }
+
+    // Track partial listening if user listened to most of it
+    trackPartialListening();
   }, []);
 
   const toggle = useCallback(() => {

@@ -42,17 +42,17 @@ export const Leaderboard = ({
   };
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-6 shadow-sm">
-      <h2 className="mb-6 text-2xl font-bold text-textPrimary">
+    <div className="rounded-xl border border-border bg-surface p-4 sm:p-6 shadow-sm">
+      <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-textPrimary">
         🏆 {t("ramadan.leaderboard.title")}
       </h2>
 
-      <div className="mb-6 flex gap-2">
+      <div className="mb-4 sm:mb-6 flex flex-wrap gap-2">
         {leaderboardTypes.map((type) => (
           <button
             key={type}
             onClick={() => setLeaderboardType(type)}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+            className={`rounded-lg px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold transition-all ${
               leaderboardType === type
                 ? "bg-primary text-white shadow-md"
                 : "border border-border bg-background text-textSecondary hover:border-primary hover:text-primary"
@@ -81,23 +81,23 @@ export const Leaderboard = ({
             return (
               <div
                 key={entry.id}
-                className={`flex items-center justify-between rounded-lg p-4 transition-all ${getRankColor(entry.rank)} ${
+                className={`flex items-center justify-between rounded-lg p-3 sm:p-4 transition-all ${getRankColor(entry.rank)} ${
                   isCurrentUser
                     ? "ring-2 ring-primary"
                     : ""
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-lg font-bold text-textPrimary">
+                <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-background text-sm sm:text-lg font-bold text-textPrimary">
                     {getRankEmoji(entry.rank) || entry.rank}
                   </div>
 
-                  <div>
-                    <p className="font-semibold text-textPrimary">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-textPrimary text-sm sm:text-base truncate">
                       {isCurrentUser ? (
-                        <span className="flex items-center gap-2">
-                          {t("ramadan.leaderboard.you")}
-                          <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-white">
+                        <span className="flex items-center gap-1 sm:gap-2">
+                          <span className="truncate">{t("ramadan.leaderboard.you")}</span>
+                          <span className="rounded-full bg-primary px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs text-white flex-shrink-0">
                             {t("ramadan.leaderboard.you")}
                           </span>
                         </span>
@@ -105,18 +105,18 @@ export const Leaderboard = ({
                         `User ${entry.user_id.slice(0, 8)}`
                       )}
                     </p>
-                    <p className="text-sm text-textSecondary">
+                    <p className="text-xs sm:text-sm text-textSecondary">
                       {entry.challenges_completed}{" "}
                       {t("ramadan.leaderboard.challengesCompleted")}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <p className="text-2xl font-bold text-textPrimary">
+                <div className="text-right flex-shrink-0">
+                  <p className="text-lg sm:text-2xl font-bold text-textPrimary">
                     {entry.total_xp.toLocaleString()}
                   </p>
-                  <p className="text-xs text-textSecondary">
+                  <p className="text-[10px] sm:text-xs text-textSecondary">
                     XP
                   </p>
                   {entry.ramadan_streak > 0 && (

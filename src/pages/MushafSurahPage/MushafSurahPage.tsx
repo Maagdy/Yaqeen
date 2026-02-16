@@ -4,11 +4,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
 import { MushafSurahDetails } from "@/components/pages";
-import { IconButton } from "@/components/common";
+import { IconButton, ReadingProgressIndicator } from "@/components/common";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
 import { generateRoute } from "@/router/routes";
 import { formatNumber } from "@/utils/numbers";
+import { useRamadanTracking } from '@/hooks/useRamadanTracking';
+import { calculatePagesFromMushafAyahs } from '@/utils/quran-tracking-utils';
+import { useRef, useEffect } from 'react';
 
 function MushafSurahPage() {
   const { surahId, mushafId } = useParams();
@@ -26,6 +29,25 @@ function MushafSurahPage() {
     error: surahErrorObj,
     refetch: refetchSurah,
   } = useMushafSurah(currentMushafId, currentSurahId);
+
+  // Track mushaf pages read on unmount
+  const { trackPagesRead, isLoggedIn } = useRamadanTracking();
+  const trackedRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      // Track when user leaves mushaf page
+      if (isLoggedIn && !trackedRef.current && surah?.ayahs && surah.ayahs.length > 0) {
+        trackedRef.current = true;
+        const pages = calculatePagesFromMushafAyahs(surah.ayahs);
+        if (pages > 0) {
+          trackPagesRead(pages, false).catch(error => {
+            console.error('[Mushaf Tracker] Failed to track pages:', error);
+          });
+        }
+      }
+    };
+  }, [surah, isLoggedIn, trackPagesRead]);
 
   const handlePreviousPage = () => {
     if (currentSurahId > 1) {
@@ -64,6 +86,7 @@ function MushafSurahPage() {
   return (
     <>
       <div className="max-w-4xl mx-auto px-4 py-8">
+        <ReadingProgressIndicator />
         <MushafSurahDetails surah={surah} mushafId={currentMushafId} />
       </div>
       <div className="max-w-4xl mx-auto px-4 pb-8 flex items-center justify-between border-t border-primary pt-6 mb-8">
