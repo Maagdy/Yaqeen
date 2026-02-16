@@ -17,7 +17,6 @@ export const HadithCollectionCard: React.FC<HadithCollectionCardProps> = ({
   const { t } = useTranslation();
   const { language, isRtl } = useLanguage();
 
-  // Find the details for the current language, default to English or first available
   const details =
     collection.collection.find((c) => c.lang === language) ||
     collection.collection.find((c) => c.lang === "en") ||
@@ -32,12 +31,10 @@ export const HadithCollectionCard: React.FC<HadithCollectionCardProps> = ({
         ${onClick ? "active:scale-[0.98]" : ""}
       `}
     >
-      {/* Decorative Background Pattern */}
       <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" />
       <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" />
 
       <div className="relative z-10 flex flex-col h-full gap-5">
-        {/* Header Section */}
         <div className="flex items-start justify-between gap-4">
           <div className="p-3 rounded-full bg-primary/10 text-primary shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
             <LibraryBooks fontSize="medium" />
@@ -62,10 +59,8 @@ export const HadithCollectionCard: React.FC<HadithCollectionCardProps> = ({
           </p>
         </div>
 
-        {/* Divider */}
         <div className="h-px w-full bg-border/50" />
 
-        {/* Stats Section & Action */}
         <div className="flex items-center justify-between mt-auto pt-2">
           <div className="flex items-center gap-2 text-sm text-text-secondary">
             <FormatListNumbered fontSize="small" className="text-primary/70" />
@@ -93,7 +88,6 @@ export const HadithCollectionCard: React.FC<HadithCollectionCardProps> = ({
         </div>
       </div>
 
-      {/* Hover Indicator */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-xl" />
     </div>
   );

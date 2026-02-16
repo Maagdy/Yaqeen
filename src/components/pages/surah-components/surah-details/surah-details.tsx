@@ -1,4 +1,3 @@
-// src/components/surah-details/surah-details.tsx
 import type { SurahDetailsProps } from "./surah-details.types";
 import { useEffect, useState } from "react";
 import { useLanguage, useMediaQuery, useAuth } from "../../../../hooks";
@@ -22,54 +21,26 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
   const { user, isLoggedIn } = useAuth();
   const { play, pause, isPlaying, currentSurahNumber, currentAudio } =
     useAudio();
-  const { setNavigationHandlers, clearNavigationHandlers } =
-    useSurahNavigation();
+  const { clearNavigationHandlers } = useSurahNavigation();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Favorite ayahs functionality
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
 
-  // Default server for full surah audio
-  // const DEFAULT_SURAH_SERVER = "https://server12.mp3quran.net/maher";
   const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
   const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.number)}.mp3`;
 
-  // Set up navigation handlers when component mounts
   useEffect(() => {
-    const handleNext = () => {
-      // TODO: Implement your logic to get next surah
-      console.log("Next surah - implement your logic here");
-    };
-
-    const handlePrevious = () => {
-      // TODO: Implement your logic to get previous surah
-      console.log("Previous surah - implement your logic here");
-    };
-
-    setNavigationHandlers({
-      onNext: handleNext,
-      onPrevious: handlePrevious,
-      canGoNext: surah.number < 114,
-      canGoPrevious: surah.number > 1,
-    });
-
-    // Cleanup on unmount
-    return () => {
-      clearNavigationHandlers();
-    };
-  }, [surah.number, setNavigationHandlers, clearNavigationHandlers]);
+    clearNavigationHandlers();
+  }, [clearNavigationHandlers]);
 
   const handleAyahClick = (ayah: Ayah) => {
     let audioUrl = ayah.audio;
 
     if (!audioUrl) {
-      // Fallback to Alafasy audio if specific edition audio is missing (e.g. for translation editions)
-      // Ayah number is absolute number (1-6236)
       audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`;
     }
 
-    // If clicking the same ayah that's playing, pause it
     if (
       isPlaying &&
       (currentSurahNumber === ayah.number || currentAudio === audioUrl)
@@ -78,25 +49,21 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
       return;
     }
 
-    // Play the ayah
-    play(audioUrl, surah.number);
+    play(audioUrl, surah.number, 'ayah');
   };
 
   const handleFullSurahClick = () => {
     if (fullSurahAudioUrl) {
-      // If the full surah is already playing, pause it
       if (isPlaying && currentAudio === fullSurahAudioUrl) {
         pause();
       } else {
-        // Play the full surah
-        play(fullSurahAudioUrl, surah.number);
+        play(fullSurahAudioUrl, surah.number, 'surah');
       }
     }
   };
 
   const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
 
-  // Helper function to create surah object for mobile card
   const getSurahForMobileCard = (): Surah => ({
     name: surah.name,
     number: surah.number,
@@ -106,7 +73,6 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
     revelationType: surah.revelationType,
   });
 
-  // Mobile ayah handlers
   const mobileHandlers = useMobileAyahHandlers({
     surah: getSurahForMobileCard(),
     favoriteAyahs,
@@ -117,7 +83,6 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
 
   return (
     <div className="mb-12 mt-4">
-      {/* Surah Header - Centered */}
       <SurahHeader
         surah={surah}
         isRtl={isRtl}
@@ -128,7 +93,6 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
         onFullSurahClick={handleFullSurahClick}
       />
 
-      {/* Ayahs - Mobile: Card View, Desktop: Centered View */}
       {isMobile ? (
         <MobileAyahsList
           ayahs={ayahs}
@@ -142,6 +106,7 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
           onCopy={mobileHandlers.handleCopy}
           onTafsirClick={onAyahClick || (() => {})}
           isBookmarked={mobileHandlers.isBookmarked}
+          isBookmarkLoading={mobileHandlers.isBookmarkLoading}
         />
       ) : (
         <DesktopAyahsList
@@ -159,7 +124,6 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
         />
       )}
 
-      {/* End of Surah Marker */}
       <div className="mt-8 flex items-center justify-center gap-3">
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-primary/30 to-transparent" />
         <span className="text-sm font-medium text-primary/70 px-4">

@@ -13,13 +13,11 @@ export default function HadithDetailsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
-  // Get params from URL or defaults
   const page = parseInt(searchParams.get("page") || "1");
   const book = searchParams.get("book")
     ? parseInt(searchParams.get("book")!)
     : 1;
 
-  // Fetch Books for this collection to populate the dropdown
   const {
     data: books,
     isLoading: isLoadingBooks,
@@ -28,7 +26,6 @@ export default function HadithDetailsPage() {
     refetch: refetchBooks,
   } = useCollectionBooks(collectionName);
 
-  // Fetch Hadiths
   const {
     data: hadithResponse,
     isLoading: isLoadingHadiths,
@@ -79,7 +76,6 @@ export default function HadithDetailsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold capitalize text-primary mb-2">
@@ -87,7 +83,6 @@ export default function HadithDetailsPage() {
           </h1>
           {currentBook && (
             <p className="text-muted-foreground">
-              {/* Find book name by language */}
               {currentBook.book.find((b) => b.lang === (isRtl ? "ar" : "en"))
                 ?.name || currentBook.book[0]?.name}{" "}
               •{" "}
@@ -101,7 +96,6 @@ export default function HadithDetailsPage() {
           )}
         </div>
 
-        {/* Controls */}
         <div className="flex items-center gap-4 w-full md:w-auto">
           {books && (
             <select
@@ -125,7 +119,6 @@ export default function HadithDetailsPage() {
         </div>
       </div>
 
-      {/* Content */}
       {isLoadingHadiths ? (
         <div className="flex justify-center p-10">
           <Loading message={t("hadith.loading")} size="lg" />
@@ -153,7 +146,6 @@ export default function HadithDetailsPage() {
         </div>
       )}
 
-      {/* Pagination */}
       {hadithResponse?.data && hadithResponse.data.length > 0 && (
         <div className="mt-8 flex justify-center items-center gap-4">
           <button
@@ -174,7 +166,6 @@ export default function HadithDetailsPage() {
           </span>
 
           <button
-            // Simple next check: if we got fewer items than limit, we are at the end
             disabled={hadithResponse.data.length < 10}
             onClick={() => handlePageChange(page + 1)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-background disabled:opacity-50 hover:bg-muted transition-colors"

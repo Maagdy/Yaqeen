@@ -1,14 +1,15 @@
+export type PlaybackType = 'surah' | 'ayah' | 'radio' | null;
+
 export interface AudioContextType {
-  // State
   isPlaying: boolean;
   currentAudio: string | null;
-  currentSurahNumber: number | null; // Changed from currentAyahNumber
+  currentSurahNumber: number | null;
+  playbackType: PlaybackType;
   progress: number;
   duration: number;
   volume: number;
 
-  // Actions
-  play: (audioUrl: string, surahNumber?: number) => void; // Changed parameter name
+  play: (audioUrl: string, surahNumber?: number, type?: PlaybackType) => void;
   pause: () => void;
   toggle: () => void;
   seek: (time: number) => void;

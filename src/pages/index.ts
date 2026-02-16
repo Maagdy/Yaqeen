@@ -1,4 +1,4 @@
-// export * from "./AboutPage"
+export * from "./AboutPage";
 export * from "./AppErrorBoundary";
 export * from "./ErrorPage";
 export * from "./HomePage";
@@ -7,3 +7,6 @@ export * from "./QuranPage";
 export * from "./ReciterDetailsPage";
 export * from "./RecitersPage";
 export * from "./SurahPage";
+export * from "./PrayerTimesPage";
+export * from "./AzkarPage";
+export * from "./RamadanPage";

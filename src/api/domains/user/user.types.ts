@@ -108,3 +108,14 @@ export interface FavoriteRadio {
   radio_url?: string | null;
   created_at: string;
 }
+
+export interface FavoriteDua {
+  id: string;
+  user_id: string;
+  dua_id: number;
+  dua_category: string;
+  dua_text_arabic?: string;
+  dua_text_english?: string;
+  dua_reference?: string;
+  created_at: string;
+}

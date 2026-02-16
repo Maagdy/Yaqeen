@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Person, Radio, MenuBook } from "@mui/icons-material";
+import { Person, Radio, MenuBook, AutoStories } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ProfileFavoritesProps } from "./profile-favorites.types";
 import { quranSurahs } from "@/utils/constants";
@@ -14,10 +14,12 @@ export const ProfileFavorites: React.FC<ProfileFavoritesProps> = ({
   favoriteJuzs,
   favoriteMushafs,
   favoriteRadios,
+  favoriteHadiths,
+  favoriteDuas,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, isRtl } = useLanguage();
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-text-primary">
@@ -260,12 +262,118 @@ export const ProfileFavorites: React.FC<ProfileFavoritesProps> = ({
         </Card>
       )}
 
+      {/* Favorite Hadiths */}
+      {favoriteHadiths && favoriteHadiths.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">
+              {t("favorites.favorite_hadiths", {
+                defaultValue: "Favorite Hadiths",
+              })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4">
+              {favoriteHadiths.map((fav) => (
+                <div
+                  key={fav.id}
+                  className="p-4 border rounded-lg flex flex-col gap-3 bg-surface hover:border-primary/50 transition-colors cursor-pointer"
+                  onClick={() => {
+                    navigate(`/hadiths/${fav.collection_name}`);
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <MenuBook />
+                    </div>
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                      <span className="font-medium text-text-primary">
+                        {fav.collection_name}
+                      </span>
+                      <span className="text-xs text-text-secondary">
+                        {t("hadith.book")} {fav.book_number} • {t("hadith.hadith")}{" "}
+                        {fav.hadith_number}
+                      </span>
+                    </div>
+                  </div>
+                  {fav.hadith_text && (
+                    <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+                      {fav.hadith_text}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Favorite Duas */}
+      {favoriteDuas && favoriteDuas.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">
+              {t("favorites.favorite_duas", {
+                defaultValue: "Favorite Duas",
+              })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4">
+              {favoriteDuas.map((fav) => (
+                <div
+                  key={fav.id}
+                  className="p-4 border rounded-lg flex flex-col gap-3 bg-surface hover:border-primary/50 transition-colors cursor-pointer"
+                  onClick={() => {
+                    navigate(`/azkar`);
+                  }}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <AutoStories />
+                      </div>
+                      <span className="text-xs font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                        {t(`azkar.categories.${fav.dua_category}` as any)}
+                      </span>
+                    </div>
+                  </div>
+                  {fav.dua_text_arabic && (
+                    <p
+                      className={`text-base font-amiri text-text-primary line-clamp-2 leading-relaxed ${
+                        isRtl ? "text-right" : "text-right"
+                      }`}
+                      dir="rtl"
+                    >
+                      {fav.dua_text_arabic}
+                    </p>
+                  )}
+                  {fav.dua_text_english && (
+                    <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+                      {fav.dua_text_english}
+                    </p>
+                  )}
+                  {fav.dua_reference && (
+                    <p className="text-xs text-muted-foreground">
+                      <span className="font-semibold">Reference:</span>{" "}
+                      {fav.dua_reference}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {!favoriteReciters?.length &&
         !favoriteSurahs?.length &&
         !favoriteJuzs?.length &&
         !favoriteAyahs?.length &&
         !favoriteMushafs?.length &&
-        !favoriteRadios?.length && (
+        !favoriteRadios?.length &&
+        !favoriteHadiths?.length &&
+        !favoriteDuas?.length && (
           <Card>
             <CardContent className="py-8 text-center text-text-secondary">
               <p>{t("profile.no_favorites")}</p>

@@ -18,11 +18,9 @@ export const Loading: React.FC<LoadingProps> = ({ message, size = "md" }) => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-8">
-      {/* Spinner */}
       <div
         className={`${sizeClasses[size]} border-primary/20 border-t-primary rounded-full animate-spin`}
       />
-      {/* Message */}
       <p className={`${textSizeClasses[size]} text-text-secondary`}>
         {message || t("common.loading")}
       </p>

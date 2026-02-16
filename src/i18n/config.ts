@@ -5,7 +5,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enCommon from '../locales/en/common.json';
 import arCommon from '../locales/ar/common.json';
 
-// the translations
 const resources = {
   en: {
     common: enCommon,
@@ -16,11 +15,8 @@ const resources = {
 };
 
 i18n
-  // detect user language
   .use(LanguageDetector)
-  // pass the i18n instance to react-i18next
   .use(initReactI18next)
-  // init i18next
   .init({
     resources,
     defaultNS: 'common',
@@ -28,7 +24,7 @@ i18n
     debug: import.meta.env.DEV,
 
     interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
+      escapeValue: false,
     },
 
     detection: {

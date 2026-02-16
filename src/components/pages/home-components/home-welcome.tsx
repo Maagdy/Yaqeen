@@ -11,7 +11,6 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
   return (
     <div className="min-h-[calc(100dvh-10rem)] flex items-center justify-center px-4 md:px-8 lg:px-16">
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-        {/* Text Section - Left Half */}
         <section
           className={`flex flex-col gap-4 md:gap-6 text-center ${isRtl ? "lg:text-right" : "lg:text-left"} order-2 lg:order-1`}
           dir={isRtl ? "rtl" : "ltr"}
@@ -36,14 +35,13 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
               label={t("home.read-quran")}
               variant="primary"
               size="lg"
-              iconPosition={isRtl ? "right" : "left"}
+              iconPosition={"right"}
               href={`#${id}`}
               icon={isRtl ? <ArrowBack /> : <ArrowForward />}
             />
           </div>
         </section>
 
-        {/* Image Section - Right Half */}
         <div className="flex justify-center items-center order-1 lg:order-2">
           <img
             src={Moshaf}

@@ -49,7 +49,6 @@ export const ProfileHeader = ({
       </div>
       <IconButton
         onClick={handleSignOut}
-        // className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-primary hover:bg-red-100 border border-red-100 transition-colors font-medium text-sm"
         icon={<Logout />}
         iconPosition="right"
         variant="primary"

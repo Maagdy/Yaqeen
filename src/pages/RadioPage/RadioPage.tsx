@@ -16,19 +16,17 @@ function RadioPage() {
   const { language } = useLanguage();
   const { data: radios, isLoading, isError, refetch } = useRadios(language);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortAscending, setSortAscending] = useState(false); // Default: Newest first
+  const [sortAscending, setSortAscending] = useState(false);
 
   const seoConfig = SEO_CONFIG.radio[language as "en" | "ar"];
 
   const filteredAndSortedRadios = useMemo(() => {
     if (!radios) return [];
 
-    // Filter
     const result = radios.filter((radio) =>
       radio.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
-    // Sort by Date
     result.sort((a, b) => {
       const dateA = new Date(a.recent_date).getTime();
       const dateB = new Date(b.recent_date).getTime();

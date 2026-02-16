@@ -29,5 +29,14 @@ dist-ssr
 .vercel
 .env*.local
 
-.SEO_IMPLEMENTATION
-.SEO_QUICK_START
+# Documentation files (AI-generated)
+CHALLENGE_TRACKING_GUIDE.md
+INTEGRATION_POINTS.md
+QUICK_REFERENCE.md
+RAMADAN_CHALLENGES_COMPLETE_GUIDE.md
+RAMADAN_CHALLENGES_README.md
+RAMADAN_IMPLEMENTATION_CHECKLIST.md
+WHAT_I_BUILT_SUMMARY.md
+supabase.schemas.md
+001_ramadan_challenges_schema.sql
+supabase-migrations

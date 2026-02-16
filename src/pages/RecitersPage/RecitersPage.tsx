@@ -28,26 +28,22 @@ const RecitersPage: React.FC<RecitersPageProps> = () => {
     navigate(generateRoute.reciterDetails(reciterId));
   };
 
-  // Normalize Arabic text to ignore letter variations
   const normalizeArabic = (text: string): string => {
     return text
-      .replace(/[أإآ]/g, "ا") // أ إ آ -> ا
-      .replace(/ى/g, "ي") // ى -> ي
-      .replace(/ة/g, "ه") // ة -> ه
-      .replace(/[ًٌٍَُِّْـ]/g, ""); // Remove diacritics
+      .replace(/[أإآ]/g, "ا")
+      .replace(/ى/g, "ي")
+      .replace(/ة/g, "ه")
+      .replace(/[ًٌٍَُِّْـ]/g, "");
   };
 
-  // Filter and sort reciters
   const filteredAndSortedReciters = useMemo(() => {
     if (!reciters) return [];
 
-    // Normalize search query for Arabic
     const normalizedQuery =
       language === "ar"
         ? normalizeArabic(searchQuery.toLowerCase())
         : searchQuery.toLowerCase();
 
-    // Filter by search query
     const filtered = reciters.filter((reciter) => {
       const normalizedName =
         language === "ar"
@@ -56,12 +52,10 @@ const RecitersPage: React.FC<RecitersPageProps> = () => {
       return normalizedName.includes(normalizedQuery);
     });
 
-    // Sort alphabetically based on language
     filtered.sort((a, b) => {
       const nameA = a.name;
       const nameB = b.name;
 
-      // Use localeCompare with proper locale for better sorting
       const compareResult = nameA.localeCompare(
         nameB,
         language === "ar" ? "ar" : "en",

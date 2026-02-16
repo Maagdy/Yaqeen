@@ -39,6 +39,15 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Smooth theme transitions for elements using theme colors */
+  html,
+  body,
+  *:not([class*="transition-"]):not([class*="animate-"]):not([class*="duration-"]) {
+    transition-property: background-color, color, border-color, fill, stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+
   /* Apply font globally */
   * {
     font-family: var(--font-sans);

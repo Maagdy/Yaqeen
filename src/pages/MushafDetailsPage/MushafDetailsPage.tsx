@@ -38,7 +38,6 @@ function MushafDetailsPage() {
 
   const totalPages = Math.ceil(114 / SURAHS_PER_PAGE);
 
-  // Handle loading state
   if (metadataLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -47,7 +46,6 @@ function MushafDetailsPage() {
     );
   }
 
-  // Handle error state
   if (metadataError || !metadata) {
     return (
       <ErrorPage
@@ -78,7 +76,6 @@ function MushafDetailsPage() {
   };
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Mushaf Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">{metadata.name}</h1>
         <p className="text-muted-foreground mb-4">{metadata.description}</p>
@@ -96,14 +93,12 @@ function MushafDetailsPage() {
         </div>
       </div>
 
-      {/* Surahs Loading State */}
       {surahsLoading && (
         <div className="flex items-center justify-center min-h-[40vh]">
           <Loading size="md" message={t("mushaf-details.loading_surahs")} />
         </div>
       )}
 
-      {/* Surahs Error State */}
       {surahsError && (
         <ErrorPage
           error={surahsErrorObj}
@@ -113,7 +108,6 @@ function MushafDetailsPage() {
         />
       )}
 
-      {/* Surahs List */}
       {!surahsLoading && !surahsError && surahs && (
         <>
           <div className="mb-6">
@@ -132,7 +126,6 @@ function MushafDetailsPage() {
             </div>
           </div>
 
-          {/* Pagination Controls */}
           <div className="flex items-center justify-between mt-8 border-t border-primary pt-6">
             <IconButton
               onClick={handlePreviousPage}

@@ -4,11 +4,16 @@ import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 export const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
-    // Add Sunnah API key if available (for proxied Sunnah.com requests)
-    ...(import.meta.env.VITE_SUNNAH_API_KEY && {
-      "X-API-Key": import.meta.env.VITE_SUNNAH_API_KEY,
-    }),
   },
+});
+
+// Add request interceptor to add API key only for Sunnah API requests
+axiosInstance.interceptors.request.use((config) => {
+  // Only add X-API-Key header for Sunnah API requests
+  if (config.url?.includes("sunnah.com") && import.meta.env.VITE_SUNNAH_API_KEY) {
+    config.headers["X-API-Key"] = import.meta.env.VITE_SUNNAH_API_KEY;
+  }
+  return config;
 });
 
 export const client = {

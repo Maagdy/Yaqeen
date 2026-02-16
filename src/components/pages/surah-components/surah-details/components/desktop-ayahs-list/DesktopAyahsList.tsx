@@ -41,7 +41,6 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
                 onMouseLeave={() => !isMobile && onAyahHover(null)}
                 className="relative"
               >
-                {/* Desktop: Show on hover */}
                 {hoveredAyah === ayah.number && (
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10">
                     <IconButton
@@ -61,14 +60,12 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
                 >
                   {ayah.text}
                 </span>
-                {/* Ayah Number Badge - Arabic Glyph Style */}
                 <span className="inline-flex items-center justify-center relative ">
                   <span className="inline-flex items-center justify-center relative mx-1 w-10 h-10 pt-1">
                     <svg
                       className="absolute inset-0 w-full h-full"
                       viewBox="0 0 35 35"
                     >
-                      {/* Octagonal shape */}
                       <path
                         d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
                         fill="currentColor"

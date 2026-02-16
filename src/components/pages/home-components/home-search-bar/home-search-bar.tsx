@@ -29,19 +29,12 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({
           placeholder={placeholder}
         />
         <div className="absolute inset-y-0 right-2 flex items-center">
-          {/* Optional: Add a clear button or search action button here if needed later */}
           <button
             onClick={() => {
-              // We can access the input value via ref or state if we were managing it,
-              // but for now relying on the parent to handle strict 'onSearch' via Enter or external button
-              // This is just a placeholder for the action area requested "function empty".
-
-              // If value is provided (controlled), we can use it.
               if (value) onSearch(value);
             }}
             className="p-2 mr-1 transition-colors rounded-xl hover:bg-background/50 text-primary opacity-0 group-focus-within:opacity-100"
           >
-            {/* ArrowRight or similar could go here */}
           </button>
         </div>
       </div>

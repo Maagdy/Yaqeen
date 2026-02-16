@@ -12,6 +12,7 @@ import {
   TipsAndUpdates,
   Pause,
 } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import type { MobileAyahCardProps } from "./mobile-ayah-card.types";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "@/utils/numbers";
@@ -28,6 +29,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
   onCopy,
   onTafsirClick,
   isBookmarked,
+  isBookmarkLoading = false,
 }) => {
   const { t } = useTranslation();
   const { isRtl, language } = useLanguage();
@@ -77,7 +79,9 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             )}
             <IconButton
               icon={
-                isBookmarked ? (
+                isBookmarkLoading ? (
+                  <CircularProgress size={16} />
+                ) : isBookmarked ? (
                   <Bookmark fontSize="small" className="text-primary" />
                 ) : (
                   <BookmarkBorder
@@ -91,6 +95,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
               variant="ghost"
               className="hover:bg-primary/10 hover:text-primary"
               label={t("common.bookmark")}
+              disabled={isBookmarkLoading}
             />
           </div>
         </div>

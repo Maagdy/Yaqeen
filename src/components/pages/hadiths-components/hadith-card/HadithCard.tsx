@@ -27,7 +27,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
   const { t, i18n } = useTranslation();
   const { user, isLoggedIn } = useAuth();
 
-  // Helper to extract content by language
   const getContent = (lang: string) => {
     return hadith.hadith.find(
       (content: HadithContent) => content.lang === lang,
@@ -37,7 +36,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
   const arabicContent = getContent("ar");
   const englishContent = getContent("en");
 
-  // Favorite Logic
   const { data: favorites } = useFavoriteHadithsQuery(user?.id);
   const isFavorited = favorites?.some(
     (f) =>
@@ -78,7 +76,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
           bookNumber: hadith.bookNumber,
           hadithNumber: hadith.hadithNumber,
           chapterId: hadith.chapterId,
-          // Store a preview of the text (English or Arabic)
           hadithText: arabicContent?.body || englishContent?.body || "",
         },
         {
@@ -93,7 +90,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
     }
   };
 
-  // Get grade from english content primarily (usually structured better), fallback to arabic
   const grades = englishContent?.grades || arabicContent?.grades || [];
   const primaryGrade = grades.length > 0 ? grades[0] : null;
 
@@ -106,7 +102,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
   const handleShare = () => {};
   return (
     <div className="flex flex-col gap-6 p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md transition-all duration-300">
-      {/* Header with metadata */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-border/50">
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           {bookName && (
@@ -139,9 +134,7 @@ export const HadithCard: React.FC<HadithCardProps> = ({
         )}
       </div>
 
-      {/* Content */}
       <div className="flex flex-col gap-6">
-        {/* Arabic Text */}
         <div className="flex flex-col gap-3">
           {arabicContent?.body && (
             <div
@@ -154,7 +147,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
           )}
         </div>
 
-        {/* English Text */}
         <div className="flex flex-col gap-2">
           {englishContent?.body && (
             <div
@@ -166,8 +158,6 @@ export const HadithCard: React.FC<HadithCardProps> = ({
           )}
         </div>
       </div>
-
-      {/* Actions Footer */}
 
       <div className="flex items-center justify-end gap-2 pt-4 border-t border-border/50">
         <IconButton

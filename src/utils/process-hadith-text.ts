@@ -3,33 +3,25 @@ export const processHadithText = (text: string) => {
 
   let processed = text;
 
-  // Replace narrator tags
-  // [narrator id="123" tooltip="Name"]Text[/narrator]
   processed = processed.replace(
     /\[narrator\s+id="(\d+)"\s+tooltip="([^"]+)"\]([\s\S]*?)\[\/narrator\]/g,
     '<span class="text-primary font-semibold cursor-help border-b border-primary/20 hover:border-primary transition-colors" title="$2">$3</span>',
   );
 
-  // Handle simple narrator tags if any (fallback)
   processed = processed.replace(
     /\[narrator\]([\s\S]*?)\[\/narrator\]/g,
     '<span class="text-primary font-semibold">$1</span>',
   );
 
-  // Replace prematn (Sanad)
   processed = processed.replace(
     /\[prematn\]([\s\S]*?)\[\/prematn\]/g,
     '<span class="text-muted-foreground block mb-3 leading-loose">$1</span>',
   );
 
-  // Replace matn (Body)
   processed = processed.replace(
     /\[matn\]([\s\S]*?)\[\/matn\]/g,
     '<span class="font-medium text-foreground block leading-loose text-lg">$1</span>',
   );
-
-  // Remove any remaining tags if they exist but weren't matched
-  // processed = processed.replace(/\[\/?(prematn|matn|narrator)[^\]]*\]/g, "");
 
   return processed;
 };

@@ -2,23 +2,9 @@ import { useEffect } from "react";
 import { useAuth } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/router/routes";
-import {
-  useProfileQuery,
-  useUserStatsQuery,
-  useFavoriteRecitersQuery,
-  useFavoriteSurahsQuery,
-  useFavoriteJuzsQuery,
-  useFavoriteAyahsQuery,
-  useFavoriteMushafsQuery,
-  useFavoriteRadiosQuery,
-} from "@/api/domains/user";
+import { useProfileQuery, useUserStatsQuery } from "@/api/domains/user";
 import { Loading } from "@/components/ui/loading";
-import {
-  ProfileHeader,
-  ProfileForm,
-  ProfileFavorites,
-  ProfileStats,
-} from "@/components/pages";
+import { ProfileHeader, ProfileForm, ProfileStats } from "@/components/pages";
 import { SEO, SEO_CONFIG } from "@/components/seo";
 import { useLanguage } from "@/hooks";
 
@@ -33,12 +19,6 @@ function ProfilePage() {
     user?.id,
   );
   const { data: stats } = useUserStatsQuery(user?.id);
-  const { data: favoriteReciters } = useFavoriteRecitersQuery(user?.id);
-  const { data: favoriteSurahs } = useFavoriteSurahsQuery(user?.id);
-  const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
-  const { data: favoriteAyahs } = useFavoriteAyahsQuery(user?.id);
-  const { data: favoriteMushafs } = useFavoriteMushafsQuery(user?.id);
-  const { data: favoriteRadios } = useFavoriteRadiosQuery(user?.id);
 
   useEffect(() => {
     if (!loading && !isLoggedIn) {
@@ -65,40 +45,30 @@ function ProfilePage() {
       <SEO {...seoConfig} />
       <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto space-y-8">
-        {/* Header Section */}
-        <ProfileHeader
-          displayName={displayName}
-          email={user.email || null}
-          initials={initials}
-          createdAt={user.created_at || null}
-        />
+          <ProfileHeader
+            displayName={displayName}
+            email={user.email || null}
+            initials={initials}
+            createdAt={user.created_at || null}
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Main Content - Left Column (Profile Form & Favorites) */}
-          <div className="md:col-span-2 space-y-6">
-            <ProfileForm
-              firstName={profile?.first_name || null}
-              lastName={profile?.last_name || null}
-              email={user.email}
-              userId={user.id}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-6">
+              <ProfileForm
+                firstName={profile?.first_name || null}
+                lastName={profile?.last_name || null}
+                email={user.email}
+                userId={user.id}
+              />
+            </div>
 
-            <ProfileFavorites
-              favoriteReciters={favoriteReciters}
-              favoriteSurahs={favoriteSurahs}
-              favoriteJuzs={favoriteJuzs}
-              favoriteAyahs={favoriteAyahs}
-              favoriteMushafs={favoriteMushafs}
-              favoriteRadios={favoriteRadios}
-            />
-          </div>
-
-          {/* Sidebar - Right Column (Stats) */}
-          <div className="space-y-6">
-            <ProfileStats currentStreak={stats?.streak?.current_streak || 0} />
+            <div className="space-y-6">
+              <ProfileStats
+                currentStreak={stats?.streak?.current_streak || 0}
+              />
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );

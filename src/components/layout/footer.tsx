@@ -34,7 +34,6 @@ export function Footer() {
   return (
     <footer className="bg-surface items-center py-12 flex flex-col border-t-2 border-primary">
       <div className="lg:flex justify-between w-[90%] max-w-7xl">
-        {/* Main content */}
         <div className="mb-8 lg:mb-0 flex flex-col lg:max-w-md">
           <Link
             to="/"
@@ -50,7 +49,6 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Links grid */}
         <div className="flex flex-col sm:flex-row justify-between lg:gap-16 xl:gap-28 mb-8 lg:mb-0">
           {footerNav.map((nav) => (
             <div
@@ -61,34 +59,38 @@ export function Footer() {
                 {nav.header}
               </h3>
               <ul className="space-y-3">
-                {nav.array.map((link) => (
-                  <li key={link.text}>
-                    {(link as any).external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-text-secondary hover:text-primary transition-colors text-sm"
-                      >
-                        {link.text}
-                      </a>
-                    ) : (
-                      <Link
-                        to={link.href}
-                        className="text-text-secondary hover:text-primary transition-colors text-sm"
-                      >
-                        {link.text}
-                      </Link>
-                    )}
-                  </li>
-                ))}
+                {nav.array.map((link) => {
+                  const isExternal = (link as any).external;
+                  const translatedText = t(link.text, { defaultValue: link.text });
+
+                  return (
+                    <li key={link.text}>
+                      {isExternal ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-text-secondary hover:text-primary transition-colors text-sm"
+                        >
+                          {translatedText}
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className="text-text-secondary hover:text-primary transition-colors text-sm"
+                        >
+                          {translatedText}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom section */}
       <div className="flex w-[90%] max-w-7xl flex-col sm:flex-row justify-between sm:gap-x-4 items-center pt-8 mt-8 border-t border-border">
         <div className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-2 mb-4 sm:mb-0">
           <a
@@ -103,15 +105,15 @@ export function Footer() {
             to="/about"
             className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
           >
-            About
+            {t("footer.about")}
           </Link>
           <a
-            href="https://github.com/anthropics/claude-code"
+            href="https://github.com/Maagdy/Yaqeen"
             target="_blank"
             rel="noopener noreferrer"
             className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
           >
-            Feedback
+            {t("footer.feedback")}
           </a>
         </div>
 
@@ -121,7 +123,6 @@ export function Footer() {
           </p>
 
           <div className="flex gap-2">
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="px-4 py-2 rounded-lg bg-background text-text-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2 border border-border shadow-sm"
@@ -166,7 +167,6 @@ export function Footer() {
               )}
             </button>
 
-            {/* Language Toggle */}
             <button
               onClick={handleLanguageToggle}
               className="px-4 py-2 rounded-lg bg-background text-text-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2 border border-border shadow-sm"

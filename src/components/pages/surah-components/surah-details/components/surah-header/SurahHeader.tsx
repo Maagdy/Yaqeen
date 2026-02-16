@@ -6,6 +6,7 @@ import {
   BookmarkBorder,
   Share,
 } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import { IconButton } from "../../../../../common/icon-button/icon-button";
 import { formatNumber } from "@/utils/numbers";
 import type { SurahHeaderProps } from "./SurahHeader.types";
@@ -38,12 +39,12 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   const addFavoriteSurahMutation = useAddFavoriteSurahMutation(user?.id);
   const removeFavoriteSurahMutation = useRemoveFavoriteSurahMutation(user?.id);
 
-  // Check if surah is already favorited (we check for null reciter_id for generic surah favorites)
-  // Or if we decide to treat any entry of this surah as "favorited" regardless of reciter
-  // existing logic suggests checking surah_number.
   const isFavorite = favoriteSurahs?.some(
     (fav) => fav.surah_number === surah.number,
   );
+
+  const isBookmarkLoading =
+    addFavoriteSurahMutation.isPending || removeFavoriteSurahMutation.isPending;
 
   const handleBookmarkClick = async () => {
     if (!isLoggedIn) {
@@ -57,10 +58,6 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
       if (isFavorite) {
         await removeFavoriteSurahMutation.mutateAsync({
           surahNumber: surah.number,
-          // We pass null/undefined for reciterId to remove the generic surah favorite
-          // If the user favorited this surah with a specific reciter elsewhere, this specific toggle
-          // in the generic SurahHeader might act on the "generic" entry or all.
-          // Based on user request "default behavior" (no reciter), we pass undefined/null
           reciterId: undefined,
         });
         toast.success(
@@ -71,7 +68,6 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
       } else {
         await addFavoriteSurahMutation.mutateAsync({
           surahNumber: surah.number,
-          // No reciter for generic Surah page header
           reciterId: undefined,
         });
         toast.success(
@@ -106,7 +102,6 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   return (
     <div className="mb-6 pb-4 border-b-2 border-primary/20">
       <div className="flex items-start justify-between">
-        {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <IconButton
             icon={<Share fontSize="medium" />}
@@ -118,7 +113,9 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
           />
           <IconButton
             icon={
-              isFavorite ? (
+              isBookmarkLoading ? (
+                <CircularProgress size={20} />
+              ) : isFavorite ? (
                 <Bookmark fontSize="medium" color="primary" />
               ) : (
                 <BookmarkBorder fontSize="medium" />
@@ -126,10 +123,10 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
             }
             onClick={handleBookmarkClick}
             size="sm"
+            disabled={isBookmarkLoading}
           />
         </div>
 
-        {/* Surah Name and Verse Count - Centered */}
         <div className="flex-1 text-center">
           <h2
             className={`text-2xl md:text-3xl font-bold text-primary mb-1 ${
@@ -149,20 +146,30 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
           </p>
         </div>
 
-        {/* Empty space for alignment */}
         {!isJuzPage && (
-          <FormControl>
+          <FormControl size="small" className="min-w-[80px] max-w-[120px] md:min-w-[120px] md:max-w-[160px]">
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="surah-select-label"
+              id="surah-select"
               value={surah.number}
-              className="text-primary"
+              className="text-primary text-xs md:text-sm"
               onChange={(e) => {
                 navigate(generateRoute.surah(e.target.value));
               }}
+              sx={{
+                "& .MuiSelect-select": {
+                  paddingY: { xs: "6px", md: "8px" },
+                  paddingX: { xs: "8px", md: "12px" },
+                  fontSize: { xs: "0.75rem", md: "0.875rem" },
+                },
+              }}
             >
               {quranSurahs.map((s) => (
-                <MenuItem value={s.number}>
+                <MenuItem
+                  key={s.number}
+                  value={s.number}
+                  className="text-xs md:text-sm"
+                >
                   {formatNumber(s.number, language)}.{" "}
                   {isRtl ? s.arabicName : s.name}
                 </MenuItem>
@@ -170,10 +177,9 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
             </Select>
           </FormControl>
         )}
-        {isJuzPage && <div className="w-20"></div>}
+        {isJuzPage && <div className="w-[80px] md:w-20"></div>}
       </div>
 
-      {/* Listen to Full Surah Button */}
       {fullSurahAudioUrl && (
         <div className="mt-4 text-center">
           <IconButton

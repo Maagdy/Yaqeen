@@ -13,11 +13,14 @@ import {
   Close,
   Person,
   Logout,
+  Bookmarks,
+  AutoStories,
+  Info,
 } from "@mui/icons-material";
-
+import MosqueIcon from "@mui/icons-material/Mosque";
 import { Drawer, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 export function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
@@ -48,6 +51,31 @@ export function Header() {
     { icon: <Mic />, label: t("navigation.reciters"), href: "/reciters" },
     { icon: <Radio />, label: t("navigation.radio"), href: "/radio" },
     { icon: <MenuBook />, label: t("navigation.hadiths"), href: "/hadiths" },
+    {
+      icon: <AutoStories />,
+      label: t("navigation.azkar"),
+      href: "/azkar",
+    },
+    {
+      icon: <Bookmarks />,
+      label: t("navigation.favorites"),
+      href: "/favorites",
+    },
+    {
+      icon: <MosqueIcon />,
+      label: t("navigation.prayer_times"),
+      href: "/prayer-times",
+    },
+    {
+      icon: <Info />,
+      label: t("navigation.about"),
+      href: "/about",
+    },
+    {
+      icon: <DarkModeIcon />,
+      label: t("navigation.ramadan"),
+      href: "/ramadan",
+    },
   ];
 
   useEffect(() => {
@@ -75,13 +103,11 @@ export function Header() {
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Left: Hamburger Menu (Mobile Only) + Logo/Title */}
         <div className="flex items-center gap-1">
-          {/* Hamburger Menu Button - Always Show */}
           <Box
             component="div"
             sx={{
-              display: "flex", // Always visible
+              display: "flex",
               alignItems: "center",
             }}
           >
@@ -123,7 +149,6 @@ export function Header() {
           </div>
         </div>
 
-        {/* Center: Navigation Icons - Visible from 960px (md/lg boundary) and up */}
         <Box
           component="nav"
           sx={{
@@ -166,9 +191,7 @@ export function Header() {
           />
         </Box>
 
-        {/* Right: Sign Up, Language & Theme Toggle */}
         <div className="flex items-center sm:gap-3 z-10 relative">
-          {/* Auth Button - Hidden below 960px */}
           <Box
             component="div"
             sx={{
@@ -198,7 +221,6 @@ export function Header() {
             )}
           </Box>
 
-          {/* Language Toggle */}
           <button
             onClick={handleLanguageToggle}
             className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 text-sm font-medium rounded-lg bg-background text-text-primary hover:bg-border transition-all"
@@ -207,7 +229,6 @@ export function Header() {
             {language === "en" ? "عربي" : "EN"}
           </button>
 
-          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-1.5 sm:p-2 text-text-primary hover:opacity-80 transition-opacity rounded-lg"
@@ -222,7 +243,6 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile Drawer - Show from 0-768px */}
       <Drawer
         anchor={isRtl ? "right" : "left"}
         open={drawerOpen}
@@ -238,10 +258,14 @@ export function Header() {
         }}
       >
         <div className="flex flex-col h-full bg-background">
-          {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
-            <div className="flex items-center gap-3">
-              <img src={Logo} className="w-10 h-10" alt="Logo" loading="lazy" />
+            <div className="flex items-center">
+              <img
+                src={Logo}
+                className="w-full h-10"
+                alt="Logo"
+                loading="lazy"
+              />
               <h2 className="font-bold text-primary text-lg">
                 {t("app.title")}
               </h2>
@@ -255,7 +279,6 @@ export function Header() {
             />
           </div>
 
-          {/* Navigation Items */}
           <nav className="flex flex-col p-4 gap-2">
             {navigationItems.map((item, index) => (
               <button
@@ -272,12 +295,9 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Divider */}
           <div className="border-t border-border mx-4" />
 
-          {/* Actions in Drawer */}
           <div className="flex flex-col p-4 gap-3">
-            {/* Auth Action */}
             {user ? (
               <>
                 <button
@@ -313,7 +333,6 @@ export function Header() {
               </button>
             )}
 
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium rounded-lg bg-background text-text-primary border border-border hover:bg-border transition-all"

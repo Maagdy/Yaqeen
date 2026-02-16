@@ -1,4 +1,3 @@
-// src/components/global-audio-player/global-audio-player.tsx
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import {
@@ -18,6 +17,7 @@ export const GlobalAudioPlayer: React.FC = () => {
   const {
     isPlaying,
     currentAudio,
+    playbackType,
     progress,
     duration,
     volume,
@@ -68,7 +68,6 @@ export const GlobalAudioPlayer: React.FC = () => {
     [setVolume],
   );
 
-  // Progress handlers
   const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDraggingProgress(true);
     updateProgress(e.clientX);
@@ -79,7 +78,6 @@ export const GlobalAudioPlayer: React.FC = () => {
     updateProgress(e.touches[0].clientX);
   };
 
-  // Volume handlers
   const handleVolumeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDraggingVolume(true);
     updateVolume(e.clientX);
@@ -90,7 +88,6 @@ export const GlobalAudioPlayer: React.FC = () => {
     updateVolume(e.touches[0].clientX);
   };
 
-  // Global mouse/touch move and up handlers
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingProgress) {
@@ -132,11 +129,8 @@ export const GlobalAudioPlayer: React.FC = () => {
     };
   }, [isDraggingProgress, isDraggingVolume, updateProgress, updateVolume]);
 
-  // Check if audio is live stream (infinite duration)
   const isLive = !Number.isFinite(duration) || duration === Infinity;
 
-  // Calculate progress percentage
-  // For live streams, we can't calculate percentage, so show 100% or 0%
   const progressPercentage = isLive
     ? 100
     : duration > 0
@@ -144,7 +138,6 @@ export const GlobalAudioPlayer: React.FC = () => {
       : 0;
   const volumePercentage = volume * 100;
 
-  // Early return AFTER all hooks
   if (!currentAudio) return null;
 
   return (
@@ -153,7 +146,6 @@ export const GlobalAudioPlayer: React.FC = () => {
       dir="ltr"
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
-        {/* Progress Bar */}
         <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
           <span className="text-[10px] sm:text-xs text-text-secondary min-w-8 sm:min-w-10">
             {isLive ? t("radio.live") : formatTime(progress)}
@@ -164,15 +156,12 @@ export const GlobalAudioPlayer: React.FC = () => {
             onMouseDown={isLive ? undefined : handleProgressMouseDown}
             onTouchStart={isLive ? undefined : handleProgressTouchStart}
           >
-            {/* Background track */}
             <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-              {/* Played portion (colored) */}
               <div
                 className={`h-full bg-primary transition-all duration-100 ${isLive ? "animate-pulse" : ""}`}
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
-            {/* Thumb (ball) - Hide for live streams */}
             {!isLive && (
               <div
                 className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
@@ -185,9 +174,7 @@ export const GlobalAudioPlayer: React.FC = () => {
           </span>
         </div>
 
-        {/* Controls Section */}
         <div className="flex items-center justify-between gap-2 sm:gap-4">
-          {/* Volume Control - Left Side */}
           <div className="flex items-center gap-2 min-w-20 lg:min-w-24">
             <button
               onClick={() => setVolume(volume > 0 ? 0 : 1)}
@@ -206,15 +193,12 @@ export const GlobalAudioPlayer: React.FC = () => {
               onMouseDown={handleVolumeMouseDown}
               onTouchStart={handleVolumeTouchStart}
             >
-              {/* Background track */}
               <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-                {/* Volume level (colored) */}
                 <div
                   className="h-full bg-primary transition-all duration-100"
                   style={{ width: `${volumePercentage}%` }}
                 />
               </div>
-              {/* Thumb (ball) */}
               <div
                 className="absolute w-3 h-3 bg-primary rounded-full shadow-md transition-all duration-100 cursor-grab active:cursor-grabbing -translate-x-1/2"
                 style={{ left: `${volumePercentage}%` }}
@@ -222,19 +206,16 @@ export const GlobalAudioPlayer: React.FC = () => {
             </div>
           </div>
 
-          {/* Playback Controls - Center */}
           <div className="flex items-center gap-1 sm:gap-2">
-            {/* Previous Button */}
             <button
               onClick={onPrevious}
-              disabled={!canGoPrevious || !onPrevious}
+              disabled={playbackType !== 'surah' || !canGoPrevious || !onPrevious}
               className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-text-secondary hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary"
               aria-label="Previous Surah"
             >
               <SkipPrevious fontSize="small" className="sm:text-base" />
             </button>
 
-            {/* Play/Pause Button */}
             <button
               onClick={toggle}
               className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-primary hover:bg-primary/80 text-white transition-colors shadow-md"
@@ -247,10 +228,9 @@ export const GlobalAudioPlayer: React.FC = () => {
               )}
             </button>
 
-            {/* Next Button */}
             <button
               onClick={onNext}
-              disabled={!canGoNext || !onNext}
+              disabled={playbackType !== 'surah' || !canGoNext || !onNext}
               className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-text-secondary hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary"
               aria-label="Next Surah"
             >
@@ -258,7 +238,6 @@ export const GlobalAudioPlayer: React.FC = () => {
             </button>
           </div>
 
-          {/* Close Button - Right Side */}
           <div className="min-w-8 sm:min-w-10 lg:min-w-12 flex justify-end">
             <button
               onClick={stop}

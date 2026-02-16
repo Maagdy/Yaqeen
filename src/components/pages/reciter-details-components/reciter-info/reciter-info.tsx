@@ -104,7 +104,6 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
       toast.success(t("reciter-details.link_copied"));
     } catch (error) {
       console.log(error);
-
       toast.error(t("reciter-details.link_copy_failed"));
     }
   };
@@ -137,9 +136,8 @@ export const ReciterInfo: React.FC<ReciterInfoProps> = ({
             className="text-primary/70 hover:text-primary"
             size="sm"
           />
-        </div>{" "}
+        </div>
       </div>
-      {/* Moshaf Selection Chips */}
       {reciter?.moshaf && reciter.moshaf.length > 1 && (
         <div className="flex flex-wrap gap-3">
           {reciter.moshaf.map((m, index) => (

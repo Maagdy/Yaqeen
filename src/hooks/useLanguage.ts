@@ -13,7 +13,6 @@ export function useLanguage() {
       i18n.changeLanguage(language);
     }
 
-    // Set document direction and lang
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = language;
   }, [language, i18n]);

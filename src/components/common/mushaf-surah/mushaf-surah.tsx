@@ -8,7 +8,6 @@ export const MushafSurahCard = ({ surah, onClick }: MushafSurahCardProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
 
-  // Lookup English name from constants
   const surahInfo = quranSurahs.find((s) => s.number === surah.id);
   const englishName = surahInfo?.name || "";
 

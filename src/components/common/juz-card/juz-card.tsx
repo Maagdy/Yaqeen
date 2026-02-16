@@ -60,7 +60,6 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
 
   return (
     <div className="bg-surface border border-transparent rounded-xl overflow-hidden p-4 break-inside-avoid mb-4 shadow-sm hover:shadow-md transition-shadow relative">
-      {/* Juz Header */}
       <div className="w-full flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="font-bold text-text-primary text-base">
@@ -88,7 +87,6 @@ export const JuzCard = ({ juzNumber, surahs, onClick }: JuzCardProps) => {
         </button>
       </div>
 
-      {/* Surah Cards */}
       <div className="space-y-3">
         {surahs.map((chapter) => (
           <SurahCard

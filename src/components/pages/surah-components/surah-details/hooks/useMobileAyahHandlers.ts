@@ -74,7 +74,6 @@ export const useMobileAyahHandlers = ({
       }
     } catch (error) {
       console.log(error);
-
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
   };
@@ -88,11 +87,9 @@ export const useMobileAyahHandlers = ({
           text: shareText,
         });
       } catch (error) {
-        // User cancelled or error occurred
         console.log(error);
       }
     } else {
-      // Fallback: copy to clipboard
       await navigator.clipboard.writeText(shareText);
       toast.success(
         t("common.copied", { defaultValue: "Copied to clipboard" }),
@@ -108,7 +105,6 @@ export const useMobileAyahHandlers = ({
       );
     } catch (error) {
       console.log(error);
-
       toast.error(t("common.error", { defaultValue: "An error occurred" }));
     }
   };
@@ -121,11 +117,16 @@ export const useMobileAyahHandlers = ({
     );
   };
 
+  const isBookmarkLoading = () => {
+    return addFavoriteAyah.isPending || removeFavoriteAyah.isPending;
+  };
+
   return {
     handlePlay,
     handleBookmark,
     handleShare,
     handleCopy,
     isBookmarked,
+    isBookmarkLoading,
   };
 };

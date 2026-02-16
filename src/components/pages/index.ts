@@ -6,3 +6,5 @@ export * from "./profile-components";
 export * from "./mushaf-surah-components";
 export * from "./radio-components";
 export * from "./hadiths-components";
+export * from "./azkar-components";
+export * from "./about-components";

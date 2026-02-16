@@ -13,6 +13,7 @@ export const MobileAyahsList: React.FC<MobileAyahsListProps> = ({
   onCopy,
   onTafsirClick,
   isBookmarked,
+  isBookmarkLoading,
 }) => {
   return (
     <div className="space-y-4">
@@ -34,6 +35,7 @@ export const MobileAyahsList: React.FC<MobileAyahsListProps> = ({
             onCopy={() => onCopy(ayah)}
             onTafsirClick={() => onTafsirClick(ayah)}
             isBookmarked={isBookmarked(ayah)}
+            isBookmarkLoading={isBookmarkLoading?.()}
           />
         );
       })}

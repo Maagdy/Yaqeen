@@ -30,8 +30,8 @@ export const HomePage: React.FC<HomePageProps> = () => {
       <SEO {...seoConfig} structuredData={structuredData} />
       <HomeSearchBar
         onSearch={handleSearch}
-        onChange={() => {}} // We can let the component handle local state or lift it up if needed. For now simpler.
-        value={undefined} // Let component handle uncontrolled or pass undefined
+        onChange={() => {}}
+        value={undefined}
         placeholder={t("home.search_placeholder")}
       />
       <HomeWelcome id="quran-tabs" />
