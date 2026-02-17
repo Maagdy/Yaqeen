@@ -67,6 +67,11 @@ export function Header() {
       href: "/prayer-times",
     },
     {
+      icon: <AutoStories />,
+      label: t("navigation.prophet_stories"),
+      href: "/prophet-stories",
+    },
+    {
       icon: <Info />,
       label: t("navigation.about"),
       href: "/about",

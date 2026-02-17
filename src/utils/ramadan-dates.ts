@@ -1,5 +1,8 @@
 import moment from "moment-hijri";
 
+// PRODUCTION MODE: Use actual Hijri calendar dates
+// All calculations are dynamic based on real Islamic calendar
+
 export const getCurrentHijriYear = (): number => {
   return moment().iYear();
 };
@@ -13,7 +16,9 @@ export const getCurrentHijriDay = (): number => {
 };
 
 export const isRamadan = (): boolean => {
-  return getCurrentHijriMonth() === 9;
+  const currentMonth = getCurrentHijriMonth();
+  const isRamadan = currentMonth === 9;
+  return isRamadan;
 };
 
 export const getCurrentRamadanYear = (): number => {
@@ -32,7 +37,8 @@ export const getCurrentRamadanDay = (): number => {
     return 0;
   }
 
-  return getCurrentHijriDay();
+  const currentDay = getCurrentHijriDay();
+  return currentDay;
 };
 
 export const getRamadanStartDate = (hijriYear: number): Date => {
@@ -106,6 +112,7 @@ export const isOddNight = (): boolean => {
 export const getRamadanStatus = (): {
   status: "before" | "during" | "after";
   message: string;
+  arabicMessage?: string;
   daysCount?: number;
 } => {
   const currentMonth = getCurrentHijriMonth();
@@ -116,6 +123,7 @@ export const getRamadanStatus = (): {
     return {
       status: "before",
       message: `${daysUntil} days until Ramadan`,
+      arabicMessage: `${daysUntil} أيام حتى رمضان`,
       daysCount: daysUntil,
     };
   } else if (currentMonth === 9) {
@@ -123,12 +131,14 @@ export const getRamadanStatus = (): {
     return {
       status: "during",
       message: `Day ${currentDay} of Ramadan`,
+      arabicMessage: `اليوم ${currentDay} من رمضان`,
       daysCount: daysRemaining,
     };
   } else {
     return {
       status: "after",
       message: "Ramadan has ended for this year",
+      arabicMessage: "رمضان انتهى لهذا العام",
     };
   }
 };

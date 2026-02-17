@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LocalFireDepartment, MenuBook, Headphones, Speed, TrendingUp } from "@mui/icons-material";
 import type { ProfileStatsProps } from "./profile-stats.types";
 import { useUserStatsQuery } from "@/api/domains/user";
-import { useUserRamadanProfileQuery } from "@/api/domains/ramadan/useRamadanQueries";
+import { useUserRamadanProfileQuery, useUserChallengesQuery } from "@/api/domains/ramadan/useRamadanQueries";
 import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
 import { useAuth } from "@/hooks";
 
@@ -18,7 +18,12 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
   const ramadanStatus = getRamadanStatus();
   const isRamadan = ramadanStatus.status === 'during';
 
-  const { data: ramadanProfile } = useUserRamadanProfileQuery(
+  const { data: ramadanProfile, isLoading: isLoadingRamadanProfile } = useUserRamadanProfileQuery(
+    isRamadan ? user?.id : undefined,
+    currentRamadanYear
+  );
+
+  const { data: _userChallenges = [] } = useUserChallengesQuery(
     isRamadan ? user?.id : undefined,
     currentRamadanYear
   );
@@ -121,7 +126,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
       </Card>
 
       {/* Ramadan Stats (Only show during Ramadan season) */}
-      {isRamadan && ramadanProfile && (
+      {isRamadan && ramadanProfile && !isLoadingRamadanProfile && (
         <Card className="border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -129,25 +134,31 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.level")}</p>
-                <p className="text-2xl font-bold text-primary">{ramadanProfile.level}</p>
+            {/* Level Progress Bar */}
+            <div className="p-3 bg-background/60 rounded-lg border border-primary/30">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-textSecondary">{t("ramadan.stats.level")} {ramadanProfile.level}</p>
+                <p className="text-xs text-textSecondary">
+                  {ramadanProfile.total_xp} XP
+                </p>
               </div>
-              <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.totalXP")}</p>
-                <p className="text-2xl font-bold text-primary">{ramadanProfile.total_xp}</p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  style={{
+                    width: `${Math.min(
+                      ((ramadanProfile.total_xp % 100) / 100) * 100,
+                      100
+                    )}%`,
+                  }}
+                />
               </div>
-              <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.streak")}</p>
-                <p className="text-2xl font-bold text-orange-500">{ramadanProfile.ramadan_streak}</p>
-              </div>
-              <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.badges.totalBadges")}</p>
-                <p className="text-2xl font-bold text-yellow-500">{ramadanProfile.badges_earned}</p>
-              </div>
+              <p className="text-xs text-textSecondary mt-1">
+                {100 - (ramadanProfile.total_xp % 100)} XP {t("ramadan.stats.untilNextLevel") || "until next level"}
+              </p>
             </div>
 
+            {/* Today's Reading Progress */}
             <div className="p-3 bg-background/60 rounded-lg border border-primary/30">
               <p className="text-xs text-textSecondary mb-1">{t("ramadan.progress.todayReading")}</p>
               <p className="text-xl font-bold text-textPrimary">
@@ -166,14 +177,23 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
               </div>
             </div>
 
+            {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-background/60 rounded-lg border border-border">
+                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.streak")}</p>
+                <p className="text-2xl font-bold text-orange-500">{ramadanProfile.ramadan_streak} 🔥</p>
+              </div>
+              <div className="p-3 bg-background/60 rounded-lg border border-border">
+                <p className="text-xs text-textSecondary mb-1">{t("ramadan.badges.totalBadges")}</p>
+                <p className="text-2xl font-bold text-yellow-500">{ramadanProfile.badges_earned} 🏅</p>
+              </div>
+              <div className="p-3 bg-background/60 rounded-lg border border-border">
                 <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.completed")}</p>
-                <p className="text-xl font-bold text-green-600">{ramadanProfile.challenges_completed}</p>
+                <p className="text-xl font-bold text-green-600">{ramadanProfile.challenges_completed} ✅</p>
               </div>
               <div className="p-3 bg-background/60 rounded-lg border border-border">
                 <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.inProgress")}</p>
-                <p className="text-xl font-bold text-blue-600">{ramadanProfile.challenges_in_progress}</p>
+                <p className="text-xl font-bold text-blue-600">{ramadanProfile.challenges_in_progress} 🔄</p>
               </div>
             </div>
           </CardContent>

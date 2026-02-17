@@ -20,7 +20,7 @@ import { TafsirCard } from "../../components/pages/surah-components/tafsir-card"
 import { useAudio } from "../../hooks";
 import { SurahDetails } from "@/components/pages";
 import { SEO } from "@/components/seo";
-import { useReadingTracker } from "@/hooks/useReadingTracker";
+import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
 import { ReadingProgressIndicator } from "@/components/common";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
@@ -32,7 +32,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const [selectedDiscoverContent, setSelectedDiscoverContent] =
     useState<React.ReactNode | null>(null);
   const [activeDiscoverType, setActiveDiscoverType] = useState<
-    "tafsir" | "tadabor" | "lessons" | null
+    "tafsir" | null
   >(null);
   const [selectedAyah, setSelectedAyah] = useState<Ayah | null>(null);
   const discoverContentRef = useRef<HTMLDivElement>(null);
@@ -82,7 +82,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const { play, toggle, currentAudio } = useAudio();
 
   // Track pages read when user leaves this surah
-  useReadingTracker(surah?.ayahs || [], !!surah);
+  useViewportPageTracker(surah?.ayahs || [], {
+    enabled: !!surah,
+  });
 
   useEffect(() => {
     return () => {
@@ -195,24 +197,6 @@ const SurahPage: React.FC<SurahPageProps> = () => {
             </div>,
           );
           setActiveDiscoverType("tafsir");
-        }
-      },
-      onTadaborClick: () => {
-        if (activeDiscoverType === "tadabor") {
-          setSelectedDiscoverContent(null);
-          setActiveDiscoverType(null);
-        } else {
-          setSelectedDiscoverContent(<div>tadabor</div>);
-          setActiveDiscoverType("tadabor");
-        }
-      },
-      onLessonsClick: () => {
-        if (activeDiscoverType === "lessons") {
-          setSelectedDiscoverContent(null);
-          setActiveDiscoverType(null);
-        } else {
-          setSelectedDiscoverContent(<div>lessons</div>);
-          setActiveDiscoverType("lessons");
         }
       },
     });

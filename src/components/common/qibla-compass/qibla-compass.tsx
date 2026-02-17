@@ -204,21 +204,22 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
               </div>
             </div>
 
-            {/* Kaaba Icon in Center */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="text-6xl md:text-7xl drop-shadow-lg">🕋</div>
+            {/* Kaaba Icon at Top (North) */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="text-5xl md:text-6xl drop-shadow-lg">🕋</div>
             </div>
 
-            {/* Rotating Arrow */}
+            {/* Rotating Arrow in Center - Points to Kaaba */}
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out"
+              className="absolute top-1/2 left-1/2 transition-transform duration-300 ease-out"
               style={{
                 transform: `translate(-50%, -50%) rotate(${qiblaAngle}deg)`,
+                transformOrigin: 'center center',
               }}
             >
               <Navigation
                 className="text-primary drop-shadow-lg"
-                style={{ fontSize: 120 }}
+                style={{ fontSize: 100, transform: 'rotate(0deg)' }}
               />
             </div>
 

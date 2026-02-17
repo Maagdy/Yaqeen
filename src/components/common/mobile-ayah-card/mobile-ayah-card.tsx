@@ -8,8 +8,6 @@ import {
   Share,
   MoreHoriz,
   MenuBook,
-  School,
-  TipsAndUpdates,
   Pause,
 } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
@@ -52,7 +50,10 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
   // So we render based on what we have.
 
   return (
-    <div className="w-full bg-card rounded-xl border border-border shadow-sm overflow-hidden mb-4">
+    <div
+      data-page={ayah.page}
+      className="w-full bg-card rounded-xl border border-border shadow-sm overflow-hidden mb-4"
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-muted/30 border-b border-border/50 gap-3 sm:gap-0">
         <div className="flex items-center gap-2 flex-wrap">
@@ -168,19 +169,11 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
       <div className="mx-4 border-t border-border/50"></div>
 
       {/* Footer Actions */}
-      <div className="flex items-center justify-between p-2 px-4 gap-2 flex-wrap sm:flex-nowrap">
+      <div className="flex items-center justify-center p-2 px-4">
         <FooterButton
           icon={<MenuBook fontSize="small" />}
           label={t("surah.tafsirs", { defaultValue: "Tafsirs" })}
           onClick={onTafsirClick}
-        />
-        <FooterButton
-          icon={<School fontSize="small" />}
-          label={t("surah.reflections", { defaultValue: "Reflections" })}
-        />
-        <FooterButton
-          icon={<TipsAndUpdates fontSize="small" />}
-          label={t("surah.benefits", { defaultValue: "Benefits" })}
         />
       </div>
     </div>

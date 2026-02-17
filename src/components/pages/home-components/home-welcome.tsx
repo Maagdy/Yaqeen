@@ -3,6 +3,7 @@ import { IconButton } from "../../common";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Moshaf } from "../../../assets/images";
 import { useLanguage } from "../../../hooks";
+import { motion } from "framer-motion";
 
 export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
   const { t } = useTranslation();
@@ -11,9 +12,12 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
   return (
     <div className="min-h-[calc(100dvh-10rem)] flex items-center justify-center px-4 md:px-8 lg:px-16">
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-        <section
+        <motion.section
           className={`flex flex-col gap-4 md:gap-6 text-center ${isRtl ? "lg:text-right" : "lg:text-left"} order-2 lg:order-1`}
           dir={isRtl ? "rtl" : "ltr"}
+          initial={{ opacity: 0, x: isRtl ? 50 : -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="flex flex-col gap-4">
             <h1 className="text-text-primary text-4xl md:text-5xl lg:text-7xl font-bold">
@@ -40,16 +44,24 @@ export const HomeWelcome: React.FC<{ id: string }> = ({ id }) => {
               icon={isRtl ? <ArrowBack /> : <ArrowForward />}
             />
           </div>
-        </section>
+        </motion.section>
 
-        <div className="flex justify-center items-center order-1 lg:order-2">
-          <img
+        <motion.div
+          className="flex justify-center items-center order-1 lg:order-2"
+          initial={{ opacity: 0, x: isRtl ? -50 : 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.img
             src={Moshaf}
             alt="Moshaf"
             loading="lazy"
             className="w-full max-w-md lg:max-w-full h-auto object-contain"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

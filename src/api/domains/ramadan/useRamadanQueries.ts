@@ -90,6 +90,10 @@ export const useUserChallengesQuery = (
     queryKey: ["user-ramadan-challenges", userId, ramadanYear],
     queryFn: () => (userId ? getUserChallenges(userId, ramadanYear) : []),
     enabled: !!userId,
+    refetchInterval: 5000, // Auto-refresh every 5 seconds
+    staleTime: 0, // ALWAYS consider stale
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -260,6 +264,11 @@ export const useUserRamadanProfileQuery = (
     queryFn: () =>
       userId ? getUserRamadanProfile(userId, ramadanYear) : null,
     enabled: !!userId,
+    refetchInterval: 5000, // Auto-refresh every 5 seconds (FASTER)
+    refetchIntervalInBackground: false,
+    staleTime: 0, // ALWAYS consider stale - force refetch
+    refetchOnMount: true, // ALWAYS refetch on mount
+    refetchOnWindowFocus: true, // Refetch when window focused
   });
 };
 

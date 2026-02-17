@@ -20,6 +20,7 @@ import PrayerTimesPage from "@/pages/PrayerTimesPage/PrayerTimesPage";
 import AzkarPage from "@/pages/AzkarPage/AzkarPage";
 import AboutPage from "@/pages/AboutPage/AboutPage";
 import { RamadanPage } from "@/pages/RamadanPage";
+import ProphetStoriesPage from "@/pages/ProphetStoriesPage/ProphetStoriesPage";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.PRAYER_TIMES, element: <PrayerTimesPage /> },
       { path: ROUTES.AZKAR, element: <AzkarPage /> },
       { path: ROUTES.RAMADAN, element: <RamadanPage /> },
+      { path: ROUTES.PROPHET_STORIES, element: <ProphetStoriesPage /> },
     ],
   },
 ]);

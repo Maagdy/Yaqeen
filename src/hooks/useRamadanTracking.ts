@@ -39,18 +39,29 @@ export const useRamadanTracking = () => {
 
         const ramadanYear = getCurrentRamadanYear();
 
-        queryClient.invalidateQueries({
-          queryKey: ["user-ramadan-challenges", user.id, ramadanYear],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user-ramadan-profile", user.id, ramadanYear],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["ramadan-daily-log", user.id],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user-badges", user.id],
-        });
+        // Force refetch of all Ramadan-related queries
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ["user-ramadan-challenges", user.id, ramadanYear],
+            refetchType: 'active',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["user-ramadan-profile", user.id, ramadanYear],
+            refetchType: 'active',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["ramadan-daily-log", user.id],
+            refetchType: 'active',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["user-badges", user.id],
+            refetchType: 'active',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["user-stats", user.id],
+            refetchType: 'active',
+          }),
+        ]);
 
         if (showNotifications) {
           if (completedChallenges.length > 0) {

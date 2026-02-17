@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/hooks";
+import { formatNumber } from "@/utils/numbers";
 import type {
   UserRamadanProfile,
   UserChallengeWithDetails,
@@ -14,6 +16,7 @@ export const UserStatsCard = ({
   userChallenges,
 }: UserStatsCardProps) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
 
   const totalXP = profile?.total_xp || 0;
   const level = profile?.level || 1;
@@ -34,32 +37,32 @@ export const UserStatsCard = ({
     {
       icon: "🏆",
       label: t("ramadan.stats.level"),
-      value: level,
+      value: formatNumber(level, language),
     },
     {
       icon: "⭐",
       label: t("ramadan.stats.totalXP"),
-      value: totalXP.toLocaleString(),
+      value: formatNumber(totalXP, language),
     },
     {
       icon: "🔥",
       label: t("ramadan.stats.streak"),
-      value: `${currentStreak} ${t("common.days")}`,
+      value: `${formatNumber(currentStreak, language)} ${t("common.days")}`,
     },
     {
       icon: "📖",
       label: t("ramadan.progress.todayReading"),
-      value: `${pagesReadToday} ${t("ramadan.progress.pages")}`,
+      value: `${formatNumber(pagesReadToday, language)} ${t("ramadan.progress.pages")}`,
     },
     {
       icon: "✅",
       label: t("ramadan.stats.completed"),
-      value: completedChallenges,
+      value: formatNumber(completedChallenges, language),
     },
     {
       icon: "🏅",
       label: t("ramadan.badges.totalBadges"),
-      value: badgesEarned,
+      value: formatNumber(badgesEarned, language),
     },
   ];
 
@@ -70,10 +73,10 @@ export const UserStatsCard = ({
       <div className="mb-4 sm:mb-6 rounded-lg border border-white/20 bg-white/10 p-3 sm:p-4 backdrop-blur-sm">
         <div className="mb-2 flex items-center justify-between text-white flex-wrap gap-1">
           <span className="text-xs sm:text-sm font-semibold">
-            {t("ramadan.stats.level")} {level}
+            {t("ramadan.stats.level")} {formatNumber(level, language)}
           </span>
           <span className="text-xs sm:text-sm">
-            {xpProgress.toLocaleString()} / {xpNeeded.toLocaleString()} XP
+            {formatNumber(xpProgress, language)} / {formatNumber(xpNeeded, language)} XP
           </span>
         </div>
         <div className="h-2.5 sm:h-3 w-full overflow-hidden rounded-full bg-white/20">
@@ -83,7 +86,7 @@ export const UserStatsCard = ({
           />
         </div>
         <p className="mt-2 text-xs text-white/90">
-          {Math.round(xpNeeded - xpProgress)} XP {t("ramadan.stats.untilNextLevel")}
+          {formatNumber(Math.round(xpNeeded - xpProgress), language)} XP {t("ramadan.stats.untilNextLevel")}
         </p>
       </div>
 

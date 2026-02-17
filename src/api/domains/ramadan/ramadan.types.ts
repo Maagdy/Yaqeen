@@ -187,6 +187,9 @@ export interface RamadanLeaderboard {
   challenges_completed: number;
   ramadan_streak: number;
   computed_at: string;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
 }
 
 // --- Reflections / Journal ---
