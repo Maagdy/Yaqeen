@@ -257,7 +257,10 @@
     "browse": "تصفح {{count}} محطة إذاعية",
     "showing_count": "عرض {{formattedCount}} محطة",
     "live": "مباشر",
-    "search_placeholder": "ابحث عن المحطات الإذاعية..."
+    "search_placeholder": "ابحث عن المحطات الإذاعية...",
+    "stations": {
+      "quran_radio": "إذاعة القرآن الكريم"
+    }
   },
 
   "footer": {

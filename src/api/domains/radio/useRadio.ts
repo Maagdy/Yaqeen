@@ -1,33 +1,23 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getRadios } from "./radio-queries";
 import { useLanguage } from "../../../hooks/useLanguage";
-import type { Radio } from "./radio.types";
+import { getStaticRadios } from "@/data/static-radios";
 
 export const useRadios = (language?: string) => {
   const { language: contextLanguage } = useLanguage();
   const finalLanguage = language || contextLanguage;
-  const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["radios", finalLanguage],
     queryFn: async () => {
-      // Determine the opposite language
-      const otherLanguage = finalLanguage === "ar" ? "en" : "ar";
+      // Fetch API radios for current language
+      const apiRadios = await getRadios(finalLanguage);
 
-      // Fetch both languages in parallel
-      const [currentData, otherData] = await Promise.all([
-        getRadios(finalLanguage),
-        getRadios(otherLanguage),
-      ]);
+      // Get static radios with bilingual names for current language
+      const staticRadios = getStaticRadios(finalLanguage);
 
-      // Cache the other language for instant switching
-      queryClient.setQueryData<Radio[]>(
-        ["radios", otherLanguage],
-        otherData
-      );
-
-      // Return the requested language (preserves existing behavior)
-      return currentData;
+      // Merge static radios with API radios
+      return [...staticRadios, ...apiRadios];
     },
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });

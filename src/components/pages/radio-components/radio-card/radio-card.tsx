@@ -136,6 +136,11 @@ export function RadioCard({ radio }: RadioCardProps) {
           >
             {radio.name}
           </h3>
+          {radio.secondaryName && (
+            <p className="text-xs text-muted-foreground line-clamp-1">
+              {radio.secondaryName}
+            </p>
+          )}
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <RadioIcon className="w-3 h-3" />
             <span>{t("radio.station")}</span>
