@@ -66,7 +66,10 @@ export const trackUserActivity = async (
       .eq("status", "in_progress");
 
     if (error) throw error;
-    if (!userChallenges || userChallenges.length === 0) return [];
+
+    if (!userChallenges || userChallenges.length === 0) {
+      return [];
+    }
 
     for (const userChallenge of userChallenges) {
       const challenge = userChallenge.challenge as unknown as RamadanChallenge;
@@ -194,6 +197,11 @@ export const trackUserActivity = async (
 
     await updateRamadanStreak(userId, ramadanYear, today);
 
+    // UPDATE PAGES READ TODAY
+    if (pagesRead > 0) {
+      await updatePagesReadToday(userId, ramadanYear, pagesRead);
+    }
+
     return completedChallenges;
   } catch (error) {
     console.error("Error tracking user activity:", error);
@@ -219,8 +227,18 @@ const processDailyChallenge = async (
 
   if (challenge.category === "quran" && config.unit === "pages") {
     const target = config.target || 0;
-    dailyTargetMet = pagesRead >= target;
-    progressData = { pages_read: pagesRead };
+
+    // FIXED: Check TOTAL pages read today from profile, not just this increment!
+    const { data: profile } = await supabase
+      .from("user_ramadan_profile")
+      .select("pages_read_today")
+      .eq("user_id", userId)
+      .eq("ramadan_year", ramadanYear)
+      .single();
+
+    const totalPagesReadToday = profile?.pages_read_today || pagesRead;
+    dailyTargetMet = totalPagesReadToday >= target;
+    progressData = { pages_read: totalPagesReadToday };
   } else if (challenge.category === "listening" && config.unit === "minutes") {
     const target = config.target || 0;
     dailyTargetMet = minutesListened >= target;
@@ -504,6 +522,46 @@ const checkMilestoneBadges = async (
       }
     }
   }
+};
+
+/**
+ * Update pages_read_today in user profile
+ */
+const updatePagesReadToday = async (
+  userId: string,
+  ramadanYear: number,
+  pagesRead: number,
+): Promise<void> => {
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data: profile } = await supabase
+    .from("user_ramadan_profile")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("ramadan_year", ramadanYear)
+    .single();
+
+  const lastActivityDate = profile?.last_activity_date;
+  let currentPagesReadToday = profile?.pages_read_today || 0;
+
+  // Reset pages_read_today if it's a new day
+  if (lastActivityDate !== today) {
+    currentPagesReadToday = 0;
+  }
+
+  // Add new pages read
+  const newPagesReadToday = currentPagesReadToday + pagesRead;
+
+  await supabase.from("user_ramadan_profile").upsert(
+    {
+      user_id: userId,
+      ramadan_year: ramadanYear,
+      pages_read_today: newPagesReadToday,
+      last_activity_date: today,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,ramadan_year" },
+  );
 };
 
 /**

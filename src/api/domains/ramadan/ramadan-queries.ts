@@ -139,6 +139,24 @@ export const enrollInChallenge = async (
     .single();
 
   if (error) throw error;
+
+  // FIXED: Update profile to increment challenges_in_progress counter
+  const { data: profile } = await supabase
+    .from("user_ramadan_profile")
+    .select("challenges_in_progress")
+    .eq("user_id", request.user_id)
+    .eq("ramadan_year", request.ramadan_year)
+    .single();
+
+  await supabase
+    .from("user_ramadan_profile")
+    .upsert({
+      user_id: request.user_id,
+      ramadan_year: request.ramadan_year,
+      challenges_in_progress: (profile?.challenges_in_progress || 0) + 1,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id,ramadan_year" });
+
   return data;
 };
 

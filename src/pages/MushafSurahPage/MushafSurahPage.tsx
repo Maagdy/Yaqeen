@@ -9,9 +9,7 @@ import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
 import { generateRoute } from "@/router/routes";
 import { formatNumber } from "@/utils/numbers";
-import { useRamadanTracking } from '@/hooks/useRamadanTracking';
-import { calculatePagesFromMushafAyahs } from '@/utils/quran-tracking-utils';
-import { useRef, useEffect } from 'react';
+import { useViewportPageTracker } from '@/hooks/useViewportPageTracker';
 
 function MushafSurahPage() {
   const { surahId, mushafId } = useParams();
@@ -30,24 +28,10 @@ function MushafSurahPage() {
     refetch: refetchSurah,
   } = useMushafSurah(currentMushafId, currentSurahId);
 
-  // Track mushaf pages read on unmount
-  const { trackPagesRead, isLoggedIn } = useRamadanTracking();
-  const trackedRef = useRef(false);
-
-  useEffect(() => {
-    return () => {
-      // Track when user leaves mushaf page
-      if (isLoggedIn && !trackedRef.current && surah?.ayahs && surah.ayahs.length > 0) {
-        trackedRef.current = true;
-        const pages = calculatePagesFromMushafAyahs(surah.ayahs);
-        if (pages > 0) {
-          trackPagesRead(pages, false).catch(error => {
-            console.error('[Mushaf Tracker] Failed to track pages:', error);
-          });
-        }
-      }
-    };
-  }, [surah, isLoggedIn, trackPagesRead]);
+  // Track mushaf pages read when user leaves page
+  useViewportPageTracker(surah?.ayahs || [], {
+    enabled: !!surah,
+  });
 
   const handlePreviousPage = () => {
     if (currentSurahId > 1) {

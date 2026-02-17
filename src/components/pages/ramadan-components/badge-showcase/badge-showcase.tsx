@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/hooks";
+import { formatNumber } from "@/utils/numbers";
 import { useUserBadgesQuery } from "@/api/domains/ramadan/useRamadanQueries";
 
 interface BadgeShowcaseProps {
@@ -7,6 +9,7 @@ interface BadgeShowcaseProps {
 
 export const BadgeShowcase = ({ userId }: BadgeShowcaseProps) => {
   const { t, i18n } = useTranslation();
+  const { language } = useLanguage();
   const isRTL = i18n.language === "ar";
 
   const { data: userBadges = [], isLoading } = useUserBadgesQuery(userId);
@@ -98,7 +101,7 @@ export const BadgeShowcase = ({ userId }: BadgeShowcaseProps) => {
               {t("ramadan.badges.totalBadges")}
             </span>
             <span className="text-xl sm:text-2xl font-bold text-textPrimary">
-              {userBadges.length}
+              {formatNumber(userBadges.length, language)}
             </span>
           </div>
         </div>

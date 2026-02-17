@@ -318,6 +318,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             return (
               <div
                 key={ayah.number}
+                data-page={ayah.page_number}
                 className="leading-loose text-text-primary p-2"
               >
                 <div className="flex items-center justify-center gap-2">

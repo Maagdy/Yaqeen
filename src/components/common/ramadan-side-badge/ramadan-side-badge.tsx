@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/hooks";
+import { formatNumber } from "@/utils/numbers";
 import {
   getRamadanStatus,
   getDaysRemainingInRamadan,
@@ -11,6 +13,7 @@ import {
 export const RamadanSideBadge = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { language } = useLanguage();
   const isRTL = i18n.language === "ar";
 
   const [ramadanStatus, setRamadanStatus] = useState(getRamadanStatus());
@@ -186,7 +189,7 @@ export const RamadanSideBadge = () => {
                   className="text-4xl font-black text-amber-300 leading-none"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
-                  {daysCount}
+                  {formatNumber(daysCount, language)}
                 </span>
                 <span className="text-white/60 text-[10px] tracking-widest uppercase mt-1">
                   {ramadanStatus.status === "during"
@@ -197,9 +200,7 @@ export const RamadanSideBadge = () => {
                 </span>
                 {ramadanStatus.status === "during" && (
                   <span className="text-white/40 text-[9px] mt-0.5">
-                    {isRTL
-                      ? `اليوم ${getCurrentRamadanDay()} من رمضان`
-                      : `Day ${getCurrentRamadanDay()} of Ramadan`}
+                    {t("ramadan.sideBadge.dayOf", { day: getCurrentRamadanDay() })}
                   </span>
                 )}
               </div>

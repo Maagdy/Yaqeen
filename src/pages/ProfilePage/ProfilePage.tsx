@@ -1,14 +1,19 @@
 import { useEffect } from "react";
 import { useAuth } from "@/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ROUTES } from "@/router/routes";
 import { useProfileQuery, useUserStatsQuery } from "@/api/domains/user";
+import { useUserRamadanProfileQuery } from "@/api/domains/ramadan/useRamadanQueries";
+import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
 import { Loading } from "@/components/ui/loading";
 import { ProfileHeader, ProfileForm, ProfileStats } from "@/components/pages";
 import { SEO, SEO_CONFIG } from "@/components/seo";
 import { useLanguage } from "@/hooks";
+import { useTranslation } from "react-i18next";
+import { formatNumber } from "@/utils/numbers";
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const { user, session, loading, isLoggedIn } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -19,6 +24,16 @@ function ProfilePage() {
     user?.id,
   );
   const { data: stats } = useUserStatsQuery(user?.id);
+
+  // Ramadan data
+  const currentRamadanYear = getCurrentRamadanYear();
+  const ramadanStatus = getRamadanStatus();
+  const isRamadan = ramadanStatus.status === 'during';
+
+  const { data: ramadanProfile } = useUserRamadanProfileQuery(
+    isRamadan ? user?.id : undefined,
+    currentRamadanYear
+  );
 
   useEffect(() => {
     if (!loading && !isLoggedIn) {
@@ -51,6 +66,32 @@ function ProfilePage() {
             initials={initials}
             createdAt={user.created_at || null}
           />
+
+          {/* Ramadan Banner (only show during Ramadan) */}
+          {isRamadan && ramadanProfile && (
+            <Link
+              to={ROUTES.RAMADAN}
+              className="block w-full p-4 sm:p-6 rounded-xl border-2 border-primary/50 bg-gradient-to-r from-primary/10 to-primary/20 hover:from-primary/20 hover:to-primary/30 transition-all shadow-md hover:shadow-lg"
+            >
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-primary mb-2">
+                    🌙 {t("ramadan.title")} {currentRamadanYear}
+                  </h3>
+                  <div className="flex items-center gap-4 text-sm text-textSecondary">
+                    <span>Level {formatNumber(ramadanProfile.level, language)}</span>
+                    <span>•</span>
+                    <span>{formatNumber(ramadanProfile.total_xp, language)} XP</span>
+                    <span>•</span>
+                    <span>{formatNumber(ramadanProfile.challenges_completed, language)} {t("ramadan.stats.completed")}</span>
+                  </div>
+                </div>
+                <div className="text-primary font-semibold text-sm">
+                  {t("ramadan.viewDashboard")} →
+                </div>
+              </div>
+            </Link>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2 space-y-6">

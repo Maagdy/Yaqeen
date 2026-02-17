@@ -18,6 +18,7 @@
     "member_since": "Member since",
     "reciter": "Reciter",
     "days": "Days",
+    "minutes": "min",
     "save_changes": "Save Changes",
     "login_to_favorite": "Please login to manage favorites",
     "added_to_favorites": "Added to favorites",
@@ -34,7 +35,9 @@
     "error_occurred": "An error occurred",
     "next": "Next",
     "previous": "Previous",
-    "page": "Page"
+    "page": "Page",
+    "of": "of",
+    "refresh": "Refresh"
   },
   "home": {
     "Yaqeen-header": "Yaqeen",
@@ -106,8 +109,6 @@
     "set-quran-goal": "Set a Custom Goal",
     "discover": "Discover",
     "discover-tafsir": "Tafsir",
-    "discover-tadabor": "Reflections",
-    "discover-lessons": "Lessons",
     "read-more": "Read More",
     "read-again": "Read Again",
     "My-Quran": "My Quran",
@@ -131,8 +132,6 @@
     "start-your-journy": "Start Your Journy",
     "go_to_ayah": "Read Ayah {{number}}",
     "tafsirs": "Tafsirs",
-    "reflections": "Reflections",
-    "benefits": "Benefits",
     "surah_link_copied_to_clipboard": "Surah link copied to clipboard"
   },
   "hadith": {
@@ -165,7 +164,8 @@
     "hadiths": "Hadiths",
     "azkar": "Azkar & Duas",
     "favorites": "Favorites",
-    "prayer_times": "Prayer Times",
+    "prayer_times": "Prayer Times & Qibla",
+    "prophet_stories": "Prophet Stories",
     "about": "About Us",
     "ramadan": "Ramadan Challenges"
   },
@@ -569,8 +569,10 @@
       "goalComplete": "Goal complete! MashaAllah! 🎉",
       "challengesDone": "Completed",
       "dayStreak": "Day Streak",
-      "xp": "XP"
+      "xp": "XP",
+      "label": "Progress"
     },
+    "refreshing": "Refreshing data...",
     "loginRequired": "Please login to join challenges",
     "enrollSuccess": "Successfully enrolled in challenge!",
     "enrollError": "Failed to enroll in challenge",
@@ -609,9 +611,18 @@
       "medium": "Medium",
       "hard": "Hard"
     },
+    "type": {
+      "all": "All Challenges",
+      "instant": "Instant Rewards",
+      "daily": "Daily Streaks",
+      "special": "Special Events",
+      "progressive": "Progressive",
+      "milestone": "Milestone"
+    },
     "filters": {
       "category": "Filter by Category",
-      "difficulty": "Filter by Difficulty"
+      "difficulty": "Filter by Difficulty",
+      "type": "Challenge Type"
     },
     "stats": {
       "level": "Level",
@@ -635,7 +646,8 @@
       "country": "Country",
       "noData": "No leaderboard data available yet",
       "you": "You",
-      "challengesCompleted": "challenges completed"
+      "challengesCompleted": "challenges completed",
+      "user": "User"
     },
     "sideBadge": {
       "ramadan": "Ramadan",
@@ -649,7 +661,20 @@
       "dismiss": "Dismiss",
       "toggle": "Toggle Ramadan badge",
       "daysUntil": "Days Until Ramadan",
-      "ramadanEnded": "Ramadan has ended"
-    }
+      "ramadanEnded": "Ramadan has ended",
+      "dayOf": "Day {{day}} of Ramadan"
+    },
+    "viewDashboard": "View Dashboard"
+  },
+  "prophet_stories": {
+    "title": "Stories of the Prophets",
+    "description": "Explore the inspiring stories and lessons from the lives of Allah's messengers",
+    "available_books": "Available Books",
+    "books_count": "{{count}} books available",
+    "open_book": "Open Book",
+    "pages": "Pages",
+    "about_section": "About Prophet Stories",
+    "about_description": "These books contain authentic stories from the lives of the Prophets (peace be upon them), derived from the Quran and authentic Hadith. Learn from their faith, patience, and devotion to Allah.",
+    "error_loading_pdf": "Failed to load PDF file. Please try again."
   }
 }

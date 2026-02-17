@@ -33,6 +33,7 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
         return (
           <div
             key={ayah.number}
+            data-page={ayah.page}
             className="leading-loose text-text-primary p-2"
           >
             <div className="flex items-center justify-center gap-2">

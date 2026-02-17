@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/hooks";
+import { formatNumber } from "@/utils/numbers";
 import { useLeaderboardQuery } from "@/api/domains/ramadan/useRamadanQueries";
 import type { LeaderboardType } from "@/api/domains/ramadan/ramadan.types";
 
@@ -13,6 +15,7 @@ export const Leaderboard = ({
   currentUserId,
 }: LeaderboardProps) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const [leaderboardType, setLeaderboardType] =
     useState<LeaderboardType>("global");
 
@@ -101,12 +104,14 @@ export const Leaderboard = ({
                             {t("ramadan.leaderboard.you")}
                           </span>
                         </span>
+                      ) : entry.first_name || entry.last_name ? (
+                        `${entry.first_name || ''} ${entry.last_name || ''}`.trim()
                       ) : (
-                        `User ${entry.user_id.slice(0, 8)}`
+                        `${t("ramadan.leaderboard.user")} ${entry.user_id.slice(0, 8)}`
                       )}
                     </p>
                     <p className="text-xs sm:text-sm text-textSecondary">
-                      {entry.challenges_completed}{" "}
+                      {formatNumber(entry.challenges_completed, language)}{" "}
                       {t("ramadan.leaderboard.challengesCompleted")}
                     </p>
                   </div>
@@ -114,7 +119,7 @@ export const Leaderboard = ({
 
                 <div className="text-right flex-shrink-0">
                   <p className="text-lg sm:text-2xl font-bold text-textPrimary">
-                    {entry.total_xp.toLocaleString()}
+                    {formatNumber(entry.total_xp, language)}
                   </p>
                   <p className="text-[10px] sm:text-xs text-textSecondary">
                     XP
@@ -122,7 +127,7 @@ export const Leaderboard = ({
                   {entry.ramadan_streak > 0 && (
                     <div className="mt-1 flex items-center justify-end gap-1 text-xs text-primary">
                       <span>🔥</span>
-                      <span>{entry.ramadan_streak}</span>
+                      <span>{formatNumber(entry.ramadan_streak, language)}</span>
                     </div>
                   )}
                 </div>

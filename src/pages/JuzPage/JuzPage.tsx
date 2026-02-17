@@ -16,7 +16,7 @@ import { useAuth } from "@/hooks";
 import { toast } from "react-toastify";
 import { IconButton, ReadingProgressIndicator } from "@/components/common";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
-import { useReadingTracker } from "@/hooks/useReadingTracker";
+import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
 
 const JuzPage: React.FC<JuzPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +39,9 @@ const JuzPage: React.FC<JuzPageProps> = () => {
   const removeFavoriteJuzMutation = useRemoveFavoriteJuzMutation(user?.id);
 
   // Track pages read when user leaves this juz (each juz = 20 pages)
-  useReadingTracker(juz?.ayahs || [], !!juz);
+  useViewportPageTracker(juz?.ayahs || [], {
+    enabled: !!juz,
+  });
 
   const isFavorite = favoriteJuzs?.some((fav) => fav.juz_number === juzNumber);
 

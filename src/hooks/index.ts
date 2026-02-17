@@ -5,3 +5,4 @@ export * from "./useSurahNavigation";
 export * from "./useMediaQuery";
 export * from "./useAuth";
 export * from "./useRamadanTracking";
+export * from "./useViewportPageTracker";

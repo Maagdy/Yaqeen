@@ -18,6 +18,7 @@ export const ROUTES = {
   PRAYER_TIMES: "/prayer-times",
   AZKAR: "/azkar",
   RAMADAN: "/ramadan",
+  PROPHET_STORIES: "/prophet-stories",
 } as const;
 
 export const generateRoute = {
