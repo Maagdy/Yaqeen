@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/hooks";
 import { SEO, SEO_CONFIG } from "@/components/seo";
+import { normalizeSearchText } from "@/utils/arabic-normalizer";
 
 function RadioPage() {
   const { t } = useTranslation();
@@ -23,9 +24,21 @@ function RadioPage() {
   const filteredAndSortedRadios = useMemo(() => {
     if (!radios) return [];
 
-    const result = radios.filter((radio) =>
-      radio.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    // Normalize the search query once
+    const normalizedQuery = normalizeSearchText(searchQuery);
+
+    const result = radios.filter((radio) => {
+      // Search in both primary and secondary names (if available)
+      const normalizedName = normalizeSearchText(radio.name);
+      const normalizedSecondaryName = radio.secondaryName
+        ? normalizeSearchText(radio.secondaryName)
+        : "";
+
+      return (
+        normalizedName.includes(normalizedQuery) ||
+        normalizedSecondaryName.includes(normalizedQuery)
+      );
+    });
 
     result.sort((a, b) => {
       const dateA = new Date(a.recent_date).getTime();

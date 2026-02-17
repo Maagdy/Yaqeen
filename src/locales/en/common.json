@@ -257,7 +257,10 @@
     "browse": "Browse {{count}} radio stations",
     "showing_count": "Showing {{formattedCount}} stations",
     "live": "Live",
-    "search_placeholder": "Search radio stations..."
+    "search_placeholder": "Search radio stations...",
+    "stations": {
+      "quran_radio": "Holy Quran Radio"
+    }
   },
 
   "footer": {
