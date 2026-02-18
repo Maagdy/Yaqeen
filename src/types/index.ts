@@ -16,6 +16,7 @@ export interface ColorScheme {
   primaryDark?: string;
   primaryMuted?: string;
   border: string;
+  ramadan: string;
 }
 
 export interface Colors {

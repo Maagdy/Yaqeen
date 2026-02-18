@@ -14,7 +14,7 @@
   --color-primary-dark: var(--color-primaryDark);
   --color-primary-muted: var(--color-primaryMuted);
   --color-border: var(--color-border);
-
+  --color-ramadan: var(--color-ramadan);
   /* Set Cairo as the default sans font */
   --font-sans: "Cairo", system-ui, sans-serif;
 }
@@ -31,6 +31,7 @@
     --color-primaryDark: "";
     --color-primaryMuted: "";
     --color-border: "";
+    --color-ramadan: "";
 
     font-family: "Cairo", system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-synthesis: none;
@@ -42,7 +43,9 @@
   /* Smooth theme transitions for elements using theme colors */
   html,
   body,
-  *:not([class*="transition-"]):not([class*="animate-"]):not([class*="duration-"]) {
+  *:not([class*="transition-"]):not([class*="animate-"]):not(
+      [class*="duration-"]
+    ) {
     transition-property: background-color, color, border-color, fill, stroke;
     transition-duration: 0.3s;
     transition-timing-function: ease-in-out;

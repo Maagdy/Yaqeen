@@ -8,6 +8,7 @@ export const colors: Colors = {
     textSecondary: "#757575",
     primary: "#4caf50",
     border: "#e0e0e0",
+    ramadan: "#4d4d4d",
   },
   dark: {
     background: "#1a1a1a",
@@ -19,5 +20,6 @@ export const colors: Colors = {
     primaryDark: "#388e3c",
     primaryMuted: "#2e7d32",
     border: "#2c2c2c",
+    ramadan: "transparent", // Ramadan color is only used as a background gradient stop in dark mode, so we set it to transparent and use opacity to achieve the desired effect
   },
 };
