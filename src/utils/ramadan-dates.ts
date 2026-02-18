@@ -14,15 +14,18 @@ const HIJRI_OFFSET_DAYS = -1;
 const getAdjustedMoment = () => moment().add(HIJRI_OFFSET_DAYS, "days");
 
 export const getCurrentHijriYear = (): number => {
-  return getAdjustedMoment().iYear();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iYear();
 };
 
 export const getCurrentHijriMonth = (): number => {
-  return getAdjustedMoment().iMonth() + 1;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iMonth() + 1;
 };
 
 export const getCurrentHijriDay = (): number => {
-  return getAdjustedMoment().iDate();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iDate();
 };
 
 export const isRamadan = (): boolean => {
