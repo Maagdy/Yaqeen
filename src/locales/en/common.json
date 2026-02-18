@@ -421,7 +421,8 @@
       "sensor_medium": "Medium Accuracy (Device Compass)",
       "sensor_low": "Low Accuracy (Relative Sensor)",
       "sensor_none": "No compass – showing calculated direction",
-      "calibrate_tip": "Move your device in a figure-8 pattern to calibrate the compass"
+      "calibrate_tip": "Move your device in a figure-8 pattern to calibrate the compass",
+      "enable_compass": "Enable Compass"
     }
   },
   "azkar": {
