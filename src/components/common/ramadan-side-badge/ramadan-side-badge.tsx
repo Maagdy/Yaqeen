@@ -109,7 +109,7 @@ export const RamadanSideBadge = () => {
         <div
           className={`
             relative flex flex-col justify-between
-            w-56 ${isRTL ? "rounded-r-2xl shadow-[8px_0_40px_rgba(0,0,0,0.25)]" : "rounded-l-2xl shadow-[-8px_0_40px_rgba(0,0,0,0.25)]"}
+            w-56 ${isRTL ? " shadow-[8px_0_40px_rgba(0,0,0,0.25)]" : "shadow-[-8px_0_40px_rgba(0,0,0,0.25)]"}
             overflow-hidden
           `}
         >
@@ -152,7 +152,7 @@ export const RamadanSideBadge = () => {
             }}
           />
 
-          <div className="relative z-10 flex flex-col h-full p-4 gap-4">
+          <div className="relative z-10 flex flex-col h-full p-4 gap-4 bg-ramadan">
             <button
               onClick={() => setVisible(false)}
               className={`absolute top-2 ${isRTL ? "left-2" : "right-2"} text-white/40 hover:text-white/80 text-xs transition-colors`}
@@ -200,7 +200,9 @@ export const RamadanSideBadge = () => {
                 </span>
                 {ramadanStatus.status === "during" && (
                   <span className="text-white/40 text-[9px] mt-0.5">
-                    {t("ramadan.sideBadge.dayOf", { day: getCurrentRamadanDay() })}
+                    {t("ramadan.sideBadge.dayOf", {
+                      day: getCurrentRamadanDay(),
+                    })}
                   </span>
                 )}
               </div>
