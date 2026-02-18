@@ -14,6 +14,10 @@ import {
   logDailyProgress,
   createOrUpdateUserRamadanProfile,
 } from "./ramadan-queries";
+import {
+  getCurrentRamadanYear,
+  getCurrentRamadanDay,
+} from "@/utils/ramadan-dates";
 import type {
   UserChallengeWithDetails,
   ChallengeConfig,
@@ -393,11 +397,8 @@ export const syncChallengesWithDailyProgress = async (
   pagesRead: number,
   minutesListened: number,
 ): Promise<void> => {
-  const ramadanYear = 1447; // TODO: Calculate dynamically
-
-  // Calculate Ramadan day (1-30)
-  // TODO: Calculate based on actual Ramadan dates
-  const ramadanDay = Math.min(Math.floor(Math.random() * 30) + 1, 30);
+  const ramadanYear = getCurrentRamadanYear();
+  const ramadanDay = getCurrentRamadanDay();
 
   try {
     // Track reading progress
