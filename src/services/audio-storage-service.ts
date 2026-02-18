@@ -8,18 +8,20 @@ export class AudioStorageService {
     reciterId: string,
     audioUrl: string,
     onProgress?: (percent: number) => void,
+    signal?: AbortSignal,
   ): Promise<void> {
     const cacheKey = audioUrl;
     const cache = await caches.open(AUDIO_CACHE_NAME);
 
-    const response = await fetch(audioUrl);
+    const response = await fetch(audioUrl, { signal });
     if (!response.ok) throw new Error(`Failed to fetch audio: ${response.status}`);
+    if (!response.body) throw new Error("Response body is null");
 
     const contentLength = response.headers.get("content-length");
     const total = contentLength ? parseInt(contentLength, 10) : 0;
     let loaded = 0;
 
-    const reader = response.body!.getReader();
+    const reader = response.body.getReader();
     const chunks: Uint8Array<ArrayBuffer>[] = [];
 
     while (true) {

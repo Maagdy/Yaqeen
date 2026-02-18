@@ -2,7 +2,7 @@
 import { clientsClaim } from "workbox-core";
 import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
-import { CacheFirst, NetworkFirst } from "workbox-strategies";
+import { CacheFirst, NetworkFirst, NetworkOnly } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { BackgroundSyncPlugin } from "workbox-background-sync";
 
@@ -87,11 +87,11 @@ registerRoute(
   }),
 );
 
-// Never cache radio live streams
+// Never cache radio live streams — pure passthrough
 registerRoute(
   ({ url }) =>
     url.hostname.includes("mp3quran") && url.pathname.endsWith(".mp3"),
-  new NetworkFirst({ cacheName: "radio-streams" }), // passthrough — no cache store
+  new NetworkOnly(),
 );
 
 // ─── Background Sync ──────────────────────────────────────────────────────────
@@ -101,17 +101,20 @@ const bgSyncPlugin = new BackgroundSyncPlugin("yaqeen-sync", {
 });
 
 // Supabase writes go through background sync when offline
-registerRoute(
-  ({ url }) =>
-    url.hostname.includes("supabase") &&
-    (url.pathname.includes("/rest/v1/") || url.pathname.includes("/rpc/")),
-  new NetworkFirst({
-    cacheName: "supabase-writes",
-    plugins: [bgSyncPlugin],
-    networkTimeoutSeconds: 10,
-  }),
-  "POST",
-);
+const supabaseWriteMatcher = ({ url }: { url: URL }) =>
+  url.hostname.includes("supabase") &&
+  (url.pathname.includes("/rest/v1/") || url.pathname.includes("/rpc/"));
+
+const supabaseWriteStrategy = new NetworkFirst({
+  cacheName: "supabase-writes",
+  plugins: [bgSyncPlugin],
+  networkTimeoutSeconds: 10,
+});
+
+// Register for all write methods
+for (const method of ["POST", "PATCH", "PUT", "DELETE"] as const) {
+  registerRoute(supabaseWriteMatcher, supabaseWriteStrategy, method);
+}
 
 // ─── Message Handler ──────────────────────────────────────────────────────────
 

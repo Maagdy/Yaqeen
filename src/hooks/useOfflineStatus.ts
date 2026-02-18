@@ -1,13 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-interface OfflineStatus {
-  isOnline: boolean;
-  wasOffline: boolean;
-}
-
-export function useOfflineStatus(): OfflineStatus {
+export function useOfflineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const wasOfflineRef = useRef(false);
 
   useEffect(() => {
     const handleOnline = async () => {
@@ -23,7 +17,6 @@ export function useOfflineStatus(): OfflineStatus {
 
     const handleOffline = () => {
       setIsOnline(false);
-      wasOfflineRef.current = true;
     };
 
     window.addEventListener("online", handleOnline);
@@ -35,5 +28,5 @@ export function useOfflineStatus(): OfflineStatus {
     };
   }, []);
 
-  return { isOnline, wasOffline: wasOfflineRef.current };
+  return { isOnline };
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { WifiOff, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { SyncQueueService } from "@/services/sync-queue-service";
 import { useAuth } from "@/hooks";
@@ -7,6 +8,7 @@ import { useAuth } from "@/hooks";
 export function OfflineIndicator() {
   const { isOnline } = useOfflineStatus();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -32,13 +34,13 @@ export function OfflineIndicator() {
         <WifiOff className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span>
           {pendingCount > 0
-            ? `Offline — ${pendingCount} action${pendingCount === 1 ? "" : "s"} will sync when online`
-            : "You are offline"}
+            ? t("pwa.offline_pending", { count: pendingCount })
+            : t("pwa.offline")}
         </span>
         <button
           onClick={() => setDismissed(true)}
           className="ml-1 hover:opacity-70 transition-opacity"
-          aria-label="Dismiss offline notice"
+          aria-label={t("pwa.dismiss_offline")}
         >
           <X className="h-3.5 w-3.5" />
         </button>

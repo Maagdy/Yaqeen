@@ -24,6 +24,13 @@ export type SyncOperation =
   | "removeFavoriteDua"
   | "trackUserActivity";
 
+function isNetworkError(error: unknown): boolean {
+  if (error instanceof TypeError && error.message.includes("fetch")) return true;
+  if (error instanceof DOMException && error.name === "AbortError") return true;
+  if (!navigator.onLine) return true;
+  return false;
+}
+
 export class SyncQueueService {
   static async enqueue(
     item: Omit<SyncQueueItem, "id" | "retries">,
@@ -55,6 +62,12 @@ export class SyncQueueService {
         await executor(item);
         await db.syncQueue.delete(item.id!);
       } catch (error) {
+        // If it's a network error, stop draining — retrying won't help
+        if (isNetworkError(error)) {
+          console.warn("[SyncQueue] Network error, stopping drain. Will retry later.");
+          break;
+        }
+
         const newRetries = item.retries + 1;
         if (newRetries >= MAX_RETRIES) {
           // Discard permanently failing items
