@@ -221,6 +221,9 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-xs select-none">E</span>
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-xs select-none">W</span>
 
+            {/* Fixed Kaaba icon at top */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 text-3xl select-none z-20">🕋</div>
+
             {/* Rotating needle */}
             <div
               ref={needleRef}
@@ -239,8 +242,6 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
                   borderBottom: "16px solid var(--color-primary)",
                 }}
               />
-              {/* 🕋 at tip */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 text-3xl select-none">🕋</div>
               {/* Tail (center → down) */}
               <div className="absolute bottom-[30%] left-1/2 -translate-x-1/2 w-[2px] h-[20%] bg-border rounded-full" />
             </div>
