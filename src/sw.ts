@@ -14,11 +14,26 @@ clientsClaim();
 precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
+// ─── Proxy URL Helper ─────────────────────────────────────────────────────────
+// All API requests go through /api/proxy?url=<encoded-external-url>
+// We need to extract the real target domain from the encoded `url` param.
+
+function getProxiedOrigin(url: URL): string | null {
+  if (url.pathname !== "/api/proxy") return null;
+  const target = url.searchParams.get("url");
+  if (!target) return null;
+  try {
+    return new URL(target).hostname;
+  } catch {
+    return null;
+  }
+}
+
 // ─── API Caching Routes ───────────────────────────────────────────────────────
 
 // AlQuran API — static Quran text, cache aggressively
 registerRoute(
-  ({ url }) => url.hostname === "api.alquran.cloud",
+  ({ url }) => getProxiedOrigin(url) === "api.alquran.cloud",
   new CacheFirst({
     cacheName: "alquran-api",
     plugins: [
@@ -27,10 +42,14 @@ registerRoute(
   }),
 );
 
-// MP3Quran API — reciter metadata (not streams)
+// MP3Quran API — reciter metadata (not audio streams)
 registerRoute(
-  ({ url }) =>
-    url.hostname === "mp3quran.net" && !url.pathname.endsWith(".mp3"),
+  ({ url }) => {
+    const origin = getProxiedOrigin(url);
+    if (origin !== "mp3quran.net") return false;
+    const target = url.searchParams.get("url") ?? "";
+    return !target.endsWith(".mp3");
+  },
   new CacheFirst({
     cacheName: "mp3quran-api",
     plugins: [
@@ -41,7 +60,7 @@ registerRoute(
 
 // Sunnah.com API — hadith data
 registerRoute(
-  ({ url }) => url.hostname === "api.sunnah.com",
+  ({ url }) => getProxiedOrigin(url) === "api.sunnah.com",
   new CacheFirst({
     cacheName: "sunnah-api",
     plugins: [
@@ -52,7 +71,11 @@ registerRoute(
 
 // Tafsir API
 registerRoute(
-  ({ url }) => url.hostname.includes("quran-tafseer") || url.hostname.includes("tafsir"),
+  ({ url }) => {
+    const origin = getProxiedOrigin(url);
+    if (!origin) return false;
+    return origin.includes("quran-tafseer") || origin.includes("tafsir");
+  },
   new CacheFirst({
     cacheName: "tafsir-api",
     plugins: [
@@ -63,7 +86,7 @@ registerRoute(
 
 // Aladhan prayer times API — time-sensitive, prefer network
 registerRoute(
-  ({ url }) => url.hostname === "api.aladhan.com",
+  ({ url }) => getProxiedOrigin(url) === "api.aladhan.com",
   new NetworkFirst({
     cacheName: "aladhan-api",
     networkTimeoutSeconds: 5,
@@ -73,25 +96,57 @@ registerRoute(
   }),
 );
 
-// QuranPedia / static images
+// QuranPedia API — mushaf data, cache aggressively
 registerRoute(
-  ({ url }) =>
-    url.hostname.includes("quranpedia") ||
-    (url.pathname.match(/\.(png|jpg|jpeg|webp|svg)$/) != null &&
-      !url.hostname.includes("localhost")),
+  ({ url }) => {
+    const origin = getProxiedOrigin(url);
+    return origin !== null && origin.includes("quranpedia");
+  },
   new CacheFirst({
-    cacheName: "quran-images",
+    cacheName: "quranpedia-api",
     plugins: [
-      new ExpirationPlugin({ maxAgeSeconds: 30 * 24 * 60 * 60, maxEntries: 500 }),
+      new ExpirationPlugin({ maxAgeSeconds: 365 * 24 * 60 * 60, maxEntries: 200 }),
+    ],
+  }),
+);
+
+// Islamic Network CDN — audio & images through proxy
+registerRoute(
+  ({ url }) => {
+    const origin = getProxiedOrigin(url);
+    return origin !== null && origin.includes("islamic.network");
+  },
+  new CacheFirst({
+    cacheName: "islamic-network-cdn",
+    plugins: [
+      new ExpirationPlugin({ maxAgeSeconds: 365 * 24 * 60 * 60, maxEntries: 500 }),
     ],
   }),
 );
 
 // Never cache radio live streams — pure passthrough
 registerRoute(
-  ({ url }) =>
-    url.hostname.includes("mp3quran") && url.pathname.endsWith(".mp3"),
+  ({ url }) => {
+    const origin = getProxiedOrigin(url);
+    if (origin !== "mp3quran.net") return false;
+    const target = url.searchParams.get("url") ?? "";
+    return target.endsWith(".mp3");
+  },
   new NetworkOnly(),
+);
+
+// ─── Direct (non-proxied) image caching ───────────────────────────────────────
+
+registerRoute(
+  ({ url }) =>
+    url.pathname.match(/\.(png|jpg|jpeg|webp|svg)$/) != null &&
+    !url.hostname.includes("localhost"),
+  new CacheFirst({
+    cacheName: "static-images",
+    plugins: [
+      new ExpirationPlugin({ maxAgeSeconds: 30 * 24 * 60 * 60, maxEntries: 500 }),
+    ],
+  }),
 );
 
 // ─── Background Sync ──────────────────────────────────────────────────────────
