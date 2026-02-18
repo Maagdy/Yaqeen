@@ -1,178 +1,206 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Navigation, MyLocation, Error as ErrorIcon } from "@mui/icons-material";
+import { MyLocation, Error as ErrorIcon } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
-import type { QiblaCompassProps, GeolocationCoordinates, QiblaDirection } from "./qibla-compass.types";
+import type {
+  QiblaCompassProps,
+  QiblaDirection,
+  AccuracyLevel,
+  CompassPhase,
+} from "./qibla-compass.types";
 
-// Kaaba coordinates
 const KAABA_LAT = 21.4225;
 const KAABA_LNG = 39.8262;
+const SMOOTH = 0.25;
 
-// Extend DeviceOrientationEvent for iOS webkitCompassHeading
-interface DeviceOrientationEventWithWebkit extends DeviceOrientationEvent {
+interface DeviceOrientationExt extends DeviceOrientationEvent {
   webkitCompassHeading?: number;
 }
-
-// Extend DeviceOrientationEvent constructor for iOS requestPermission
-interface DeviceOrientationEventStatic {
+interface DeviceOrientationStatic {
   requestPermission?: () => Promise<"granted" | "denied">;
+}
+
+function norm(deg: number) {
+  return ((deg % 360) + 360) % 360;
+}
+function delta(prev: number, next: number) {
+  return ((next - prev + 540) % 360) - 180;
+}
+
+function calcQibla(lat: number, lng: number): QiblaDirection {
+  const r = (d: number) => (d * Math.PI) / 180;
+  const φ1 = r(lat), λ1 = r(lng), φ2 = r(KAABA_LAT), λ2 = r(KAABA_LNG);
+  const Δλ = λ2 - λ1;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  const bearing = norm(Math.atan2(y, x) * (180 / Math.PI));
+  const a = Math.sin((φ2 - φ1) / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+  const distance = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return { angle: bearing, distance };
 }
 
 export function QiblaCompass({ className = "" }: QiblaCompassProps) {
   const { t } = useTranslation();
-  const [userLocation, setUserLocation] = useState<GeolocationCoordinates | null>(null);
-  const [qiblaDirection, setQiblaDirection] = useState<QiblaDirection | null>(null);
-  const [deviceHeading, setDeviceHeading] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
+  const [phase, setPhase] = useState<CompassPhase>("loading");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [qiblaInfo, setQiblaInfo] = useState<QiblaDirection | null>(null);
+  const [accuracy, setAccuracy] = useState<AccuracyLevel>("none");
+  const [needsPermission, setNeedsPermission] = useState(false);
 
-  // Calculate Qibla direction using Haversine formula
-  const calculateQiblaDirection = useCallback((lat: number, lng: number): QiblaDirection => {
-    const toRad = (deg: number) => (deg * Math.PI) / 180;
-    const toDeg = (rad: number) => (rad * 180) / Math.PI;
+  const needleRef = useRef<HTMLDivElement>(null);
+  const smoothedRef = useRef(0);
+  const rotRef = useRef(0);
+  const qiblaRef = useRef(0);
+  const animRef = useRef(0);
+  const headingRef = useRef<number | null>(null);
+  const sensorActiveRef = useRef(false);
 
-    const lat1 = toRad(lat);
-    const lng1 = toRad(lng);
-    const lat2 = toRad(KAABA_LAT);
-    const lng2 = toRad(KAABA_LNG);
-
-    const dLng = lng2 - lng1;
-
-    // Calculate bearing (direction)
-    const y = Math.sin(dLng) * Math.cos(lat2);
-    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
-    let bearing = toDeg(Math.atan2(y, x));
-    bearing = (bearing + 360) % 360;
-
-    // Calculate distance
-    const dLat = lat2 - lat1;
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = 6371 * c; // Earth radius in km
-
-    return { angle: bearing, distance };
+  // ── rAF animation loop ──────────────────────────────────────────────────
+  const startAnim = useCallback(() => {
+    const tick = () => {
+      const h = headingRef.current;
+      if (h !== null) {
+        const d = delta(smoothedRef.current, h);
+        smoothedRef.current += SMOOTH * d;
+        const target = qiblaRef.current - smoothedRef.current;
+        rotRef.current += delta(rotRef.current, target);
+        if (needleRef.current) {
+          needleRef.current.style.transform = `rotate(${rotRef.current}deg)`;
+        }
+      }
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animRef.current);
   }, []);
 
-  // Request location permission and get coordinates
-  const requestLocation = useCallback(() => {
-    setLoading(true);
-    setError("");
+  // ── Sensor setup ────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (phase !== "active") return;
 
+    const stopAnim = startAnim();
+    const cleanups: (() => void)[] = [stopAnim];
+    let absoluteFired = false;
+
+    // 1) deviceorientationabsolute (Android — true-north referenced)
+    const onAbsolute = (e: Event) => {
+      const ev = e as DeviceOrientationEvent;
+      if (ev.alpha === null) return;
+      absoluteFired = true;
+      headingRef.current = norm(360 - ev.alpha);
+      if (!sensorActiveRef.current) {
+        sensorActiveRef.current = true;
+        setAccuracy("high");
+      }
+    };
+    window.addEventListener("deviceorientationabsolute", onAbsolute as EventListener, true);
+    cleanups.push(() => window.removeEventListener("deviceorientationabsolute", onAbsolute as EventListener, true));
+
+    // 2) deviceorientation fallback (iOS webkitCompassHeading / Android alpha)
+    const onOrientation = (e: DeviceOrientationEvent) => {
+      if (absoluteFired) return;
+      const ext = e as DeviceOrientationExt;
+      if (typeof ext.webkitCompassHeading === "number") {
+        headingRef.current = ext.webkitCompassHeading;
+        if (!sensorActiveRef.current) { sensorActiveRef.current = true; setAccuracy("medium"); }
+      } else if (e.alpha !== null) {
+        headingRef.current = norm(360 - e.alpha);
+        if (!sensorActiveRef.current) { sensorActiveRef.current = true; setAccuracy("low"); }
+      }
+    };
+
+    const DOE = DeviceOrientationEvent as unknown as DeviceOrientationStatic;
+    if (typeof DOE.requestPermission === "function") {
+      setNeedsPermission(true); // iOS — need user gesture
+    } else {
+      window.addEventListener("deviceorientation", onOrientation, true);
+      cleanups.push(() => window.removeEventListener("deviceorientation", onOrientation, true));
+    }
+
+    // If nothing fires in 3s → mark as no-compass
+    const timer = setTimeout(() => {
+      if (!sensorActiveRef.current) setAccuracy("none");
+    }, 3000);
+    cleanups.push(() => clearTimeout(timer));
+
+    return () => { sensorActiveRef.current = false; cleanups.forEach((fn) => fn()); };
+  }, [phase, startAnim]);
+
+  // ── iOS compass permission (must come from user tap) ────────────────────
+  const requestCompassPermission = useCallback(() => {
+    const DOE = DeviceOrientationEvent as unknown as DeviceOrientationStatic;
+    if (typeof DOE.requestPermission !== "function") return;
+    DOE.requestPermission()
+      .then((r) => {
+        if (r === "granted") {
+          setNeedsPermission(false);
+          const handler = (e: DeviceOrientationEvent) => {
+            const ext = e as DeviceOrientationExt;
+            if (typeof ext.webkitCompassHeading === "number") {
+              headingRef.current = ext.webkitCompassHeading;
+              if (!sensorActiveRef.current) { sensorActiveRef.current = true; setAccuracy("medium"); }
+            }
+          };
+          window.addEventListener("deviceorientation", handler, true);
+        }
+      })
+      .catch(() => { setAccuracy("none"); setNeedsPermission(false); });
+  }, []);
+
+  // ── Geolocation ─────────────────────────────────────────────────────────
+  const requestLocation = useCallback(() => {
+    setPhase("loading");
+    setErrorMsg("");
     if (!navigator.geolocation) {
-      setError(t("prayer_times.qibla.geolocation_not_supported"));
-      setLoading(false);
+      setErrorMsg(t("prayer_times.qibla.geolocation_not_supported"));
+      setPhase("error");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords: GeolocationCoordinates = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setUserLocation(coords);
-        const direction = calculateQiblaDirection(coords.latitude, coords.longitude);
-        setQiblaDirection(direction);
-        setLoading(false);
+      ({ coords }) => {
+        const info = calcQibla(coords.latitude, coords.longitude);
+        qiblaRef.current = info.angle;
+        rotRef.current = info.angle;
+        setQiblaInfo(info);
+        setPhase("active");
       },
       (err) => {
-        let errorMessage = t("prayer_times.qibla.location_error");
-        if (err.code === err.PERMISSION_DENIED) {
-          errorMessage = t("prayer_times.qibla.permission_denied");
-        } else if (err.code === err.POSITION_UNAVAILABLE) {
-          errorMessage = t("prayer_times.qibla.position_unavailable");
-        } else if (err.code === err.TIMEOUT) {
-          errorMessage = t("prayer_times.qibla.timeout");
-        }
-        setError(errorMessage);
-        setLoading(false);
+        let msg = t("prayer_times.qibla.location_error");
+        if (err.code === err.PERMISSION_DENIED) msg = t("prayer_times.qibla.permission_denied");
+        else if (err.code === err.POSITION_UNAVAILABLE) msg = t("prayer_times.qibla.position_unavailable");
+        else if (err.code === err.TIMEOUT) msg = t("prayer_times.qibla.timeout");
+        setErrorMsg(msg);
+        setPhase("error");
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
     );
-  }, [t, calculateQiblaDirection]);
+  }, [t]);
 
-  // Handle device orientation for compass rotation
-  useEffect(() => {
-    if (!userLocation || !qiblaDirection) return;
+  useEffect(() => { requestLocation(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
 
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-      let heading = 0;
-      const webkitEvent = event as DeviceOrientationEventWithWebkit;
-
-      if (event.alpha !== null) {
-        // iOS uses webkitCompassHeading, Android uses alpha
-        if (typeof webkitEvent.webkitCompassHeading !== "undefined") {
-          heading = webkitEvent.webkitCompassHeading;
-        } else if (event.alpha !== null) {
-          heading = 360 - event.alpha;
-        }
-      }
-
-      setDeviceHeading(heading);
-    };
-
-    // Request permission for iOS 13+
-    const DeviceOrientationEventTyped = DeviceOrientationEvent as unknown as DeviceOrientationEventStatic;
-    if (typeof DeviceOrientationEventTyped.requestPermission === "function") {
-      DeviceOrientationEventTyped
-        .requestPermission()
-        .then((response) => {
-          if (response === "granted") {
-            window.addEventListener("deviceorientation", handleOrientation, true);
-          } else {
-            setError(t("prayer_times.qibla.compass_permission_denied"));
-          }
-        })
-        .catch(() => {
-          setError(t("prayer_times.qibla.compass_not_supported"));
-        });
-    } else {
-      // Non-iOS devices
-      window.addEventListener("deviceorientation", handleOrientation, true);
-    }
-
-    return () => {
-      window.removeEventListener("deviceorientation", handleOrientation, true);
-    };
-  }, [userLocation, qiblaDirection, t]);
-
-  // Auto-request location on mount
-  useEffect(() => {
-    requestLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const qiblaAngle = qiblaDirection ? qiblaDirection.angle - deviceHeading : 0;
-
+  // ── Render ──────────────────────────────────────────────────────────────
   return (
     <div className={`bg-surface rounded-xl p-6 border border-border ${className}`}>
+      {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-primary mb-2 flex items-center justify-center gap-2">
-          <span className="text-3xl">🕋</span>
+        <h2 className="text-2xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
+          <span role="img" aria-label="Kaaba">🕋</span>
           {t("prayer_times.qibla.title")}
         </h2>
-        <p className="text-text-secondary text-sm">
-          {t("prayer_times.qibla.subtitle")}
-        </p>
+        <p className="text-text-secondary text-sm">{t("prayer_times.qibla.subtitle")}</p>
       </div>
 
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-12">
-          <CircularProgress size={48} className="mb-4" />
-          <p className="text-text-secondary text-sm">
-            {t("prayer_times.qibla.getting_location")}
-          </p>
+      {phase === "loading" && (
+        <div className="flex flex-col items-center py-12 gap-4">
+          <CircularProgress size={48} />
+          <p className="text-text-secondary text-sm">{t("prayer_times.qibla.getting_location")}</p>
         </div>
       )}
 
-      {error && (
-        <div className="flex flex-col items-center justify-center py-12">
-          <ErrorIcon className="text-red-500 mb-4" style={{ fontSize: 48 }} />
-          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+      {phase === "error" && (
+        <div className="flex flex-col items-center py-12 gap-4">
+          <ErrorIcon className="text-red-500" style={{ fontSize: 48 }} />
+          <p className="text-red-500 text-sm text-center max-w-xs">{errorMsg}</p>
           <button
             onClick={requestLocation}
             className="px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2"
@@ -183,88 +211,89 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
         </div>
       )}
 
-      {!loading && !error && userLocation && qiblaDirection && (
-        <div className="flex flex-col items-center">
-          {/* Compass Container */}
-          <div className="relative w-64 h-64 md:w-80 md:h-80 mb-6">
-            {/* Compass Background Circle */}
-            <div className="absolute inset-0 rounded-full border-4 border-border bg-linear-to-br from-surface to-background shadow-lg">
-              {/* Cardinal Directions */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 text-text-primary font-bold text-sm">
-                N
-              </div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-text-secondary font-bold text-sm">
-                S
-              </div>
-              <div className="absolute left-2 top-1/2 -translate-y-1/2 text-text-secondary font-bold text-sm">
-                W
-              </div>
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary font-bold text-sm">
-                E
-              </div>
-            </div>
+      {phase === "active" && qiblaInfo && (
+        <div className="flex flex-col items-center gap-5">
+          {/* ── Compass ─────────────────────────────────────────────── */}
+          <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-full border-[3px] border-primary/20 bg-background">
+            {/* Static cardinal markers */}
+            <span className="absolute top-3 left-1/2 -translate-x-1/2 text-primary font-bold text-sm select-none">N</span>
+            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 text-text-secondary font-semibold text-xs select-none">S</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-xs select-none">E</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-xs select-none">W</span>
 
-            {/* Kaaba Icon at Top (North) */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="text-5xl md:text-6xl drop-shadow-lg">🕋</div>
-            </div>
+            {/* Fixed Kaaba icon at top */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 text-3xl select-none z-20">🕋</div>
 
-            {/* Rotating Arrow in Center - Points to Kaaba */}
+            {/* Rotating needle */}
             <div
-              className="absolute top-1/2 left-1/2 transition-transform duration-300 ease-out"
-              style={{
-                transform: `translate(-50%, -50%) rotate(${qiblaAngle}deg)`,
-                transformOrigin: 'center center',
-              }}
+              ref={needleRef}
+              className="absolute inset-0"
+              style={{ transform: `rotate(${qiblaInfo.angle}deg)`, willChange: "transform" }}
             >
-              <Navigation
-                className="text-primary drop-shadow-lg"
-                style={{ fontSize: 100, transform: 'rotate(0deg)' }}
+              {/* Arrow body (center → up) */}
+              <div className="absolute top-[14%] left-1/2 -translate-x-1/2 w-[3px] h-[36%] bg-primary rounded-full" />
+              {/* Arrowhead */}
+              <div
+                className="absolute top-[8%] left-1/2 -translate-x-1/2"
+                style={{
+                  width: 0, height: 0,
+                  borderLeft: "8px solid transparent",
+                  borderRight: "8px solid transparent",
+                  borderBottom: "16px solid var(--color-primary)",
+                }}
               />
+              {/* Tail (center → down) */}
+              <div className="absolute bottom-[30%] left-1/2 -translate-x-1/2 w-[2px] h-[20%] bg-border rounded-full" />
             </div>
 
-            {/* Degree Markers */}
-            <div className="absolute inset-0">
-              {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-                <div
-                  key={deg}
-                  className="absolute top-1/2 left-1/2 w-1 h-2 bg-border origin-bottom"
-                  style={{
-                    transform: `translate(-50%, -100%) rotate(${deg}deg) translateY(-${
-                      deg % 90 === 0 ? "120" : "115"
-                    }px)`,
-                  }}
-                />
-              ))}
+            {/* Center dot */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white z-10" />
+          </div>
+
+          {/* iOS permission button */}
+          {needsPermission && (
+            <button
+              onClick={requestCompassPermission}
+              className="px-5 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+            >
+              {t("prayer_times.qibla.enable_compass")}
+            </button>
+          )}
+
+          {/* Info cards */}
+          <div className="w-full grid grid-cols-2 gap-3">
+            <div className="bg-background rounded-lg p-4 border border-border text-center">
+              <p className="text-text-secondary text-xs mb-1">{t("prayer_times.qibla.direction")}</p>
+              <p className="text-text-primary text-2xl font-bold">{Math.round(qiblaInfo.angle)}°</p>
+            </div>
+            <div className="bg-background rounded-lg p-4 border border-border text-center">
+              <p className="text-text-secondary text-xs mb-1">{t("prayer_times.qibla.distance")}</p>
+              <p className="text-text-primary text-2xl font-bold">{Math.round(qiblaInfo.distance).toLocaleString()} km</p>
             </div>
           </div>
 
-          {/* Information Cards */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-background rounded-lg p-4 border border-border">
-              <p className="text-text-secondary text-xs mb-1">
-                {t("prayer_times.qibla.direction")}
-              </p>
-              <p className="text-text-primary text-2xl font-bold">
-                {Math.round(qiblaDirection.angle)}°
-              </p>
-            </div>
-            <div className="bg-background rounded-lg p-4 border border-border">
-              <p className="text-text-secondary text-xs mb-1">
-                {t("prayer_times.qibla.distance")}
-              </p>
-              <p className="text-text-primary text-2xl font-bold">
-                {Math.round(qiblaDirection.distance)} km
-              </p>
-            </div>
+          {/* Accuracy */}
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+            accuracy === "high"   ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" :
+            accuracy === "medium" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" :
+            accuracy === "low"    ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400" :
+                                    "bg-border text-text-secondary"
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${
+              accuracy === "high" ? "bg-green-500 animate-pulse" :
+              accuracy === "medium" ? "bg-yellow-500" :
+              accuracy === "low" ? "bg-orange-500" : "bg-gray-400"
+            }`} />
+            {accuracy === "high"   ? t("prayer_times.qibla.sensor_high") :
+             accuracy === "medium" ? t("prayer_times.qibla.sensor_medium") :
+             accuracy === "low"    ? t("prayer_times.qibla.sensor_low") :
+                                     t("prayer_times.qibla.sensor_none")}
           </div>
 
-          {/* Instructions */}
-          <div className="mt-6 text-center">
-            <p className="text-text-secondary text-xs">
-              {t("prayer_times.qibla.instruction")}
-            </p>
-          </div>
+          <p className="text-text-secondary text-xs text-center max-w-xs">
+            {accuracy === "none" ? t("prayer_times.qibla.instruction") : t("prayer_times.qibla.calibrate_tip")}
+          </p>
         </div>
       )}
     </div>
