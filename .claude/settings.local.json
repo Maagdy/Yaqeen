@@ -4,7 +4,14 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(ls -la \"D:\\\\Projects\\\\yaqeen-islamic-website\\\\public\"\" 2>/dev/null || echo \"public directory not found or empty \")",
+      "Bash(python -c:*)",
+      "Bash(node -e:*)",
+      "Bash(echo:*)",
+      "Bash(node:*)",
+      "WebSearch",
+      "WebFetch(domain:sunnah.com)"
     ]
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import {
@@ -27,6 +28,7 @@ const MAIN_PRAYERS = [
 export const PrayerTimesPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { language } = useLanguage();
+  const { isOnline } = useOfflineStatus();
   const isRtl = i18n.language === "ar";
 
   const [locationMode, setLocationMode] = useState<"city" | "geolocation">(
@@ -159,6 +161,13 @@ export const PrayerTimesPage: React.FC = () => {
               onGeolocationChange={handleGeolocationChange}
             />
           </div>
+
+          {!isOnline && data && (
+            <div className="mb-4 flex items-center justify-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+              {t("prayer_times.showing_cached", "Showing cached prayer times")}
+            </div>
+          )}
 
           {isLoading && (
             <div className="flex justify-center items-center py-20">

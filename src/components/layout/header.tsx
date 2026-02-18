@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth, useLanguage, useTheme } from "../../hooks";
+import { useInstallPrompt } from "../../hooks/useInstallPrompt";
 import { IconButton } from "../common";
 import { Logo } from "../../assets/images";
 import {
@@ -16,6 +17,7 @@ import {
   Bookmarks,
   AutoStories,
   Info,
+  GetApp,
 } from "@mui/icons-material";
 import MosqueIcon from "@mui/icons-material/Mosque";
 import { Drawer, Box } from "@mui/material";
@@ -30,6 +32,7 @@ export function Header() {
   const { user, signOut } = useAuth();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { canInstall, install } = useInstallPrompt();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -283,6 +286,22 @@ export function Header() {
               className="p-1 text-text-primary"
             />
           </div>
+
+          {canInstall && (
+            <div className="px-4 pt-3 pb-1">
+              <button
+                onClick={async () => {
+                  await install();
+                  setDrawerOpen(false);
+                }}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+                aria-label={t("navigation.install_app", "Install App")}
+              >
+                <GetApp className="w-4 h-4" />
+                {t("navigation.install_app", "Install App")}
+              </button>
+            </div>
+          )}
 
           <nav className="flex flex-col p-4 gap-2">
             {navigationItems.map((item, index) => (

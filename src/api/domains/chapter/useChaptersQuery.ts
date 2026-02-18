@@ -5,7 +5,7 @@ export const useChaptersQuery = () => {
   return useQuery({
     queryKey: ["chapters"],
     queryFn: getChapters,
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: Infinity,
   });
 };
 
@@ -23,7 +23,8 @@ export const useSurahQuery = ({
   return useQuery({
     queryKey: ["surah", surahNumber, edition, offset, limit],
     queryFn: () => getSurah(surahNumber, edition, offset, limit),
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: Infinity,
+    gcTime: 7 * 24 * 60 * 60 * 1000,
     enabled: Boolean(surahNumber),
   });
 };

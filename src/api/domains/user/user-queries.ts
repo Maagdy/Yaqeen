@@ -14,8 +14,20 @@ import type {
   FavoriteRadio,
   FavoriteDua,
 } from "./user.types";
+import { SyncQueueService } from "@/services/sync-queue-service";
 
-// --- Profiles ---
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function isOnline(): boolean {
+  return navigator.onLine;
+}
+
+function timestamp(): string {
+  return new Date().toISOString();
+}
+
+// ─── Profiles ─────────────────────────────────────────────────────────────────
+
 export const getProfile = async (userId: string): Promise<Profile | null> => {
   const { data, error } = await supabase
     .from("profiles")
@@ -40,7 +52,8 @@ export const updateProfile = async (
   return data;
 };
 
-// --- Favorites ---
+// ─── Favorites ────────────────────────────────────────────────────────────────
+
 export const getFavoriteReciters = async (
   userId: string,
 ): Promise<FavoriteReciter[]> => {
@@ -58,16 +71,26 @@ export const addFavoriteReciter = async (
   reciterName?: string,
   reciterNameEnglish?: string,
 ): Promise<FavoriteReciter | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteReciter",
+      payload: { userId, reciterId, reciterName, reciterNameEnglish },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return {
+      id: -1,
+      user_id: userId,
+      reciter_id: reciterId,
+      reciter_name: reciterName,
+      reciter_name_english: reciterNameEnglish,
+      created_at: timestamp(),
+    } as unknown as FavoriteReciter;
+  }
   const { data, error } = await supabase
     .from("favorite_reciters")
-    .insert([
-      {
-        user_id: userId,
-        reciter_id: reciterId,
-        reciter_name: reciterName,
-        reciter_name_english: reciterNameEnglish,
-      },
-    ])
+    .insert([{ user_id: userId, reciter_id: reciterId, reciter_name: reciterName, reciter_name_english: reciterNameEnglish }])
     .select()
     .single();
   if (error) throw error;
@@ -78,6 +101,16 @@ export const removeFavoriteReciter = async (
   userId: string,
   reciterId: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteReciter",
+      payload: { userId, reciterId },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase
     .from("favorite_reciters")
     .delete()
@@ -103,17 +136,27 @@ export const addFavoriteSurah = async (
   reciterName?: string,
   reciterNameEnglish?: string,
 ): Promise<FavoriteSurah | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteSurah",
+      payload: { userId, surahNumber, reciterId, reciterName, reciterNameEnglish },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return {
+      id: -1,
+      user_id: userId,
+      surah_number: surahNumber,
+      reciter_id: reciterId,
+      reciter_name: reciterName,
+      reciter_name_english: reciterNameEnglish,
+      created_at: timestamp(),
+    } as unknown as FavoriteSurah;
+  }
   const { data, error } = await supabase
     .from("favorite_surahs")
-    .insert([
-      {
-        user_id: userId,
-        surah_number: surahNumber,
-        reciter_id: reciterId,
-        reciter_name: reciterName,
-        reciter_name_english: reciterNameEnglish,
-      },
-    ])
+    .insert([{ user_id: userId, surah_number: surahNumber, reciter_id: reciterId, reciter_name: reciterName, reciter_name_english: reciterNameEnglish }])
     .select()
     .single();
   if (error) throw error;
@@ -125,12 +168,21 @@ export const removeFavoriteSurah = async (
   surahNumber: number,
   reciterId?: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteSurah",
+      payload: { userId, surahNumber, reciterId },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   let query = supabase
     .from("favorite_surahs")
     .delete()
     .eq("user_id", userId)
     .eq("surah_number", surahNumber);
-
   if (reciterId) {
     query = query.eq("reciter_id", reciterId);
   } else {
@@ -159,18 +211,28 @@ export const addFavoriteAyah = async (
   ayahText?: string,
   surahNameEnglish?: string,
 ): Promise<FavoriteAyah | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteAyah",
+      payload: { userId, surahNumber, ayahNumber, surahName, ayahText, surahNameEnglish },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return {
+      id: -1,
+      user_id: userId,
+      surah_number: surahNumber,
+      ayah_number: ayahNumber,
+      surah_name: surahName,
+      ayah_text: ayahText,
+      surah_name_english: surahNameEnglish,
+      created_at: timestamp(),
+    } as unknown as FavoriteAyah;
+  }
   const { data, error } = await supabase
     .from("favorite_ayahs")
-    .insert([
-      {
-        user_id: userId,
-        surah_number: surahNumber,
-        ayah_number: ayahNumber,
-        surah_name: surahName,
-        ayah_text: ayahText,
-        surah_name_english: surahNameEnglish,
-      },
-    ])
+    .insert([{ user_id: userId, surah_number: surahNumber, ayah_number: ayahNumber, surah_name: surahName, ayah_text: ayahText, surah_name_english: surahNameEnglish }])
     .select()
     .single();
   if (error) throw error;
@@ -182,6 +244,16 @@ export const removeFavoriteAyah = async (
   surahNumber: number,
   ayahNumber: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteAyah",
+      payload: { userId, surahNumber, ayahNumber },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase.from("favorite_ayahs").delete().match({
     user_id: userId,
     surah_number: surahNumber,
@@ -190,7 +262,8 @@ export const removeFavoriteAyah = async (
   if (error) throw error;
 };
 
-// --- Favorite Juz ---
+// ─── Favorite Juz ─────────────────────────────────────────────────────────────
+
 export const getFavoriteJuzs = async (
   userId: string,
 ): Promise<FavoriteJuz[]> => {
@@ -206,14 +279,19 @@ export const addFavoriteJuz = async (
   userId: string,
   juzNumber: number,
 ): Promise<FavoriteJuz | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteJuz",
+      payload: { userId, juzNumber },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, juz_number: juzNumber, created_at: timestamp() } as unknown as FavoriteJuz;
+  }
   const { data, error } = await supabase
     .from("favorite_juz")
-    .insert([
-      {
-        user_id: userId,
-        juz_number: juzNumber,
-      },
-    ])
+    .insert([{ user_id: userId, juz_number: juzNumber }])
     .select()
     .single();
   if (error) throw error;
@@ -224,6 +302,16 @@ export const removeFavoriteJuz = async (
   userId: string,
   juzNumber: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteJuz",
+      payload: { userId, juzNumber },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase
     .from("favorite_juz")
     .delete()
@@ -231,35 +319,44 @@ export const removeFavoriteJuz = async (
   if (error) throw error;
 };
 
-// --- Progress & Streaks ---
-// --- Progress & Streaks ---
+// ─── Progress & Streaks ───────────────────────────────────────────────────────
+
 export const getUserProgress = async (
   userId: string,
   date?: string,
 ): Promise<UserProgress[]> => {
   let query = supabase.from("daily_progress").select("*").eq("user_id", userId);
-
   if (date) {
     query = query.eq("date", date);
   }
-
   const { data, error } = await query;
   if (error) throw error;
   return data || [];
 };
 
-// Re-implementing simplified progress update
 export const updateDailyProgress = async (
   userId: string,
   progress: Partial<UserProgress>,
 ): Promise<UserProgress | null> => {
-  // Upsert logic usually
-  // We need 'date' to be present if upserting
   const today = new Date().toISOString().split("T")[0];
+  // Allow caller to pass a specific date in progress (used by sync queue replay)
+  const date = (progress as { date?: string }).date ?? today;
+
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "updateDailyProgress",
+      payload: { userId, progress: { ...progress, date } },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { user_id: userId, date, ...progress } as unknown as UserProgress;
+  }
+
   const { data, error } = await supabase
     .from("daily_progress")
     .upsert(
-      { user_id: userId, date: today, ...progress },
+      { user_id: userId, date, ...progress },
       { onConflict: "user_id, date" },
     )
     .select()
@@ -276,12 +373,12 @@ export const getUserStreaks = async (
     .select("*")
     .eq("user_id", userId)
     .single();
-
-  if (error && error.code !== "PGRST116") throw error; // PGRST116 is "The result contains 0 rows"
+  if (error && error.code !== "PGRST116") throw error;
   return data;
 };
 
-// --- Goals ---
+// ─── Goals ────────────────────────────────────────────────────────────────────
+
 export const getUserGoals = async (userId: string): Promise<UserGoal[]> => {
   const { data, error } = await supabase
     .from("user_goals")
@@ -308,7 +405,8 @@ export const deleteUserGoal = async (id: number): Promise<void> => {
   if (error) throw error;
 };
 
-// --- Favorite Books ---
+// ─── Favorite Books ───────────────────────────────────────────────────────────
+
 export const getFavoriteBooks = async (
   userId: string,
 ): Promise<FavoriteBook[]> => {
@@ -326,16 +424,19 @@ export const addFavoriteBook = async (
   bookNumber?: string,
   bookName?: string,
 ): Promise<FavoriteBook | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteBook",
+      payload: { userId, collectionName, bookNumber, bookName },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, collection_name: collectionName, book_number: bookNumber, book_name: bookName, created_at: timestamp() } as unknown as FavoriteBook;
+  }
   const { data, error } = await supabase
     .from("favorite_books")
-    .insert([
-      {
-        user_id: userId,
-        collection_name: collectionName,
-        book_number: bookNumber,
-        book_name: bookName,
-      },
-    ])
+    .insert([{ user_id: userId, collection_name: collectionName, book_number: bookNumber, book_name: bookName }])
     .select()
     .single();
   if (error) throw error;
@@ -347,23 +448,32 @@ export const removeFavoriteBook = async (
   collectionName: string,
   bookNumber?: string,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteBook",
+      payload: { userId, collectionName, bookNumber },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   let query = supabase
     .from("favorite_books")
     .delete()
     .eq("user_id", userId)
     .eq("collection_name", collectionName);
-
   if (bookNumber) {
     query = query.eq("book_number", bookNumber);
   } else {
     query = query.is("book_number", null);
   }
-
   const { error } = await query;
   if (error) throw error;
 };
 
-// --- Favorite Hadiths ---
+// ─── Favorite Hadiths ─────────────────────────────────────────────────────────
+
 export const getFavoriteHadiths = async (
   userId: string,
 ): Promise<FavoriteHadith[]> => {
@@ -383,18 +493,19 @@ export const addFavoriteHadith = async (
   chapterId?: string,
   hadithText?: string,
 ): Promise<FavoriteHadith | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteHadith",
+      payload: { userId, collectionName, bookNumber, hadithNumber, chapterId, hadithText },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, collection_name: collectionName, book_number: bookNumber, hadith_number: hadithNumber, chapter_id: chapterId, hadith_text: hadithText, created_at: timestamp() } as unknown as FavoriteHadith;
+  }
   const { data, error } = await supabase
     .from("favorite_hadiths")
-    .insert([
-      {
-        user_id: userId,
-        collection_name: collectionName,
-        book_number: bookNumber,
-        hadith_number: hadithNumber,
-        chapter_id: chapterId,
-        hadith_text: hadithText,
-      },
-    ])
+    .insert([{ user_id: userId, collection_name: collectionName, book_number: bookNumber, hadith_number: hadithNumber, chapter_id: chapterId, hadith_text: hadithText }])
     .select()
     .single();
   if (error) throw error;
@@ -407,6 +518,16 @@ export const removeFavoriteHadith = async (
   bookNumber: string,
   hadithNumber: string,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteHadith",
+      payload: { userId, collectionName, bookNumber, hadithNumber },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase.from("favorite_hadiths").delete().match({
     user_id: userId,
     collection_name: collectionName,
@@ -416,7 +537,8 @@ export const removeFavoriteHadith = async (
   if (error) throw error;
 };
 
-// --- Favorite Mushafs ---
+// ─── Favorite Mushafs ─────────────────────────────────────────────────────────
+
 export const getFavoriteMushafs = async (
   userId: string,
 ): Promise<FavoriteMushaf[]> => {
@@ -434,16 +556,19 @@ export const addFavoriteMushaf = async (
   mushafName?: string,
   mushafNameEnglish?: string,
 ): Promise<FavoriteMushaf | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteMushaf",
+      payload: { userId, mushafId, mushafName, mushafNameEnglish },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, mushaf_id: mushafId, mushaf_name: mushafName, mushaf_name_english: mushafNameEnglish, created_at: timestamp() } as unknown as FavoriteMushaf;
+  }
   const { data, error } = await supabase
     .from("favorite_mushafs")
-    .insert([
-      {
-        user_id: userId,
-        mushaf_id: mushafId,
-        mushaf_name: mushafName,
-        mushaf_name_english: mushafNameEnglish,
-      },
-    ])
+    .insert([{ user_id: userId, mushaf_id: mushafId, mushaf_name: mushafName, mushaf_name_english: mushafNameEnglish }])
     .select()
     .single();
   if (error) throw error;
@@ -454,6 +579,16 @@ export const removeFavoriteMushaf = async (
   userId: string,
   mushafId: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteMushaf",
+      payload: { userId, mushafId },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase.from("favorite_mushafs").delete().match({
     user_id: userId,
     mushaf_id: mushafId,
@@ -461,7 +596,8 @@ export const removeFavoriteMushaf = async (
   if (error) throw error;
 };
 
-// --- Favorite Radios ---
+// ─── Favorite Radios ──────────────────────────────────────────────────────────
+
 export const getFavoriteRadios = async (
   userId: string,
 ): Promise<FavoriteRadio[]> => {
@@ -480,17 +616,19 @@ export const addFavoriteRadio = async (
   radioUrl?: string,
   radioNameEnglish?: string,
 ): Promise<FavoriteRadio | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteRadio",
+      payload: { userId, radioId, radioName, radioUrl, radioNameEnglish },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, radio_id: radioId, radio_name: radioName, radio_name_english: radioNameEnglish, radio_url: radioUrl, created_at: timestamp() } as unknown as FavoriteRadio;
+  }
   const { data, error } = await supabase
     .from("favorite_radios")
-    .insert([
-      {
-        user_id: userId,
-        radio_id: radioId,
-        radio_name: radioName,
-        radio_name_english: radioNameEnglish,
-        radio_url: radioUrl,
-      },
-    ])
+    .insert([{ user_id: userId, radio_id: radioId, radio_name: radioName, radio_name_english: radioNameEnglish, radio_url: radioUrl }])
     .select()
     .single();
   if (error) throw error;
@@ -501,6 +639,16 @@ export const removeFavoriteRadio = async (
   userId: string,
   radioId: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteRadio",
+      payload: { userId, radioId },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase.from("favorite_radios").delete().match({
     user_id: userId,
     radio_id: radioId,
@@ -508,7 +656,8 @@ export const removeFavoriteRadio = async (
   if (error) throw error;
 };
 
-// --- Favorite Duas ---
+// ─── Favorite Duas ────────────────────────────────────────────────────────────
+
 export const getFavoriteDuas = async (
   userId: string,
 ): Promise<FavoriteDua[]> => {
@@ -529,18 +678,19 @@ export const addFavoriteDua = async (
   duaTextEnglish?: string,
   duaReference?: string,
 ): Promise<FavoriteDua | null> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "addFavoriteDua",
+      payload: { userId, duaId, duaCategory, duaTextArabic, duaTextEnglish, duaReference },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return { id: -1, user_id: userId, dua_id: duaId, dua_category: duaCategory, dua_text_arabic: duaTextArabic, dua_text_english: duaTextEnglish, dua_reference: duaReference, created_at: timestamp() } as unknown as FavoriteDua;
+  }
   const { data, error } = await supabase
     .from("favorite_duas")
-    .insert([
-      {
-        user_id: userId,
-        dua_id: duaId,
-        dua_category: duaCategory,
-        dua_text_arabic: duaTextArabic,
-        dua_text_english: duaTextEnglish,
-        dua_reference: duaReference,
-      },
-    ])
+    .insert([{ user_id: userId, dua_id: duaId, dua_category: duaCategory, dua_text_arabic: duaTextArabic, dua_text_english: duaTextEnglish, dua_reference: duaReference }])
     .select()
     .single();
   if (error) throw error;
@@ -551,6 +701,16 @@ export const removeFavoriteDua = async (
   userId: string,
   duaId: number,
 ): Promise<void> => {
+  if (!isOnline()) {
+    await SyncQueueService.enqueue({
+      operationType: "removeFavoriteDua",
+      payload: { userId, duaId },
+      activityTimestamp: timestamp(),
+      userId,
+      createdAt: timestamp(),
+    });
+    return;
+  }
   const { error } = await supabase.from("favorite_duas").delete().match({
     user_id: userId,
     dua_id: duaId,

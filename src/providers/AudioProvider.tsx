@@ -3,6 +3,7 @@ import type { AudioContextType, PlaybackType } from "../contexts/audio-context.t
 import { AudioContext } from "../contexts/audio-context";
 import { useRamadanTracking } from '@/hooks/useRamadanTracking';
 import { shouldTrackListening, secondsToMinutes } from '@/utils/quran-tracking-utils';
+import { AudioStorageService } from '@/services/audio-storage-service';
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -99,7 +100,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const play = useCallback(
-    (audioUrl: string, surahNumber?: number, type: PlaybackType = 'surah') => {
+    async (audioUrl: string, surahNumber?: number, type: PlaybackType = 'surah') => {
       if (!audioRef.current) return;
 
       if (currentAudio === audioUrl) {
@@ -108,7 +109,19 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      audioRef.current.src = audioUrl;
+      // Check local Cache Storage for offline playback
+      const localBlob = await AudioStorageService.getLocalAudio(audioUrl);
+      if (localBlob) {
+        const objectUrl = URL.createObjectURL(localBlob);
+        audioRef.current.src = objectUrl;
+        // Revoke the object URL when the audio element changes source or unmounts
+        const prevRevoke = (audioRef.current as HTMLAudioElement & { _revokeUrl?: () => void })._revokeUrl;
+        if (prevRevoke) prevRevoke();
+        (audioRef.current as HTMLAudioElement & { _revokeUrl?: () => void })._revokeUrl = () =>
+          URL.revokeObjectURL(objectUrl);
+      } else {
+        audioRef.current.src = audioUrl;
+      }
       audioRef.current.volume = volume;
       setCurrentAudio(audioUrl);
       setCurrentSurahNumber(surahNumber ?? null);

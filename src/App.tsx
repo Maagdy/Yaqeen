@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLanguage, useTheme } from "./hooks";
 import { ScrollToTop, RamadanSideBadge } from "./components/common";
+import { OfflineIndicator } from "./components/common/offline-indicator";
 
 function App() {
   const { language } = useLanguage();
@@ -16,6 +17,7 @@ function App() {
       <div>
         <ScrollToTop />
         <RamadanSideBadge />
+        <OfflineIndicator />
         <Header />
         <ToastContainer
           position={language === "ar" ? "bottom-right" : "bottom-left"}

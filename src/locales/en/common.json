@@ -685,5 +685,21 @@
     "about_section": "About Prophet Stories",
     "about_description": "These books contain authentic stories from the lives of the Prophets (peace be upon them), derived from the Quran and authentic Hadith. Learn from their faith, patience, and devotion to Allah.",
     "error_loading_pdf": "Failed to load PDF file. Please try again."
+  },
+  "pwa": {
+    "offline": "You are offline",
+    "offline_pending": "Offline — {{count}} action(s) will sync when online",
+    "dismiss_offline": "Dismiss offline notice",
+    "downloading": "Downloading...",
+    "download_progress": "Downloading: {{percent}}%",
+    "downloaded_remove": "Downloaded — tap to remove",
+    "remove_download": "Remove downloaded audio",
+    "download_offline": "Download for offline",
+    "download_audio_offline": "Download audio for offline listening",
+    "low_storage_title": "Low Storage",
+    "low_storage_message": "Only {{mb}}MB available. Download anyway?",
+    "cancel": "Cancel",
+    "download": "Download",
+    "cancel_download": "Cancel download"
   }
 }

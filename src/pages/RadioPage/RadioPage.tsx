@@ -11,6 +11,8 @@ import { useState, useMemo } from "react";
 import { useLanguage } from "@/hooks";
 import { SEO, SEO_CONFIG } from "@/components/seo";
 import { normalizeSearchText } from "@/utils/arabic-normalizer";
+import { useOfflineStatus } from "@/hooks/useOfflineStatus";
+import { WifiOff } from "lucide-react";
 
 function RadioPage() {
   const { t } = useTranslation();
@@ -20,6 +22,7 @@ function RadioPage() {
   const [sortAscending, setSortAscending] = useState(false);
 
   const seoConfig = SEO_CONFIG.radio[language as "en" | "ar"];
+  const { isOnline } = useOfflineStatus();
 
   const filteredAndSortedRadios = useMemo(() => {
     if (!radios) return [];
@@ -48,6 +51,20 @@ function RadioPage() {
 
     return result;
   }, [radios, searchQuery, sortAscending]);
+
+  if (!isOnline) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
+        <WifiOff className="h-16 w-16 text-[var(--color-text-secondary)] opacity-40" aria-hidden="true" />
+        <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
+          {t("radio.offline_title", "Radio unavailable offline")}
+        </h2>
+        <p className="text-[var(--color-text-secondary)] max-w-sm">
+          {t("radio.offline_message", "Live radio streams require an internet connection. Connect to the internet to listen.")}
+        </p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
