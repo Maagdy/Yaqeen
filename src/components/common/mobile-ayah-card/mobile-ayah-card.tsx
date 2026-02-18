@@ -6,7 +6,6 @@ import {
   Bookmark,
   ContentCopy,
   Share,
-  MoreHoriz,
   MenuBook,
   Pause,
 } from "@mui/icons-material";
@@ -127,16 +126,6 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
             variant="ghost"
             className="hover:bg-primary/10 hover:text-primary"
             label={t("common.share")}
-          />
-          <IconButton
-            icon={
-              <MoreHoriz fontSize="small" className="text-muted-foreground" />
-            }
-            onClick={() => {}}
-            size="sm"
-            variant="ghost"
-            className="hover:bg-primary/10 hover:text-primary"
-            label={t("common.more")}
           />
         </div>
       </div>

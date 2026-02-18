@@ -3,16 +3,29 @@ import moment from "moment-hijri";
 // PRODUCTION MODE: Use actual Hijri calendar dates
 // All calculations are dynamic based on real Islamic calendar
 
+// HIJRI_OFFSET_DAYS: Correction for official moon sighting vs astronomical calculation.
+// Egypt's official Ramadan 1447 start is Feb 19, 2026, while moment-hijri gives Feb 18.
+// A value of -1 shifts all Gregorian→Hijri lookups back by 1 day so the Hijri date
+// only advances when the official crescent has been sighted.
+// Set to 0 to disable the correction.
+const HIJRI_OFFSET_DAYS = -1;
+
+// Use this instead of moment() for any Gregorian→Hijri conversion.
+const getAdjustedMoment = () => moment().add(HIJRI_OFFSET_DAYS, "days");
+
 export const getCurrentHijriYear = (): number => {
-  return moment().iYear();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iYear();
 };
 
 export const getCurrentHijriMonth = (): number => {
-  return moment().iMonth() + 1;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iMonth() + 1;
 };
 
 export const getCurrentHijriDay = (): number => {
-  return moment().iDate();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (getAdjustedMoment() as any).iDate();
 };
 
 export const isRamadan = (): boolean => {
@@ -43,12 +56,14 @@ export const getCurrentRamadanDay = (): number => {
 
 export const getRamadanStartDate = (hijriYear: number): Date => {
   const ramadanStart = moment(`${hijriYear}/09/01`, "iYYYY/iM/iD");
-  return ramadanStart.toDate();
+  // Shift the Gregorian result by the inverse of HIJRI_OFFSET_DAYS so that
+  // the start date aligns with the official moon-sighting announcement.
+  return ramadanStart.subtract(HIJRI_OFFSET_DAYS, "days").toDate();
 };
 
 export const getRamadanEndDate = (hijriYear: number): Date => {
   const ramadanEnd = moment(`${hijriYear}/09/30`, "iYYYY/iM/iD");
-  return ramadanEnd.toDate();
+  return ramadanEnd.subtract(HIJRI_OFFSET_DAYS, "days").toDate();
 };
 
 export const getDaysUntilRamadan = (): number => {
