@@ -34,6 +34,6 @@ export const useReciters = (params?: GetRecitersParams) => {
       // Return the requested language (preserves existing behavior)
       return currentData;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: Infinity,
   });
 };

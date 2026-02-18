@@ -12,6 +12,9 @@ import { AuthProvider } from "./providers/AuthProvider";
 import { SurahNavigationProvider } from "./providers/SurahNavigationProvider";
 
 import { GlobalAudioPlayer } from "./components/common/global-audio-player";
+import { registerServiceWorker } from "./lib/register-sw";
+
+registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

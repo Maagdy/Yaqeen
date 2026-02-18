@@ -18,6 +18,7 @@ interface UserActivity {
   surahsCompleted?: number[];
   reflectionWritten?: boolean;
   timestamp?: Date;
+  activityDate?: string; // YYYY-MM-DD — used by sync queue replay for cross-day writes
 }
 
 interface ChallengeCompletionResult {
@@ -44,7 +45,7 @@ const calculateLevel = (xp: number): number => {
 export const trackUserActivity = async (
   activity: UserActivity,
 ): Promise<ChallengeCompletionResult[]> => {
-  const { userId, pagesRead = 0, minutesListened = 0, reflectionWritten = false } = activity;
+  const { userId, pagesRead = 0, minutesListened = 0, reflectionWritten = false, activityDate } = activity;
 
   const ramadanYear = getCurrentRamadanYear();
   const ramadanDay = getCurrentRamadanDay();
@@ -53,7 +54,7 @@ export const trackUserActivity = async (
     return [];
   }
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = activityDate ?? new Date().toISOString().split("T")[0];
   const completedChallenges: ChallengeCompletionResult[] = [];
 
   try {
@@ -198,7 +199,10 @@ export const trackUserActivity = async (
     await updateRamadanStreak(userId, ramadanYear, today);
 
     // UPDATE PAGES READ TODAY
-    if (pagesRead > 0) {
+    // Cross-day sync workaround: skip pages_read_today update for past dates
+    // to avoid the server-side trigger resetting it (DB trigger uses CURRENT_DATE)
+    const serverToday = new Date().toISOString().split("T")[0];
+    if (pagesRead > 0 && today === serverToday) {
       await updatePagesReadToday(userId, ramadanYear, pagesRead);
     }
 
@@ -572,7 +576,10 @@ const updateRamadanStreak = async (
   ramadanYear: number,
   today: string,
 ): Promise<void> => {
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  // Use activity date for yesterday comparison (correct for cross-day offline sync)
+  const yesterday = new Date(new Date(today).getTime() + 86400000 * -1)
+    .toISOString()
+    .split("T")[0];
 
   const { data: profile } = await supabase
     .from("user_ramadan_profile")
