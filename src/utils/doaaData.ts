@@ -160,17 +160,6 @@ export const DUAS = [
       "O Allah, help me to remember You, to give thanks to You, and to worship You in an excellent manner.",
     reference: "Abu Dawud 1522",
   },
-  {
-    id: 16,
-    category: "gratitude",
-    arabic:
-      "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ وَعَلَى وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضَاهُ وَأَدْخِلْنِي بِرَحْمَتِكَ فِي عِبَادِكَ الصَّالِحِينَ",
-    transliteration:
-      "Rabbi awzi'ni an ashkura ni'matakal lati an'amta alayya wa ala walidayya wa an a'mala salihan tardahu wa adkhilni birahmatika fi ibadikash shalihin",
-    english:
-      "My Lord, enable me to be grateful for Your favour which You have bestowed upon me and upon my parents and to do righteousness of which You approve. And admit me by Your mercy into the ranks of Your righteous servants.",
-    reference: "Quran 27:19",
-  },
 
   {
     id: 17,
@@ -203,17 +192,7 @@ export const DUAS = [
       "My Lord, forgive me and my parents and whoever enters my house as a believer, and the believing men and believing women.",
     reference: "Quran 71:28",
   },
-  {
-    id: 20,
-    category: "family",
-    arabic:
-      "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
-    transliteration:
-      "Rabbana hab lana min azwajina wa dhurriyyatina qurrata a'yunin waj'alna lilmuttaqina imama",
-    english:
-      "Our Lord, grant us from among our wives and offspring comfort to our eyes and make us an example for the righteous.",
-    reference: "Quran 25:74",
-  },
+
   {
     id: 21,
     category: "family",
@@ -344,7 +323,7 @@ export const DUAS = [
     arabic:
       "أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
     transliteration:
-      "Asbahna ala fitratil islam, wa ala kalimातil ikhlas, wa ala dini nabiyyina Muhammadin sallallahu alayhi wa sallam, wa ala millati abina Ibrahim, hanifan musliman wa ma kana minal mushrikin",
+      "Asbahna ala fitratil islam, wa ala kalimati'l ikhlas, wa ala dini nabiyyina Muhammadin sallallahu alayhi wa sallam, wa ala millati abina Ibrahim, hanifan musliman wa ma kana minal mushrikin",
     english:
       "We have reached the morning upon the fitrah of Islam, upon the word of sincerity, upon the religion of our Prophet Muhammad (peace be upon him), and upon the path of our father Ibrahim, who was upright and Muslim and was not of the polytheists.",
     reference: "Ahmad 15360",
@@ -455,7 +434,7 @@ export const DUAS = [
     arabic:
       "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْبُخْلِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ",
     transliteration:
-      "Allahumma inni a'udhu bika minal hammi wal hazan, wal 'ajzi wal kasal, wal jubni wal bukhl, wa dhala'id dayni wa ghalabatir rijal",
+      "Allahumma inni a'udhu bika minal hammi wal hazan, wal 'ajzi wal kasal, wal jubni wal bukhl, wa dala'id-dayn wa ghalabatir-rijal",
     english:
       "O Allah, I seek refuge in You from grief and sorrow, from weakness and laziness, from miserliness and cowardice, from the burden of debt and from being overpowered by men.",
     reference: "Bukhari 6369",
@@ -487,7 +466,7 @@ export const DUAS = [
     arabic:
       "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ زَوَالِ نِعْمَتِكَ، وَتَحَوُّلِ عَافِيَتِكَ، وَفُجَاءَةِ نِقْمَتِكَ، وَجَمِيعِ سَخَطِكَ",
     transliteration:
-      "Allahumma inni a'udhu bika min zawali ni'matik, wa tahawwuli 'afiyatik, wa fuja'ati niqmatik, wa jami'i sakharik",
+      "Allahumma inni a'udhu bika min zawali ni'matik, wa tahawwuli 'afiyatik, wa fuja'ati niqmatik, wa jami'i sakhatik",
     english:
       "O Allah, I seek refuge in You from the removal of Your blessing, the change of Your pardon, the sudden onset of Your punishment, and all forms of Your displeasure.",
     reference: "Muslim 2739",
@@ -502,17 +481,6 @@ export const DUAS = [
     english:
       "O Allah, I ask You for pardon and well-being in this life and in the Hereafter.",
     reference: "Ibn Majah 3871",
-  },
-  {
-    id: 48,
-    category: "protection",
-    arabic:
-      "اللَّهُمَّ احْرُسْنِي بِعَيْنِكَ الَّتِي لَا تَنَامُ، وَاكْنُفْنِي بِرُكْنِكَ الَّذِي لَا يُرَامُ",
-    transliteration:
-      "Allahumma ahrусni bi'aynikal lati la tanam, wakнufni biركнikal ladhi la yuram",
-    english:
-      "O Allah, guard me with Your eye that never sleeps, and shelter me with Your side that cannot be assailed.",
-    reference: "Ibn Abi Shayba, authenticated by al-Hakim",
   },
 
   // ─── Gratitude ───────────────────────────────────────────────────────────
@@ -633,12 +601,12 @@ export const DUAS = [
     id: 59,
     category: "daily",
     arabic:
-      "بِسْمِ اللَّهِ، آمَنْتُ بِاللَّهِ، اعْتَصَمْتُ بِاللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ",
+      "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا",
     transliteration:
-      "Bismillah, amantu billah, i'tasamtu billah, tawakkaltu alallah",
+      "Bismillahi walajna, wa bismillahi kharajna, wa alallahi rabbina tawakkalna",
     english:
-      "In the name of Allah, I have believed in Allah, I have held fast to Allah, I have placed my trust in Allah.",
-    reference: "Ibn al-Sunni, Amal al-Yawm wal-Layla 69",
+      "In the name of Allah we enter, in the name of Allah we leave, and upon Allah our Lord we place our trust.",
+    reference: "Abu Dawud 5096",
   },
   {
     id: 60,
@@ -669,7 +637,7 @@ export const DUAS = [
     arabic:
       "بِاسْمِكَ اللَّهُمَّ أَضَعُ جَنْبِي، وَبِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ",
     transliteration:
-      "Bismika Allahumma ada'u janbi, wa bika arfa'uh, fa in amsakta nafsi farhamha, wa in arsaltaha fahfadhha bima tahfadhu bihi ibadakas salihin",
+      "Bismika Allahumma ada'u janbi wa bika arfa'uh, fa in amsakta nafsi farhamha, wa in arsaltaha fahfadhha bima tahfadhu bihi ibadakas salihin",
     english:
       "In Your name, O Allah, I lay down my side, and in Your name I raise it. If You take my soul then have mercy on it, and if You release it then protect it as You protect Your righteous servants.",
     reference: "Bukhari 6320",
@@ -683,7 +651,7 @@ export const DUAS = [
       "Allahumma aslamtu nafsi ilayk, wa wajjahtu wajhi ilayk, wa fawwadtu amri ilayk, wa alja'tu dhahri ilayk, raghbatan wa rahbatan ilayk, la malja'a wa la manja minka illa ilayk",
     english:
       "O Allah, I have submitted myself to You, turned my face toward You, entrusted my affairs to You, and leaned my back against You, in hope and fear of You. There is no refuge and no escape from You except to You.",
-    reference: "Bukhari 247",
+    reference: "Bukhari 6311",
   },
 
   // ─── Guidance ────────────────────────────────────────────────────────────
@@ -694,17 +662,6 @@ export const DUAS = [
     transliteration: "Allahumma inni as'alukal huda was sadad",
     english: "O Allah, I ask You for guidance and right conduct.",
     reference: "Muslim 2725",
-  },
-  {
-    id: 65,
-    category: "guidance",
-    arabic:
-      "اللَّهُمَّ أَرِنَا الْحَقَّ حَقًّا وَارْزُقْنَا اتِّبَاعَهُ، وَأَرِنَا الْبَاطِلَ بَاطِلًا وَارْزُقْنَا اجْتِنَابَهُ",
-    transliteration:
-      "Allahumma arinal haqqa haqqan warzuqnat tiba'ah, wa arinal batila batilan warzuqnaj tinabah",
-    english:
-      "O Allah, show us the truth as truth and grant us the following of it, and show us falsehood as falsehood and grant us the avoidance of it.",
-    reference: "Ibn Kathir, Tafsir 2:213",
   },
 
   // ─── Hereafter ───────────────────────────────────────────────────────────
@@ -718,14 +675,6 @@ export const DUAS = [
     english:
       "O Allah, I seek refuge in You from the punishment of the grave, from the punishment of Hellfire, from the trials of life and death, and from the evil of the trial of the False Messiah.",
     reference: "Bukhari 1377",
-  },
-  {
-    id: 67,
-    category: "hereafter",
-    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ حُسْنَ الْخَاتِمَةِ",
-    transliteration: "Allahumma inni as'aluka husnal khatimah",
-    english: "O Allah, I ask You for a good ending.",
-    reference: "Tabarani, al-Mu'jam al-Awsat",
   },
   {
     id: 68,
