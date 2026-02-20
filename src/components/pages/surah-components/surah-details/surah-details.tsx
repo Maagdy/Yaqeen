@@ -1,6 +1,6 @@
 import type { SurahDetailsProps } from "./surah-details.types";
 import { useEffect, useState } from "react";
-import { useLanguage, useMediaQuery, useAuth } from "../../../../hooks";
+import { useLanguage, useMediaQuery, useAuth, useReciterSelector } from "../../../../hooks";
 import { useSurahNavigation } from "../../../../hooks/useSurahNavigation";
 import { useAudio } from "../../../../hooks/useAudio";
 import type { Ayah, Surah } from "../../../../api";
@@ -8,7 +8,10 @@ import { useFavoriteAyahsQuery } from "@/api/domains/user";
 import { useMobileAyahHandlers } from "./hooks";
 import { SurahHeader, MobileAyahsList, DesktopAyahsList } from "./components";
 import { useTranslation } from "react-i18next";
-import { padSurahNumber } from "@/utils/surahUtils";
+import ViewListRounded from "@mui/icons-material/ViewListRounded";
+import ArticleRounded from "@mui/icons-material/ArticleRounded";
+
+type MobileViewMode = "ayah" | "full";
 
 export const SurahDetails: React.FC<SurahDetailsProps> = ({
   surah,
@@ -23,12 +26,18 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
     useAudio();
   const { clearNavigationHandlers } = useSurahNavigation();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
+  const [mobileViewMode, setMobileViewMode] = useState<MobileViewMode>("ayah");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
 
-  const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
-  const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.number)}.mp3`;
+  const {
+    availableReciters,
+    selectedReciter,
+    fullSurahAudioUrl,
+    onReciterChange,
+    isLoading: isRecitersLoading,
+  } = useReciterSelector({ surahNumber: surah.number });
 
   useEffect(() => {
     clearNavigationHandlers();
@@ -91,9 +100,40 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
         fullSurahAudioUrl={fullSurahAudioUrl}
         isFullSurahPlaying={isFullSurahPlaying}
         onFullSurahClick={handleFullSurahClick}
+        availableReciters={availableReciters}
+        selectedReciter={selectedReciter}
+        onReciterChange={onReciterChange}
+        isRecitersLoading={isRecitersLoading}
       />
 
-      {isMobile ? (
+      {isMobile && (
+        <div className="flex items-center gap-1 mb-4 p-1 bg-muted/30 rounded-xl border border-border/50">
+          <button
+            onClick={() => setMobileViewMode("ayah")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
+              mobileViewMode === "ayah"
+                ? "bg-card text-primary shadow-sm border border-border/50"
+                : "text-text-secondary"
+            }`}
+          >
+            <ViewListRounded fontSize="small" />
+            {t("surah.view_ayah_by_ayah")}
+          </button>
+          <button
+            onClick={() => setMobileViewMode("full")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
+              mobileViewMode === "full"
+                ? "bg-card text-primary shadow-sm border border-border/50"
+                : "text-text-secondary"
+            }`}
+          >
+            <ArticleRounded fontSize="small" />
+            {t("surah.view_full_surah")}
+          </button>
+        </div>
+      )}
+
+      {isMobile && mobileViewMode === "ayah" ? (
         <MobileAyahsList
           ayahs={ayahs}
           surah={getSurahForMobileCard()}

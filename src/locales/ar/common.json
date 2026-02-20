@@ -132,7 +132,11 @@
     "start-your-journy": "ابدأ رحلتك",
     "go_to_ayah": "اقرأ الآية {{number}}",
     "tafsirs": "التفاسير",
-    "surah_link_copied_to_clipboard": "تم نسخ رابط السورة إلى الحافظة"
+    "surah_link_copied_to_clipboard": "تم نسخ رابط السورة إلى الحافظة",
+    "view_ayah_by_ayah": "آية بآية",
+    "view_full_surah": "السورة كاملة",
+    "select_reciter": "اختر القارئ",
+    "no_reciters": "لا يوجد قراء"
   },
   "hadith": {
     "title": "مجموعات الحديث",
@@ -167,7 +171,8 @@
     "prayer_times": "مواقيت الصلاة و القبلة",
     "prophet_stories": "قصص الأنبياء",
     "about": "من نحن",
-    "ramadan": "تحديات رمضان"
+    "ramadan": "تحديات رمضان",
+    "install_app": "تثبيت التطبيق"
   },
   "search": {
     "title": "نتائج البحث",

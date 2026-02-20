@@ -6,3 +6,4 @@ export * from "./useMediaQuery";
 export * from "./useAuth";
 export * from "./useRamadanTracking";
 export * from "./useViewportPageTracker";
+export * from "./useReciterSelector";

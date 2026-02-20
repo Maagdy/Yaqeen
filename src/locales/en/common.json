@@ -132,7 +132,11 @@
     "start-your-journy": "Start Your Journy",
     "go_to_ayah": "Read Ayah {{number}}",
     "tafsirs": "Tafsirs",
-    "surah_link_copied_to_clipboard": "Surah link copied to clipboard"
+    "surah_link_copied_to_clipboard": "Surah link copied to clipboard",
+    "view_ayah_by_ayah": "Ayah by Ayah",
+    "view_full_surah": "Full Surah",
+    "select_reciter": "Select Reciter",
+    "no_reciters": "No reciters available"
   },
   "hadith": {
     "title": "Hadith Collections",
@@ -167,7 +171,8 @@
     "prayer_times": "Prayer Times & Qibla",
     "prophet_stories": "Prophet Stories",
     "about": "About Us",
-    "ramadan": "Ramadan Challenges"
+    "ramadan": "Ramadan Challenges",
+    "install_app": "Install App"
   },
   "search": {
     "title": "Search Results",

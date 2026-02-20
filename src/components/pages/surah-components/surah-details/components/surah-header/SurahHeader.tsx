@@ -6,10 +6,11 @@ import {
   BookmarkBorder,
   Share,
 } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import { IconButton } from "../../../../../common/icon-button/icon-button";
 import { formatNumber } from "@/utils/numbers";
 import type { SurahHeaderProps } from "./SurahHeader.types";
+import { filterReciters } from "@/hooks/useReciterSelector";
 import { useNavigate } from "react-router-dom";
 import { generateRoute } from "@/router/routes";
 import { quranSurahs } from "@/utils/constants";
@@ -31,6 +32,10 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   isFullSurahPlaying,
   onFullSurahClick,
   isJuzPage = false,
+  availableReciters = [],
+  selectedReciter,
+  onReciterChange,
+  isRecitersLoading = false,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -181,7 +186,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
       </div>
 
       {fullSurahAudioUrl && (
-        <div className="mt-4 text-center">
+        <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
           <IconButton
             onClick={onFullSurahClick}
             icon={
@@ -196,9 +201,40 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
                 ? t("surah.pause_full")
                 : t("surah.listen_full")
             }
-            className="mx-auto"
             size="md"
           />
+          {isRecitersLoading ? (
+            <CircularProgress size={20} />
+          ) : availableReciters.length > 0 && onReciterChange ? (
+            <Autocomplete
+              size="small"
+              options={availableReciters}
+              getOptionLabel={(option) => option.reciterName}
+              value={selectedReciter ?? undefined}
+              onChange={(_, newValue) => {
+                if (newValue) onReciterChange(newValue.reciterId);
+              }}
+              filterOptions={(options, { inputValue }) =>
+                filterReciters(options, inputValue)
+              }
+              isOptionEqualToValue={(option, value) =>
+                option.reciterId === value.reciterId
+              }
+              disableClearable
+              sx={{ minWidth: 180, maxWidth: 260 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={t("surah.select_reciter")}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      fontSize: { xs: "0.75rem", md: "0.875rem" },
+                    },
+                  }}
+                />
+              )}
+            />
+          ) : null}
         </div>
       )}
     </div>

@@ -5,12 +5,14 @@ import Footer from "./components/layout/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLanguage, useTheme } from "./hooks";
+import { usePrefetchData } from "./hooks/usePrefetchData";
 import { ScrollToTop, RamadanSideBadge } from "./components/common";
 import { OfflineIndicator } from "./components/common/offline-indicator";
 
 function App() {
   const { language } = useLanguage();
   const { theme } = useTheme();
+  usePrefetchData();
 
   return (
     <HelmetProvider>

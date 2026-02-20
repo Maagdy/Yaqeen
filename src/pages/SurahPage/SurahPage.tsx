@@ -22,6 +22,7 @@ import { SurahDetails } from "@/components/pages";
 import { SEO } from "@/components/seo";
 import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
 import { ReadingProgressIndicator } from "@/components/common";
+import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,6 +51,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   });
 
   const { data: tafsirData } = useSurahTafsir(1, surahNumber, language);
+
+  // Prefetch nearby surahs for offline PWA use
+  useSmartPrefetch({ type: "surah", params: { surahNumber, edition } });
 
   // Get Surah metadata for SEO
   const surahInfo = quranSurahs.find((s) => s.number === surahNumber);
