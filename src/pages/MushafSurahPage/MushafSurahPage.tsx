@@ -10,6 +10,7 @@ import { useLanguage } from "@/hooks";
 import { generateRoute } from "@/router/routes";
 import { formatNumber } from "@/utils/numbers";
 import { useViewportPageTracker } from '@/hooks/useViewportPageTracker';
+import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 function MushafSurahPage() {
   const { surahId, mushafId } = useParams();
@@ -27,6 +28,9 @@ function MushafSurahPage() {
     error: surahErrorObj,
     refetch: refetchSurah,
   } = useMushafSurah(currentMushafId, currentSurahId);
+
+  // Prefetch nearby mushaf surahs for offline PWA use
+  useSmartPrefetch({ type: "mushaf-surah", params: { mushafId: currentMushafId, surahNumber: currentSurahId } });
 
   // Track mushaf pages read when user leaves page
   useViewportPageTracker(surah?.ayahs || [], {

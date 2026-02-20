@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { IconButton, ReadingProgressIndicator } from "@/components/common";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
+import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 const JuzPage: React.FC<JuzPageProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,9 @@ const JuzPage: React.FC<JuzPageProps> = () => {
     isError,
     refetch: juzRefetch,
   } = useJuzQuery(juzNumber, edition);
+
+  // Prefetch next juz for offline PWA use
+  useSmartPrefetch({ type: "juz", params: { juzNumber, edition } });
 
   const { data: favoriteJuzs } = useFavoriteJuzsQuery(user?.id);
   const addFavoriteJuzMutation = useAddFavoriteJuzMutation(user?.id);

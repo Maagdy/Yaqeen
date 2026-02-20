@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
 import { ErrorPage } from "@/pages/ErrorPage";
+import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 export default function HadithDetailsPage() {
   const { collectionName } = useParams();
@@ -17,6 +18,12 @@ export default function HadithDetailsPage() {
   const book = searchParams.get("book")
     ? parseInt(searchParams.get("book")!)
     : 1;
+
+  // Prefetch next hadith page + next book for offline PWA use
+  useSmartPrefetch({
+    type: "hadith",
+    params: { collection: collectionName || "", book, page, limit: 10 },
+  });
 
   const {
     data: books,

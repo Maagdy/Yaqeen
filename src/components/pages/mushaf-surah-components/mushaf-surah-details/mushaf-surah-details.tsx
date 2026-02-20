@@ -1,20 +1,25 @@
 import type { MushafSurahDetailsProps } from "./mushaf-surah-details.types";
 import { useTranslation } from "react-i18next";
-import { useLanguage, useMediaQuery, useAuth } from "@/hooks";
+import { useLanguage, useMediaQuery, useAuth, useReciterSelector } from "@/hooks";
 import { quranSurahs } from "@/utils/constants";
 import { useState } from "react";
 import { formatNumber } from "@/utils/numbers";
-import { padSurahNumber } from "@/utils/surahUtils";
 import {
   Bookmark,
   BookmarkBorder,
   Share,
   PlayCircleFilledRounded,
   PauseCircleFilledRounded,
+  ViewListRounded,
+  ArticleRounded,
 } from "@mui/icons-material";
 import { IconButton } from "@/components/common";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import { MobileAyahCard } from "@/components/common/mobile-ayah-card";
 import { useAudio } from "@/hooks/useAudio";
+import { filterReciters } from "@/hooks/useReciterSelector";
+
+type MobileViewMode = "ayah" | "full";
 import {
   useFavoriteAyahsQuery,
   useAddFavoriteAyahMutation,
@@ -33,6 +38,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   const { isRtl, language } = useLanguage();
   const { user, isLoggedIn } = useAuth();
   const [hoveredAyah, setHoveredAyah] = useState<number | null>(null);
+  const [mobileViewMode, setMobileViewMode] = useState<MobileViewMode>("ayah");
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { data: favoriteAyahs = [] } = useFavoriteAyahsQuery(user?.id);
@@ -89,8 +95,13 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
   const englishName = surahInfo?.name || "";
 
   const { play, pause, isPlaying, currentAudio } = useAudio();
-  const DEFAULT_SURAH_SERVER = "https://server7.mp3quran.net/basit";
-  const fullSurahAudioUrl = `${DEFAULT_SURAH_SERVER}/${padSurahNumber(surah.id)}.mp3`;
+  const {
+    availableReciters,
+    selectedReciter,
+    fullSurahAudioUrl,
+    onReciterChange,
+    isLoading: isRecitersLoading,
+  } = useReciterSelector({ surahNumber: surah.id });
   const isFullSurahPlaying = isPlaying && currentAudio === fullSurahAudioUrl;
 
   const handleFullSurahClick = () => {
@@ -268,7 +279,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
         </div>
 
         {fullSurahAudioUrl && (
-          <div className="mt-4 text-center">
+          <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
             <IconButton
               onClick={handleFullSurahClick}
               icon={
@@ -283,14 +294,72 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
                   ? t("surah.pause_full")
                   : t("surah.listen_full")
               }
-              className="mx-auto"
               size="md"
             />
+            {isRecitersLoading ? (
+              <CircularProgress size={20} />
+            ) : availableReciters.length > 0 ? (
+              <Autocomplete
+                size="small"
+                options={availableReciters}
+                getOptionLabel={(option) => option.reciterName}
+                value={selectedReciter ?? undefined}
+                onChange={(_, newValue) => {
+                  if (newValue) onReciterChange(newValue.reciterId);
+                }}
+                filterOptions={(options, { inputValue }) =>
+                  filterReciters(options, inputValue)
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.reciterId === value.reciterId
+                }
+                disableClearable
+                sx={{ minWidth: 180, maxWidth: 260 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={t("surah.select_reciter")}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.75rem", md: "0.875rem" },
+                      },
+                    }}
+                  />
+                )}
+              />
+            ) : null}
           </div>
         )}
       </div>
 
-      {isMobile ? (
+      {isMobile && (
+        <div className="flex items-center gap-1 mb-4 p-1 bg-muted/30 rounded-xl">
+          <button
+            onClick={() => setMobileViewMode("ayah")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
+              mobileViewMode === "ayah"
+                ? "bg-card text-primary shadow-sm"
+                : "text-text-secondary"
+            }`}
+          >
+            <ViewListRounded fontSize="small" />
+            {t("surah.view_ayah_by_ayah")}
+          </button>
+          <button
+            onClick={() => setMobileViewMode("full")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
+              mobileViewMode === "full"
+                ? "bg-card text-primary shadow-sm"
+                : "text-text-secondary"
+            }`}
+          >
+            <ArticleRounded fontSize="small" />
+            {t("surah.view_full_surah")}
+          </button>
+        </div>
+      )}
+
+      {isMobile && mobileViewMode === "ayah" ? (
         <div className="space-y-4">
           {surah.ayahs.map((ayah) => (
             <MobileAyahCard

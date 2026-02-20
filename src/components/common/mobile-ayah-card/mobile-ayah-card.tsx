@@ -51,7 +51,7 @@ export const MobileAyahCard: React.FC<MobileAyahCardProps> = ({
   return (
     <div
       data-page={ayah.page}
-      className="w-full bg-card rounded-xl border border-border shadow-sm overflow-hidden mb-4"
+      className="w-full bg-card rounded-xl border border-primary-muted shadow-md overflow-hidden mb-4"
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-muted/30 border-b border-border/50 gap-3 sm:gap-0">

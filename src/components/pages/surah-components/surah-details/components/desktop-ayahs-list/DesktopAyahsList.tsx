@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useRef, useCallback, useEffect } from "react";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { IconButton } from "../../../../../common/icon-button/icon-button";
 import { formatNumber } from "@/utils/numbers";
@@ -18,6 +19,35 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
   onDetailsClick,
 }) => {
   const { t } = useTranslation();
+
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleTouchStart = useCallback(
+    (ayahNumber: number) => {
+      longPressTriggeredRef.current = false;
+      longPressTimerRef.current = setTimeout(() => {
+        longPressTriggeredRef.current = true;
+        onAyahHover(ayahNumber);
+      }, 500);
+    },
+    [onAyahHover],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
 
   return (
     <div
@@ -40,20 +70,39 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
               <div
                 onMouseEnter={() => !isMobile && onAyahHover(ayah.number)}
                 onMouseLeave={() => !isMobile && onAyahHover(null)}
+                onTouchStart={() => isMobile && handleTouchStart(ayah.number)}
+                onTouchEnd={() => isMobile && handleTouchEnd()}
+                onTouchMove={() => isMobile && handleTouchEnd()}
+                onContextMenu={(e) => {
+                  if (isMobile) e.preventDefault();
+                }}
                 className="relative"
               >
                 {hoveredAyah === ayah.number && (
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10">
                     <IconButton
                       label={t("surah.ayah-details")}
-                      onClick={() => onDetailsClick?.(ayah)}
+                      onClick={() => {
+                        onDetailsClick?.(ayah);
+                        onAyahHover(null);
+                      }}
                       size="md"
                       icon={<TipsAndUpdatesIcon fontSize="small" />}
                     />
                   </div>
                 )}
                 <span
-                  onClick={() => onAyahClick(ayah)}
+                  onClick={() => {
+                    if (longPressTriggeredRef.current) {
+                      longPressTriggeredRef.current = false;
+                      return;
+                    }
+                    if (isMobile && hoveredAyah !== null) {
+                      onAyahHover(null);
+                      return;
+                    }
+                    onAyahClick(ayah);
+                  }}
                   className={`text-xl md:text-2xl ${isRtl ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${
                     isAyahPlaying ? "text-primary" : ""
                   }`}

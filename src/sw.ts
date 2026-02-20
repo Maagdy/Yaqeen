@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 import { clientsClaim } from "workbox-core";
-import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
-import { registerRoute } from "workbox-routing";
+import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from "workbox-precaching";
+import { registerRoute, NavigationRoute, setCatchHandler } from "workbox-routing";
 import { CacheFirst, NetworkFirst, NetworkOnly } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { BackgroundSyncPlugin } from "workbox-background-sync";
@@ -13,6 +13,12 @@ clientsClaim();
 // Precache app shell (injected by vite-plugin-pwa at build time)
 precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
+
+// ─── SPA Navigation Fallback ─────────────────────────────────────────────────
+// All navigation requests (HTML) fall back to the precached index.html
+// so React Router can handle client-side routing offline.
+const navHandler = createHandlerBoundToURL("/index.html");
+registerRoute(new NavigationRoute(navHandler));
 
 // ─── Proxy URL Helper ─────────────────────────────────────────────────────────
 // All API requests go through /api/proxy?url=<encoded-external-url>
@@ -32,12 +38,13 @@ function getProxiedOrigin(url: URL): string | null {
 // ─── API Caching Routes ───────────────────────────────────────────────────────
 
 // AlQuran API — static Quran text, cache aggressively
+// 114 surahs + 30 juzs + metadata/search = need generous entry limit
 registerRoute(
   ({ url }) => getProxiedOrigin(url) === "api.alquran.cloud",
   new CacheFirst({
     cacheName: "alquran-api",
     plugins: [
-      new ExpirationPlugin({ maxAgeSeconds: 365 * 24 * 60 * 60, maxEntries: 200 }),
+      new ExpirationPlugin({ maxAgeSeconds: 365 * 24 * 60 * 60, maxEntries: 500 }),
     ],
   }),
 );
@@ -58,13 +65,13 @@ registerRoute(
   }),
 );
 
-// Sunnah.com API — hadith data
+// Sunnah.com API — hadith data (many books × pages, need generous limit)
 registerRoute(
   ({ url }) => getProxiedOrigin(url) === "api.sunnah.com",
   new CacheFirst({
     cacheName: "sunnah-api",
     plugins: [
-      new ExpirationPlugin({ maxAgeSeconds: 30 * 24 * 60 * 60, maxEntries: 100 }),
+      new ExpirationPlugin({ maxAgeSeconds: 30 * 24 * 60 * 60, maxEntries: 500 }),
     ],
   }),
 );
@@ -170,6 +177,17 @@ const supabaseWriteStrategy = new NetworkFirst({
 for (const method of ["POST", "PATCH", "PUT", "DELETE"] as const) {
   registerRoute(supabaseWriteMatcher, supabaseWriteStrategy, method);
 }
+
+// ─── Global Catch Handler ────────────────────────────────────────────────────
+// Graceful fallback when a request fails and isn't matched by any cache route.
+setCatchHandler(async ({ request }) => {
+  // For page navigations, serve the cached app shell
+  if (request.destination === "document") {
+    const cached = await caches.match("/index.html");
+    if (cached) return cached;
+  }
+  return Response.error();
+});
 
 // ─── Message Handler ──────────────────────────────────────────────────────────
 
