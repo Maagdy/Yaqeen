@@ -107,13 +107,13 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
       />
 
       {isMobile && (
-        <div className="flex items-center gap-1 mb-4 p-1 bg-muted/30 rounded-xl border border-border/50">
+        <div className="flex items-center gap-1 mb-4 p-1 bg-muted/30 rounded-xl">
           <button
             onClick={() => setMobileViewMode("ayah")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
               mobileViewMode === "ayah"
-                ? "bg-card text-primary shadow-sm border border-border/50"
-                : "text-text-secondary border border-border/50"
+                ? "bg-card text-primary shadow-sm"
+                : "text-text-secondary"
             }`}
           >
             <ViewListRounded fontSize="small" />
@@ -123,8 +123,8 @@ export const SurahDetails: React.FC<SurahDetailsProps> = ({
             onClick={() => setMobileViewMode("full")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
               mobileViewMode === "full"
-                ? "bg-card text-primary shadow-sm border border-border/50"
-                : "text-text-secondary border border-border/50"
+                ? "bg-card text-primary shadow-sm"
+                : "text-text-secondary"
             }`}
           >
             <ArticleRounded fontSize="small" />
