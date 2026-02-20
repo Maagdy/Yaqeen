@@ -339,7 +339,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
               mobileViewMode === "ayah"
                 ? "bg-card text-primary shadow-sm border border-border/50"
-                : "text-text-secondary"
+                : "text-text-secondary border border-border/50"
             }`}
           >
             <ViewListRounded fontSize="small" />
@@ -350,7 +350,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex-1 justify-center ${
               mobileViewMode === "full"
                 ? "bg-card text-primary shadow-sm border border-border/50"
-                : "text-text-secondary"
+                : "text-text-secondary border border-border/50"
             }`}
           >
             <ArticleRounded fontSize="small" />
