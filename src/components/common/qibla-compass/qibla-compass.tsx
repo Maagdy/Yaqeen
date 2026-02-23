@@ -180,25 +180,25 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
 
   // ── Render ──────────────────────────────────────────────────────────────
   return (
-    <div className={`bg-surface rounded-xl p-6 border border-border ${className}`}>
+    <div className={`bg-surface rounded-xl p-4 sm:p-6 border border-border ${className}`}>
       {/* Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
+      <div className="text-center mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
           <span role="img" aria-label="Kaaba">🕋</span>
           {t("prayer_times.qibla.title")}
         </h2>
-        <p className="text-text-secondary text-sm">{t("prayer_times.qibla.subtitle")}</p>
+        <p className="text-text-secondary text-xs sm:text-sm">{t("prayer_times.qibla.subtitle")}</p>
       </div>
 
       {phase === "loading" && (
-        <div className="flex flex-col items-center py-12 gap-4">
+        <div className="flex flex-col items-center py-8 sm:py-12 gap-4">
           <CircularProgress size={48} />
           <p className="text-text-secondary text-sm">{t("prayer_times.qibla.getting_location")}</p>
         </div>
       )}
 
       {phase === "error" && (
-        <div className="flex flex-col items-center py-12 gap-4">
+        <div className="flex flex-col items-center py-8 sm:py-12 gap-4">
           <ErrorIcon className="text-red-500" style={{ fontSize: 48 }} />
           <p className="text-red-500 text-sm text-center max-w-xs">{errorMsg}</p>
           <button
@@ -212,9 +212,9 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
       )}
 
       {phase === "active" && qiblaInfo && (
-        <div className="flex flex-col items-center gap-5">
+        <div className="flex flex-col items-center gap-4 sm:gap-5">
           {/* ── Compass ─────────────────────────────────────────────── */}
-          <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-full border-[3px] border-primary/20 bg-background">
+          <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full border-[3px] border-primary/20 bg-background">
             {/* Static cardinal markers */}
             <span className="absolute top-3 left-1/2 -translate-x-1/2 text-primary font-bold text-sm select-none">N</span>
             <span className="absolute bottom-3 left-1/2 -translate-x-1/2 text-text-secondary font-semibold text-xs select-none">S</span>
@@ -222,7 +222,7 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-xs select-none">W</span>
 
             {/* Fixed Kaaba icon at top */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 text-3xl select-none z-20">🕋</div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 text-2xl sm:text-3xl select-none z-20">🕋</div>
 
             {/* Rotating needle */}
             <div
@@ -262,14 +262,14 @@ export function QiblaCompass({ className = "" }: QiblaCompassProps) {
           )}
 
           {/* Info cards */}
-          <div className="w-full grid grid-cols-2 gap-3">
-            <div className="bg-background rounded-lg p-4 border border-border text-center">
+          <div className="w-full grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="bg-background rounded-lg p-3 sm:p-4 border border-border text-center">
               <p className="text-text-secondary text-xs mb-1">{t("prayer_times.qibla.direction")}</p>
-              <p className="text-text-primary text-2xl font-bold">{Math.round(qiblaInfo.angle)}°</p>
+              <p className="text-text-primary text-lg sm:text-2xl font-bold">{Math.round(qiblaInfo.angle)}°</p>
             </div>
-            <div className="bg-background rounded-lg p-4 border border-border text-center">
+            <div className="bg-background rounded-lg p-3 sm:p-4 border border-border text-center">
               <p className="text-text-secondary text-xs mb-1">{t("prayer_times.qibla.distance")}</p>
-              <p className="text-text-primary text-2xl font-bold">{Math.round(qiblaInfo.distance).toLocaleString()} km</p>
+              <p className="text-text-primary text-lg sm:text-2xl font-bold">{Math.round(qiblaInfo.distance).toLocaleString()} km</p>
             </div>
           </div>
 

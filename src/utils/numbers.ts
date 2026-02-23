@@ -20,3 +20,17 @@ export const formatNumber = (
 ): string => {
   return language === "ar" ? toArabicNumerals(num) : String(num);
 };
+
+/**
+ * Formats a hizbQuarter (1–240) into a readable hizb string
+ * e.g. 1 → "1", 2 → "1 ¼", 3 → "1 ½", 4 → "1 ¾", 5 → "2"
+ */
+export const formatHizbQuarter = (
+  hizbQuarter: number,
+  language: string,
+): string => {
+  const hizb = Math.ceil(hizbQuarter / 4);
+  const quarter = ((hizbQuarter - 1) % 4);
+  const fractions = ["", " ¼", " ½", ""];
+  return formatNumber(hizb, language) + fractions[quarter];
+};

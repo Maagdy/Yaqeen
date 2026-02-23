@@ -221,7 +221,7 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
     manzil: mushafAyah.manzil,
     page: mushafAyah.page_number,
     ruku: mushafAyah.ruku,
-    hizbQuarter: mushafAyah.hizb * 4,
+    hizbQuarter: (mushafAyah.hizb - 1) * 4 + 1,
     sajda: false,
     surah: getSurahForMobileCard(),
   });
@@ -361,71 +361,101 @@ export const MushafSurahDetails: React.FC<MushafSurahDetailsProps> = ({
 
       {isMobile && mobileViewMode === "ayah" ? (
         <div className="space-y-4">
-          {surah.ayahs.map((ayah) => (
-            <MobileAyahCard
-              key={ayah.number}
-              ayah={convertToAyah(ayah)}
-              surah={getSurahForMobileCard()}
-              onBookmark={() =>
-                handleMobileAyahBookmark(ayah.number, ayah.text)
-              }
-              onShare={() => handleMobileAyahShare(ayah.number, ayah.text)}
-              onCopy={() => handleMobileAyahCopy(ayah.text)}
-              onTafsirClick={() => {
-                // Tafsir - not yet implemented
-              }}
-              isBookmarked={isAyahBookmarked(ayah.number)}
-            />
-          ))}
+          {surah.ayahs.map((ayah, index) => {
+            const isLastAyahOnPage =
+              index === surah.ayahs.length - 1 ||
+              surah.ayahs[index + 1]?.page_number !== ayah.page_number;
+
+            return (
+              <div key={ayah.number}>
+                <MobileAyahCard
+                  ayah={convertToAyah(ayah)}
+                  surah={getSurahForMobileCard()}
+                  onBookmark={() =>
+                    handleMobileAyahBookmark(ayah.number, ayah.text)
+                  }
+                  onShare={() => handleMobileAyahShare(ayah.number, ayah.text)}
+                  onCopy={() => handleMobileAyahCopy(ayah.text)}
+                  onTafsirClick={() => {
+                    // Tafsir - not yet implemented
+                  }}
+                  isBookmarked={isAyahBookmarked(ayah.number)}
+                />
+                {isLastAyahOnPage && (
+                  <div className="flex items-center justify-center gap-2 mt-4">
+                    <div className="h-px flex-1 bg-primary/15" />
+                    <span className="text-xs text-primary/70">
+                      {formatNumber(ayah.page_number, language)}
+                    </span>
+                    <div className="h-px flex-1 bg-primary/15" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div
           className={`space-y-4 text-center ${isRtl ? "font-amiri" : ""}`}
           dir={"rtl"}
         >
-          {surah.ayahs.map((ayah) => {
+          {surah.ayahs.map((ayah, index) => {
+            const isLastAyahOnPage =
+              index === surah.ayahs.length - 1 ||
+              surah.ayahs[index + 1]?.page_number !== ayah.page_number;
+
             return (
-              <div
-                key={ayah.number}
-                data-page={ayah.page_number}
-                className="leading-loose text-text-primary p-2"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <div
-                    onMouseEnter={() => setHoveredAyah(ayah.number)}
-                    onMouseLeave={() => setHoveredAyah(null)}
-                    className="relative"
-                  >
-                    {hoveredAyah === ayah.number && (
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
-                      </div>
-                    )}
+              <div key={ayah.number}>
+                <div
+                  data-page={ayah.page_number}
+                  className="leading-loose text-text-primary p-2"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <div
+                      onMouseEnter={() => setHoveredAyah(ayah.number)}
+                      onMouseLeave={() => setHoveredAyah(null)}
+                      className="relative"
+                    >
+                      {hoveredAyah === ayah.number && (
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10 pb-2">
+                        </div>
+                      )}
 
-                    <span className={`text-xl md:text-2xl transition-colors`}>
-                      {ayah.text}
-                    </span>
+                      <span className={`text-xl md:text-2xl transition-colors`}>
+                        {ayah.text}
+                      </span>
 
-                    <span className="inline-flex items-center justify-center relative">
-                      <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
-                        <svg
-                          className="absolute inset-0 w-full h-full"
-                          viewBox="0 0 36 36"
-                        >
-                          <path
-                            d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
-                            fill="currentColor"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            className="text-primary/90"
-                          />
-                        </svg>
-                        <span className="relative z-10 text-sm font-bold text-text-primary">
-                          {formatNumber(ayah.number, language)}
+                      <span className="inline-flex items-center justify-center relative">
+                        <span className="inline-flex items-center justify-center relative mx-1 w-9 h-9">
+                          <svg
+                            className="absolute inset-0 w-full h-full"
+                            viewBox="0 0 36 36"
+                          >
+                            <path
+                              d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
+                              fill="currentColor"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              className="text-primary/90"
+                            />
+                          </svg>
+                          <span className="relative z-10 text-sm font-bold text-text-primary">
+                            {formatNumber(ayah.number, language)}
+                          </span>
                         </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
+                {isLastAyahOnPage && (
+                  <div className="flex items-center justify-center gap-2 my-2">
+                    <div className="h-px flex-1 bg-primary/15" />
+                    <span className="text-xs text-primary/70">
+                      {formatNumber(ayah.page_number, language)}
+                    </span>
+                    <div className="h-px flex-1 bg-primary/15" />
+                  </div>
+                )}
               </div>
             );
           })}

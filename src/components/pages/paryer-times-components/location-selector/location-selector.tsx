@@ -155,7 +155,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
 
   return (
     <div className="bg-surface rounded-xl p-4 md:p-6 border border-border">
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-end">
         <FormControl fullWidth size="medium">
           <InputLabel id="location-select-label">
             {t("prayer_times.select_location")}
@@ -184,7 +184,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
           size="md"
           variant="primary"
           label={loading ? t("common.loading") : t("prayer_times.use_location")}
-          className="ml-2"
+          className="w-full sm:w-auto shrink-0"
           onClick={handleUseMyLocation}
           disabled={loading}
         />

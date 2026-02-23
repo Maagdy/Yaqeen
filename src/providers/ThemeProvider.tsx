@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import { colors } from "../theme/colors";
 import { usePreferencesStore } from "../store/usePreferencesStore";
@@ -12,19 +12,37 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  root.classList.remove("light", "dark");
+  root.classList.add(theme);
+
+  const themeColors = colors[theme];
+  Object.entries(themeColors).forEach(([key, value]) => {
+    root.style.setProperty(`--theme-${key}`, value);
+  });
+}
+
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const theme = usePreferencesStore((state) => state.theme);
   const setThemeStore = usePreferencesStore((state) => state.setTheme);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
+  const isFirstRender = useRef(true);
 
-    const themeColors = colors[theme];
-    Object.entries(themeColors).forEach(([key, value]) => {
-      root.style.setProperty(`--color-${key}`, value);
-    });
+  useEffect(() => {
+    // First render: apply immediately, no animation
+    if (isFirstRender.current) {
+      applyTheme(theme);
+      isFirstRender.current = false;
+      return;
+    }
+
+    // Theme toggle: use View Transitions API for a smooth crossfade
+    if (document.startViewTransition) {
+      document.startViewTransition(() => applyTheme(theme));
+    } else {
+      applyTheme(theme);
+    }
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {

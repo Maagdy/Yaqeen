@@ -5,50 +5,39 @@
 }
 
 @theme {
-  --color-background: var(--color-background);
-  --color-surface: var(--color-surface);
-  --color-text-primary: var(--color-textPrimary);
-  --color-text-secondary: var(--color-textSecondary);
-  --color-primary: var(--color-primary);
-  --color-primary-light: var(--color-primaryLight);
-  --color-primary-dark: var(--color-primaryDark);
-  --color-primary-muted: var(--color-primaryMuted);
-  --color-border: var(--color-border);
-  --color-ramadan: var(--color-ramadan);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
+  --color-text-primary: var(--theme-textPrimary);
+  --color-text-secondary: var(--theme-textSecondary);
+  --color-primary: var(--theme-primary);
+  --color-primary-light: var(--theme-primaryLight);
+  --color-primary-dark: var(--theme-primaryDark);
+  --color-primary-muted: var(--theme-primaryMuted);
+  --color-border: var(--theme-border);
+  --color-ramadan: var(--theme-ramadan);
   /* Set Cairo as the default sans font */
   --font-sans: "Cairo", system-ui, sans-serif;
 }
 
 @layer base {
   :root {
-    /* CSS variables for theme colors - values set by ThemeContext */
-    --color-background: "";
-    --color-surface: "";
-    --color-textPrimary: "";
-    --color-textSecondary: "";
-    --color-primary: "";
-    --color-primaryLight: "";
-    --color-primaryDark: "";
-    --color-primaryMuted: "";
-    --color-border: "";
-    --color-ramadan: "";
+    /* CSS variables for theme colors - values set by ThemeProvider */
+    --theme-background: #ffffff;
+    --theme-surface: #f5f5f5;
+    --theme-textPrimary: #212121;
+    --theme-textSecondary: #757575;
+    --theme-primary: #4caf50;
+    --theme-primaryLight: #81c784;
+    --theme-primaryDark: #388e3c;
+    --theme-primaryMuted: #2e7d32;
+    --theme-border: #e0e0e0;
+    --theme-ramadan: #4d4d4d;
 
     font-family: "Cairo", system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Smooth theme transitions for elements using theme colors */
-  html,
-  body,
-  *:not([class*="transition-"]):not([class*="animate-"]):not(
-      [class*="duration-"]
-    ) {
-    transition-property: background-color, color, border-color, fill, stroke;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
   }
 
   /* Apply font globally */
@@ -65,7 +54,7 @@
     min-width: 320px;
     min-height: 100vh;
     background-color: var(--color-background);
-    color: var(--color-textPrimary);
+    color: var(--color-text-primary);
   }
 
   h1 {
@@ -97,6 +86,13 @@
     font-size: 1rem;
     font-weight: 500;
   }
+}
+
+/* View Transitions — smooth crossfade on theme toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
 }
 
 /* Custom Scrollbar — from your design tokens */

@@ -54,85 +54,99 @@ export const DesktopAyahsList: React.FC<DesktopAyahsListProps> = ({
       className={`space-y-4 text-center ${isRtl ? "font-amiri" : ""}`}
       dir={isRtl ? "rtl" : "ltr"}
     >
-      {ayahs.map((ayah) => {
+      {ayahs.map((ayah, index) => {
         const isAyahPlaying =
           isPlaying &&
           ayah?.surah?.number === currentSurahNumber &&
           currentAudio === ayah?.audio;
 
+        const isLastAyahOnPage =
+          index === ayahs.length - 1 ||
+          ayahs[index + 1]?.page !== ayah.page;
+
         return (
-          <div
-            key={ayah.number}
-            data-page={ayah.page}
-            className="leading-loose text-text-primary p-2"
-          >
-            <div className="flex items-center justify-center gap-2">
-              <div
-                onMouseEnter={() => !isMobile && onAyahHover(ayah.number)}
-                onMouseLeave={() => !isMobile && onAyahHover(null)}
-                onTouchStart={() => isMobile && handleTouchStart(ayah.number)}
-                onTouchEnd={() => isMobile && handleTouchEnd()}
-                onTouchMove={() => isMobile && handleTouchEnd()}
-                onContextMenu={(e) => {
-                  if (isMobile) e.preventDefault();
-                }}
-                className="relative"
-              >
-                {hoveredAyah === ayah.number && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10">
-                    <IconButton
-                      label={t("surah.ayah-details")}
-                      onClick={() => {
-                        onDetailsClick?.(ayah);
-                        onAyahHover(null);
-                      }}
-                      size="md"
-                      icon={<TipsAndUpdatesIcon fontSize="small" />}
-                    />
-                  </div>
-                )}
-                <span
-                  onClick={() => {
-                    if (longPressTriggeredRef.current) {
-                      longPressTriggeredRef.current = false;
-                      return;
-                    }
-                    if (isMobile && hoveredAyah !== null) {
-                      onAyahHover(null);
-                      return;
-                    }
-                    onAyahClick(ayah);
+          <div key={ayah.number}>
+            <div
+              data-page={ayah.page}
+              className="leading-loose text-text-primary p-2"
+            >
+              <div className="flex items-center justify-center gap-2">
+                <div
+                  onMouseEnter={() => !isMobile && onAyahHover(ayah.number)}
+                  onMouseLeave={() => !isMobile && onAyahHover(null)}
+                  onTouchStart={() => isMobile && handleTouchStart(ayah.number)}
+                  onTouchEnd={() => isMobile && handleTouchEnd()}
+                  onTouchMove={() => isMobile && handleTouchEnd()}
+                  onContextMenu={(e) => {
+                    if (isMobile) e.preventDefault();
                   }}
-                  className={`text-xl md:text-2xl ${isRtl ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${
-                    isAyahPlaying ? "text-primary" : ""
-                  }`}
-                  title={t("audio.click_to_play")}
+                  className="relative"
                 >
-                  {ayah.text}
-                </span>
-                <span className="inline-flex items-center justify-center relative ">
-                  <span className="inline-flex items-center justify-center relative mx-1 w-10 h-10 pt-1">
-                    <svg
-                      className="absolute inset-0 w-full h-full"
-                      viewBox="0 0 35 35"
-                    >
-                      <path
-                        d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
-                        fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        className={
-                          isAyahPlaying ? "text-primary" : "text-primary/90"
-                        }
+                  {hoveredAyah === ayah.number && (
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 z-10">
+                      <IconButton
+                        label={t("surah.ayah-details")}
+                        onClick={() => {
+                          onDetailsClick?.(ayah);
+                          onAyahHover(null);
+                        }}
+                        size="md"
+                        icon={<TipsAndUpdatesIcon fontSize="small" />}
                       />
-                    </svg>
-                    <span className="relative z-10 text-base -mt-1 font-bold text-text-primary">
-                      {formatNumber(ayah.numberInSurah, language)}
+                    </div>
+                  )}
+                  <span
+                    onClick={() => {
+                      if (longPressTriggeredRef.current) {
+                        longPressTriggeredRef.current = false;
+                        return;
+                      }
+                      if (isMobile && hoveredAyah !== null) {
+                        onAyahHover(null);
+                        return;
+                      }
+                      onAyahClick(ayah);
+                    }}
+                    className={`text-xl md:text-2xl ${isRtl ? "cursor-pointer" : ""} hover:text-primary/80 transition-colors ${
+                      isAyahPlaying ? "text-primary" : ""
+                    }`}
+                    title={t("audio.click_to_play")}
+                  >
+                    {ayah.text}
+                  </span>
+                  <span className="inline-flex items-center justify-center relative ">
+                    <span className="inline-flex items-center justify-center relative mx-1 w-10 h-10 pt-1">
+                      <svg
+                        className="absolute inset-0 w-full h-full"
+                        viewBox="0 0 35 35"
+                      >
+                        <path
+                          d="M18 2 L26 6 L30 14 L30 22 L26 30 L18 34 L10 30 L6 22 L6 14 L10 6 Z"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          className={
+                            isAyahPlaying ? "text-primary" : "text-primary/90"
+                          }
+                        />
+                      </svg>
+                      <span className="relative z-10 text-base -mt-1 font-bold text-text-primary">
+                        {formatNumber(ayah.numberInSurah, language)}
+                      </span>
                     </span>
                   </span>
-                </span>
+                </div>
               </div>
             </div>
+            {isLastAyahOnPage && (
+              <div className="flex items-center justify-center gap-2 my-2">
+                <div className="h-px flex-1 bg-primary/15" />
+                <span className="text-xs text-primary/70">
+                  {formatNumber(ayah.page, language)}
+                </span>
+                <div className="h-px flex-1 bg-primary/15" />
+              </div>
+            )}
           </div>
         );
       })}

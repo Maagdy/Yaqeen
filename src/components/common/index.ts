@@ -13,3 +13,4 @@ export * from "./qibla-compass";
 export * from "./reading-progress-indicator";
 export * from "./pdf-viewer";
 export * from "./book-card";
+export * from "./tafsir-book-card";
