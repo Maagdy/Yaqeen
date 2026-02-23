@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Bookmark, BookmarkBorder, ContentCopy } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { IconButton, MushafCard } from "../../../common";
+import { IconButton, TafsirBookCard } from "../../../common";
 import { useLanguage, useAuth } from "../../../../hooks";
 import type { AyahModalProps } from "./ayah-modal.types";
-import { formatNumber } from "../../../../utils/numbers";
+import { formatNumber, formatHizbQuarter } from "../../../../utils/numbers";
 import { useAyahTafsir, useTafsirBooks } from "../../../../api/domains/tafsir";
 import {
   useFavoriteAyahsQuery,
@@ -242,9 +242,8 @@ export const AyahModal: React.FC<AyahModalProps> = ({
           {tafsirBooks && tafsirBooks.length > 1 && (
             <div className="flex flex-row flex-wrap gap-2 mb-2">
               {tafsirBooks.map((book) => (
-                <MushafCard
+                <TafsirBookCard
                   key={book.id}
-                  id={book.id}
                   name={book.name}
                   active={currentTafsirBook === book.id}
                   onClick={() => setCurrentTafsirBook(book.id)}
@@ -296,7 +295,7 @@ export const AyahModal: React.FC<AyahModalProps> = ({
             />
             <DetailItem
               label={t("surah.hizb")}
-              value={formatNumber(ayah.hizbQuarter, language)}
+              value={formatHizbQuarter(ayah.hizbQuarter, language)}
             />
             <DetailItem
               label={t("surah.manzil")}

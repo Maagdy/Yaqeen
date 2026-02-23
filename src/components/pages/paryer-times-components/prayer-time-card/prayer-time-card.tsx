@@ -14,7 +14,7 @@ export const PrayerTimeCard: React.FC<PrayerTimeCardProps> = ({
   return (
     <div
       className={`
-        relative overflow-hidden rounded-xl p-4 md:p-6
+        relative overflow-hidden rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6
         transition-all duration-300 hover:scale-105
         ${
           isNext
@@ -24,37 +24,35 @@ export const PrayerTimeCard: React.FC<PrayerTimeCardProps> = ({
       `}
     >
       {isNext && (
-        <div className="absolute top-2 right-2 px-2 py-1 bg-primary-dark text-white text-xs rounded-full">
+        <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-primary-dark text-white text-[10px] sm:text-xs rounded-full">
           {t("prayer_times.next")}
         </div>
       )}
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div
             className={`
-              p-2 rounded-lg
+              p-1.5 sm:p-2 rounded-lg
               ${isNext ? "bg-primary text-white" : "bg-primary/10 text-primary"}
             `}
           >
-            {icon || <AccessTime fontSize="medium" />}
+            {icon || <AccessTime fontSize="small" />}
           </div>
 
-          <div>
-            <h3
-              className={`
-                text-base md:text-lg font-semibold
-                ${isNext ? "text-primary" : "text-text-primary"}
-              `}
-            >
-              {name}
-            </h3>
-          </div>
+          <h3
+            className={`
+              text-sm sm:text-base md:text-lg font-semibold
+              ${isNext ? "text-primary" : "text-text-primary"}
+            `}
+          >
+            {name}
+          </h3>
         </div>
 
         <div
           className={`
-            text-xl md:text-2xl font-bold
+            text-base sm:text-xl md:text-2xl font-bold text-center sm:text-right
             ${isNext ? "text-primary" : "text-text-primary"}
           `}
         >

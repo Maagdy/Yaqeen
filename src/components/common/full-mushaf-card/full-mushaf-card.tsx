@@ -62,6 +62,7 @@ export const FullMushafCard = ({ mushaf, onClick }: FullMushafCardProps) => {
       );
     }
   };
+  console.log(mushaf.image);
 
   return (
     <div
@@ -71,9 +72,10 @@ export const FullMushafCard = ({ mushaf, onClick }: FullMushafCardProps) => {
       <div className="relative h-48 sm:h-56 overflow-hidden bg-primary/10">
         {mushaf.image ? (
           <img
-            src={mushaf.image}
+            src={mushaf.image.replace(/^http:\/\//, "https://")}
             alt={mushaf.name}
             loading="lazy"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (

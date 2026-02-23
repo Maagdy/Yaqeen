@@ -123,7 +123,9 @@ export const PrayerTimesPage: React.FC = () => {
       const prayerTime =
         data.data.timings[prayer as keyof typeof data.data.timings];
       if (prayerTime) {
-        const [hours, minutes] = prayerTime.split(":").map(Number);
+        // Strip timezone suffix e.g. "17:30 (EET)" → "17:30"
+        const timeOnly = prayerTime.replace(/\s*\(.*\)$/, "");
+        const [hours, minutes] = timeOnly.split(":").map(Number);
         const prayerMinutes = hours * 60 + minutes;
 
         if (prayerMinutes > currentTime) {
@@ -142,18 +144,18 @@ export const PrayerTimesPage: React.FC = () => {
         <meta name="description" content={t("prayer_times.page_description")} />
       </Helmet>
 
-      <div className="min-h-screen bg-background py-6 md:py-10">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
+      <div className="min-h-screen bg-background py-4 sm:py-6 md:py-10">
+        <div className="container mx-auto px-3 sm:px-4 max-w-6xl">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-1 sm:mb-2">
               {t("prayer_times.title")}
             </h1>
-            <p className="text-text-secondary text-sm md:text-base">
+            <p className="text-text-secondary text-xs sm:text-sm md:text-base">
               {t("prayer_times.subtitle")}
             </p>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <LocationSelector
               city={displayCity}
               country={displayCountry}
@@ -192,15 +194,15 @@ export const PrayerTimesPage: React.FC = () => {
 
           {data?.data && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div className="bg-surface rounded-xl p-4 md:p-6 border border-border">
-                  <div className="flex items-center gap-3 mb-2">
-                    <CalendarMonth className="text-primary" />
-                    <h3 className="text-lg font-semibold text-text-primary">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="bg-surface rounded-xl p-3 sm:p-4 md:p-6 border border-border">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                    <CalendarMonth className="text-primary" fontSize="small" />
+                    <h3 className="text-sm sm:text-base md:text-lg font-semibold text-text-primary">
                       {t("prayer_times.gregorian_date")}
                     </h3>
                   </div>
-                  <p className="text-text-secondary">
+                  <p className="text-text-secondary text-xs sm:text-sm md:text-base">
                     {data.data.date.gregorian.weekday.en},{" "}
                     {formatNumber(data.data.date.gregorian.day, language)}{" "}
                     {data.data.date.gregorian.month.en}{" "}
@@ -208,11 +210,11 @@ export const PrayerTimesPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="bg-surface rounded-xl p-4 md:p-6 border border-border">
-                  <div className="flex items-center gap-3 mb-2">
-                    <CalendarMonth className="text-primary" />
+                <div className="bg-surface rounded-xl p-3 sm:p-4 md:p-6 border border-border">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                    <CalendarMonth className="text-primary" fontSize="small" />
                     <h3
-                      className={`text-lg font-semibold text-text-primary ${
+                      className={`text-sm sm:text-base md:text-lg font-semibold text-text-primary ${
                         isRtl ? "font-amiri" : ""
                       }`}
                     >
@@ -220,7 +222,7 @@ export const PrayerTimesPage: React.FC = () => {
                     </h3>
                   </div>
                   <p
-                    className={`text-text-secondary ${isRtl ? "font-amiri" : ""}`}
+                    className={`text-text-secondary text-xs sm:text-sm md:text-base ${isRtl ? "font-amiri" : ""}`}
                   >
                     {isRtl
                       ? data.data.date.hijri.weekday.ar
@@ -234,15 +236,17 @@ export const PrayerTimesPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {MAIN_PRAYERS.map((prayer) => {
-                  const time =
+                  const rawTime =
                     data.data.timings[prayer as keyof typeof data.data.timings];
+                  // Strip timezone suffix e.g. "17:30 (EET)" → "17:30"
+                  const time = rawTime?.replace(/\s*\(.*\)$/, "") || "";
                   return (
                     <PrayerTimeCard
                       key={prayer}
                       name={t(PRAYER_KEY_MAP[prayer])}
-                      time={time || ""}
+                      time={time}
                       icon={getPrayerIcon(prayer)}
                       isNext={prayer === nextPrayer}
                     />
@@ -250,9 +254,9 @@ export const PrayerTimesPage: React.FC = () => {
                 })}
               </div>
 
-              <div className="mt-8 bg-surface rounded-xl p-4 md:p-6 border border-border">
-                <div className="flex items-start gap-2 text-text-secondary text-sm">
-                  <LocationOn fontSize="small" className="text-primary" />
+              <div className="mt-6 sm:mt-8 bg-surface rounded-xl p-3 sm:p-4 md:p-6 border border-border">
+                <div className="flex items-start gap-2 text-text-secondary text-xs sm:text-sm">
+                  <LocationOn fontSize="small" className="text-primary shrink-0" />
                   <span>
                     {t("prayer_times.calculation_method")}:{" "}
                     <span className="font-semibold text-text-primary">
@@ -263,7 +267,7 @@ export const PrayerTimesPage: React.FC = () => {
               </div>
 
               {/* Qibla Compass Section */}
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-8">
                 <QiblaCompass />
               </div>
             </>
