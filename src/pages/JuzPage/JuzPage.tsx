@@ -14,9 +14,10 @@ import {
 } from "@/api/domains/user";
 import { useAuth } from "@/hooks";
 import { toast } from "react-toastify";
-import { IconButton, ReadingProgressIndicator } from "@/components/common";
+// import { IconButton, ReadingProgressIndicator } from "@/components/common";
+import { IconButton } from "@/components/common";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
-import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
+// import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
 import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 const JuzPage: React.FC<JuzPageProps> = () => {
@@ -43,9 +44,9 @@ const JuzPage: React.FC<JuzPageProps> = () => {
   const removeFavoriteJuzMutation = useRemoveFavoriteJuzMutation(user?.id);
 
   // Track pages read when user leaves this juz (each juz = 20 pages)
-  useViewportPageTracker(juz?.ayahs || [], {
-    enabled: !!juz,
-  });
+  // useViewportPageTracker(juz?.ayahs || [], {
+  //   enabled: !!juz,
+  // });
 
   const isFavorite = favoriteJuzs?.some((fav) => fav.juz_number === juzNumber);
 
@@ -142,7 +143,7 @@ const JuzPage: React.FC<JuzPageProps> = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ReadingProgressIndicator />
+        {/* <ReadingProgressIndicator /> */}
         {surahNumbers.map((surahNumber) => {
           const surah = juz.surahs[surahNumber];
           const ayahs = ayahsBySurah[surahNumber];

@@ -20,8 +20,8 @@ import { TafsirCard } from "../../components/pages/surah-components/tafsir-card"
 import { useAudio } from "../../hooks";
 import { SurahDetails } from "@/components/pages";
 import { SEO } from "@/components/seo";
-import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
-import { ReadingProgressIndicator } from "@/components/common";
+// import { useViewportPageTracker } from "@/hooks/useViewportPageTracker";
+// import { ReadingProgressIndicator } from "@/components/common";
 import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 const SurahPage: React.FC<SurahPageProps> = () => {
@@ -32,9 +32,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const [ayahModalVisible, setAyahModalVisible] = useState(false);
   const [selectedDiscoverContent, setSelectedDiscoverContent] =
     useState<React.ReactNode | null>(null);
-  const [activeDiscoverType, setActiveDiscoverType] = useState<
-    "tafsir" | null
-  >(null);
+  const [activeDiscoverType, setActiveDiscoverType] = useState<"tafsir" | null>(
+    null,
+  );
   const [selectedAyah, setSelectedAyah] = useState<Ayah | null>(null);
   const discoverContentRef = useRef<HTMLDivElement>(null);
   const surahNumber = Number(id);
@@ -86,9 +86,9 @@ const SurahPage: React.FC<SurahPageProps> = () => {
   const { play, toggle, currentAudio } = useAudio();
 
   // Track pages read when user leaves this surah
-  useViewportPageTracker(surah?.ayahs || [], {
-    enabled: !!surah,
-  });
+  // useViewportPageTracker(surah?.ayahs || [], {
+  //   enabled: !!surah,
+  // });
 
   useEffect(() => {
     return () => {
@@ -187,7 +187,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
                         if (currentAudio === segment.url) {
                           toggle();
                         } else {
-                          play(segment.url, surahNumber, 'surah');
+                          play(segment.url, surahNumber, "surah");
                         }
                       }}
                     />
@@ -275,7 +275,7 @@ const SurahPage: React.FC<SurahPageProps> = () => {
     <>
       <SEO {...surahSEO} />
       <div className="max-w-4xl mx-auto px-4">
-        <ReadingProgressIndicator />
+        {/* <ReadingProgressIndicator /> */}
         <SurahDetails
           surah={surah}
           ayahs={surah.ayahs}
