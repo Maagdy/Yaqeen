@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { useAuth } from "@/hooks";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/router/routes";
 import { useProfileQuery, useUserStatsQuery } from "@/api/domains/user";
-import { useUserRamadanProfileQuery } from "@/api/domains/ramadan/useRamadanQueries";
-import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
+// import { useUserRamadanProfileQuery } from "@/api/domains/ramadan/useRamadanQueries";
+// import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
 import { Loading } from "@/components/ui/loading";
 import { ProfileHeader, ProfileForm, ProfileStats } from "@/components/pages";
 import { SEO, SEO_CONFIG } from "@/components/seo";
 import { useLanguage } from "@/hooks";
-import { useTranslation } from "react-i18next";
-import { formatNumber } from "@/utils/numbers";
+// import { useTranslation } from "react-i18next";
+// import { formatNumber } from "@/utils/numbers";
 
 function ProfilePage() {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { user, session, loading, isLoggedIn } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -26,14 +26,14 @@ function ProfilePage() {
   const { data: stats } = useUserStatsQuery(user?.id);
 
   // Ramadan data
-  const currentRamadanYear = getCurrentRamadanYear();
-  const ramadanStatus = getRamadanStatus();
-  const isRamadan = ramadanStatus.status === 'during';
+  // const currentRamadanYear = getCurrentRamadanYear();
+  // const ramadanStatus = getRamadanStatus();
+  // const isRamadan = ramadanStatus.status === 'during';
 
-  const { data: ramadanProfile } = useUserRamadanProfileQuery(
-    isRamadan ? user?.id : undefined,
-    currentRamadanYear
-  );
+  // const { data: ramadanProfile } = useUserRamadanProfileQuery(
+  //   isRamadan ? user?.id : undefined,
+  //   currentRamadanYear
+  // );
 
   useEffect(() => {
     if (!loading && !isLoggedIn) {
@@ -68,7 +68,7 @@ function ProfilePage() {
           />
 
           {/* Ramadan Banner (only show during Ramadan) */}
-          {isRamadan && ramadanProfile && (
+          {/* {isRamadan && ramadanProfile && (
             <Link
               to={ROUTES.RAMADAN}
               className="block w-full p-4 sm:p-6 rounded-xl border-2 border-primary/50 bg-gradient-to-r from-primary/10 to-primary/20 hover:from-primary/20 hover:to-primary/30 transition-all shadow-md hover:shadow-lg"
@@ -91,7 +91,7 @@ function ProfilePage() {
                 </div>
               </div>
             </Link>
-          )}
+          )} */}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2 space-y-6">

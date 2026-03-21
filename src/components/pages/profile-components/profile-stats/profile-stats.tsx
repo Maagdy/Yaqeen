@@ -1,10 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LocalFireDepartment, MenuBook, Headphones, Speed, TrendingUp } from "@mui/icons-material";
+import {
+  LocalFireDepartment,
+  MenuBook,
+  Headphones,
+  Speed,
+  TrendingUp,
+} from "@mui/icons-material";
 import type { ProfileStatsProps } from "./profile-stats.types";
 import { useUserStatsQuery } from "@/api/domains/user";
-import { useUserRamadanProfileQuery, useUserChallengesQuery } from "@/api/domains/ramadan/useRamadanQueries";
-import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
+// import { useUserRamadanProfileQuery, useUserChallengesQuery } from "@/api/domains/ramadan/useRamadanQueries";
+// import { getCurrentRamadanYear, getRamadanStatus } from "@/utils/ramadan-dates";
 import { useAuth } from "@/hooks";
 
 export const ProfileStats: React.FC<ProfileStatsProps> = ({
@@ -14,32 +20,48 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
   const { user } = useAuth();
   const { data: stats } = useUserStatsQuery(user?.id);
 
-  const currentRamadanYear = getCurrentRamadanYear();
-  const ramadanStatus = getRamadanStatus();
-  const isRamadan = ramadanStatus.status === 'during';
+  // const currentRamadanYear = getCurrentRamadanYear();
+  // const ramadanStatus = getRamadanStatus();
+  // const isRamadan = ramadanStatus.status === 'during';
 
-  const { data: ramadanProfile, isLoading: isLoadingRamadanProfile } = useUserRamadanProfileQuery(
-    isRamadan ? user?.id : undefined,
-    currentRamadanYear
-  );
+  // const { data: ramadanProfile, isLoading: isLoadingRamadanProfile } = useUserRamadanProfileQuery(
+  //   isRamadan ? user?.id : undefined,
+  //   currentRamadanYear
+  // );
 
-  const { data: _userChallenges = [] } = useUserChallengesQuery(
-    isRamadan ? user?.id : undefined,
-    currentRamadanYear
-  );
+  // const { data: _userChallenges = [] } = useUserChallengesQuery(
+  //   isRamadan ? user?.id : undefined,
+  //   currentRamadanYear
+  // );
 
   // Calculate total pages read from daily progress
-  const totalPagesRead = stats?.progress?.reduce((sum, day) => sum + (day.pages_read || 0), 0) || 0;
-  const totalMinutesListened = stats?.progress?.reduce((sum, day) => sum + (day.minutes_listened || 0), 0) || 0;
+  const totalPagesRead =
+    stats?.progress?.reduce((sum, day) => sum + (day.pages_read || 0), 0) || 0;
+  const totalMinutesListened =
+    stats?.progress?.reduce(
+      (sum, day) => sum + (day.minutes_listened || 0),
+      0,
+    ) || 0;
 
   // Calculate average reading speed from recent sessions
-  const recentSessions = stats?.progress?.filter(day => day.average_reading_speed && day.average_reading_speed > 0) || [];
-  const avgReadingSpeed = recentSessions.length > 0
-    ? recentSessions.reduce((sum, day) => sum + (day.average_reading_speed || 0), 0) / recentSessions.length
-    : 0;
+  const recentSessions =
+    stats?.progress?.filter(
+      (day) => day.average_reading_speed && day.average_reading_speed > 0,
+    ) || [];
+  const avgReadingSpeed =
+    recentSessions.length > 0
+      ? recentSessions.reduce(
+          (sum, day) => sum + (day.average_reading_speed || 0),
+          0,
+        ) / recentSessions.length
+      : 0;
 
   // Calculate total reading time in hours
-  const totalReadingTimeHours = (stats?.progress?.reduce((sum, day) => sum + (day.reading_time_seconds || 0), 0) || 0) / 3600;
+  const totalReadingTimeHours =
+    (stats?.progress?.reduce(
+      (sum, day) => sum + (day.reading_time_seconds || 0),
+      0,
+    ) || 0) / 3600;
 
   return (
     <div className="space-y-4">
@@ -86,7 +108,8 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
                 {t("profile.total_listening")}
               </p>
               <p className="text-xl font-bold text-textPrimary">
-                {Math.floor(totalMinutesListened / 60)}h {totalMinutesListened % 60}m
+                {Math.floor(totalMinutesListened / 60)}h{" "}
+                {totalMinutesListened % 60}m
               </p>
             </div>
           </div>
@@ -126,7 +149,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
       </Card>
 
       {/* Ramadan Stats (Only show during Ramadan season) */}
-      {isRamadan && ramadanProfile && !isLoadingRamadanProfile && (
+      {/* {isRamadan && ramadanProfile && !isLoadingRamadanProfile && (
         <Card className="border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -134,10 +157,11 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {/* Level Progress Bar */}
             <div className="p-3 bg-background/60 rounded-lg border border-primary/30">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-textSecondary">{t("ramadan.stats.level")} {ramadanProfile.level}</p>
+                <p className="text-xs text-textSecondary">
+                  {t("ramadan.stats.level")} {ramadanProfile.level}
+                </p>
                 <p className="text-xs text-textSecondary">
                   {ramadanProfile.total_xp} XP
                 </p>
@@ -148,57 +172,78 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
                   style={{
                     width: `${Math.min(
                       ((ramadanProfile.total_xp % 100) / 100) * 100,
-                      100
+                      100,
                     )}%`,
                   }}
                 />
               </div>
               <p className="text-xs text-textSecondary mt-1">
-                {100 - (ramadanProfile.total_xp % 100)} XP {t("ramadan.stats.untilNextLevel") || "until next level"}
+                {100 - (ramadanProfile.total_xp % 100)} XP{" "}
+                {t("ramadan.stats.untilNextLevel") || "until next level"}
               </p>
             </div>
 
-            {/* Today's Reading Progress */}
             <div className="p-3 bg-background/60 rounded-lg border border-primary/30">
-              <p className="text-xs text-textSecondary mb-1">{t("ramadan.progress.todayReading")}</p>
+              <p className="text-xs text-textSecondary mb-1">
+                {t("ramadan.progress.todayReading")}
+              </p>
               <p className="text-xl font-bold text-textPrimary">
-                {ramadanProfile.pages_read_today || 0} / {ramadanProfile.daily_goal_pages || 10} {t("ramadan.progress.pages")}
+                {ramadanProfile.pages_read_today || 0} /{" "}
+                {ramadanProfile.daily_goal_pages || 10}{" "}
+                {t("ramadan.progress.pages")}
               </p>
               <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
                   className="h-full rounded-full bg-primary transition-all duration-500"
                   style={{
                     width: `${Math.min(
-                      ((ramadanProfile.pages_read_today || 0) / (ramadanProfile.daily_goal_pages || 10)) * 100,
-                      100
+                      ((ramadanProfile.pages_read_today || 0) /
+                        (ramadanProfile.daily_goal_pages || 10)) *
+                        100,
+                      100,
                     )}%`,
                   }}
                 />
               </div>
             </div>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.streak")}</p>
-                <p className="text-2xl font-bold text-orange-500">{ramadanProfile.ramadan_streak} 🔥</p>
+                <p className="text-xs text-textSecondary mb-1">
+                  {t("ramadan.stats.streak")}
+                </p>
+                <p className="text-2xl font-bold text-orange-500">
+                  {ramadanProfile.ramadan_streak} 🔥
+                </p>
               </div>
               <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.badges.totalBadges")}</p>
-                <p className="text-2xl font-bold text-yellow-500">{ramadanProfile.badges_earned} 🏅</p>
+                <p className="text-xs text-textSecondary mb-1">
+                  {t("ramadan.badges.totalBadges")}
+                </p>
+                <p className="text-2xl font-bold text-yellow-500">
+                  {ramadanProfile.badges_earned} 🏅
+                </p>
               </div>
               <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.completed")}</p>
-                <p className="text-xl font-bold text-green-600">{ramadanProfile.challenges_completed} ✅</p>
+                <p className="text-xs text-textSecondary mb-1">
+                  {t("ramadan.stats.completed")}
+                </p>
+                <p className="text-xl font-bold text-green-600">
+                  {ramadanProfile.challenges_completed} ✅
+                </p>
               </div>
               <div className="p-3 bg-background/60 rounded-lg border border-border">
-                <p className="text-xs text-textSecondary mb-1">{t("ramadan.stats.inProgress")}</p>
-                <p className="text-xl font-bold text-blue-600">{ramadanProfile.challenges_in_progress} 🔄</p>
+                <p className="text-xs text-textSecondary mb-1">
+                  {t("ramadan.stats.inProgress")}
+                </p>
+                <p className="text-xl font-bold text-blue-600">
+                  {ramadanProfile.challenges_in_progress} 🔄
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
-      )}
+      )} */}
     </div>
   );
 };

@@ -6,8 +6,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLanguage, useTheme } from "./hooks";
 import { usePrefetchData } from "./hooks/usePrefetchData";
-import { ScrollToTop, RamadanSideBadge } from "./components/common";
+// import { RamadanSideBadge } from "./components/common";
 import { OfflineIndicator } from "./components/common/offline-indicator";
+import { ScrollToTop } from "./components/common";
 
 function App() {
   const { language } = useLanguage();
@@ -18,7 +19,7 @@ function App() {
     <HelmetProvider>
       <div>
         <ScrollToTop />
-        <RamadanSideBadge />
+        {/* <RamadanSideBadge /> */}
         <OfflineIndicator />
         <Header />
         <ToastContainer

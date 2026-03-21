@@ -4,12 +4,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
 import { MushafSurahDetails } from "@/components/pages";
-import { IconButton, ReadingProgressIndicator } from "@/components/common";
+// import {  ReadingProgressIndicator } from "@/components/common";
+import { IconButton } from "@/components/common";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useLanguage } from "@/hooks";
 import { generateRoute } from "@/router/routes";
 import { formatNumber } from "@/utils/numbers";
-import { useViewportPageTracker } from '@/hooks/useViewportPageTracker';
+// import { useViewportPageTracker } from '@/hooks/useViewportPageTracker';
 import { useSmartPrefetch } from "@/hooks/useSmartPrefetch";
 
 function MushafSurahPage() {
@@ -30,12 +31,15 @@ function MushafSurahPage() {
   } = useMushafSurah(currentMushafId, currentSurahId);
 
   // Prefetch nearby mushaf surahs for offline PWA use
-  useSmartPrefetch({ type: "mushaf-surah", params: { mushafId: currentMushafId, surahNumber: currentSurahId } });
+  useSmartPrefetch({
+    type: "mushaf-surah",
+    params: { mushafId: currentMushafId, surahNumber: currentSurahId },
+  });
 
   // Track mushaf pages read when user leaves page
-  useViewportPageTracker(surah?.ayahs || [], {
-    enabled: !!surah,
-  });
+  // useViewportPageTracker(surah?.ayahs || [], {
+  //   enabled: !!surah,
+  // });
 
   const handlePreviousPage = () => {
     if (currentSurahId > 1) {
@@ -74,7 +78,7 @@ function MushafSurahPage() {
   return (
     <>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ReadingProgressIndicator />
+        {/* <ReadingProgressIndicator /> */}
         <MushafSurahDetails surah={surah} mushafId={currentMushafId} />
       </div>
       <div className="max-w-4xl mx-auto px-4 pb-8 flex items-center justify-between border-t border-primary pt-6 mb-8">

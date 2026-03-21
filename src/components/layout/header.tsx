@@ -22,7 +22,7 @@ import {
 import MosqueIcon from "@mui/icons-material/Mosque";
 import { Drawer, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
+// import DarkModeIcon from "@mui/icons-material/DarkMode";
 export function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
@@ -79,11 +79,11 @@ export function Header() {
       label: t("navigation.about"),
       href: "/about",
     },
-    {
-      icon: <DarkModeIcon />,
-      label: t("navigation.ramadan"),
-      href: "/ramadan",
-    },
+    // {
+    //   icon: <DarkModeIcon />,
+    //   label: t("navigation.ramadan"),
+    //   href: "/ramadan",
+    // },
   ];
 
   useEffect(() => {
