@@ -7,12 +7,12 @@ import { ThemeProvider } from "./providers/ThemeProvider";
 import { QueryProvider } from "./providers/QueryProvider";
 
 import { router } from "./router/router";
-// import { AudioProvider } from "./providers/AudioProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { SurahNavigationProvider } from "./providers/SurahNavigationProvider";
 
 import { GlobalAudioPlayer } from "./components/common/global-audio-player";
 import { registerServiceWorker } from "./lib/register-sw";
+import { AudioProvider } from "./providers/AudioProvider";
 
 registerServiceWorker();
 
@@ -21,12 +21,12 @@ createRoot(document.getElementById("root")!).render(
     <QueryProvider>
       <ThemeProvider>
         <AuthProvider>
-          {/* <AudioProvider> */}
-          <SurahNavigationProvider>
-            <RouterProvider router={router} />
-            <GlobalAudioPlayer />
-          </SurahNavigationProvider>
-          {/* </AudioProvider> */}
+          <AudioProvider>
+            <SurahNavigationProvider>
+              <RouterProvider router={router} />
+              <GlobalAudioPlayer />
+            </SurahNavigationProvider>
+          </AudioProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryProvider>
