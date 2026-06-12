@@ -4,6 +4,7 @@ import { Header } from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Analytics } from "@vercel/analytics/react";
 import { useLanguage, useTheme } from "./hooks";
 import { usePrefetchData } from "./hooks/usePrefetchData";
 // import { RamadanSideBadge } from "./components/common";
@@ -35,6 +36,7 @@ function App() {
         />
         <Outlet />
         <Footer />
+        <Analytics />
       </div>
     </HelmetProvider>
   );
